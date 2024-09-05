@@ -36,6 +36,7 @@ coding!
 
 - Anna Bowen: [GitHub](https://github.com/bowenanna / https://linkedin.com/in/liaccountname)](https://www.linkedin.com/in/realannabowen/
 - Teammate name #2: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
+- Clarissa Jaime: [GitHub](https://github.com/clarissajaime) / [LinkedIn](https://linkedin.com/in/clarissajaime)
 
    ...
 - Teammate name #n: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
