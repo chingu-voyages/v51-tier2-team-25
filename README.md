@@ -35,6 +35,7 @@ your repo access and to practice PR'ing with your team *before* you start
 coding!
 
 - Teammate name Ivan Rebolledo: [GitHub]( https://github.com/ivannissimrch) / [LinkedIn]( https://www.linkedin.com/in/ivan-rebolledo-012b17244/)
+- Emily Arnold: https://github.com/elta79 / www.linkedin.com/in/elta7679
 - Teammate name #2: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
 
    ...
