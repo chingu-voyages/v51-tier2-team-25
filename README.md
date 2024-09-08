@@ -34,7 +34,7 @@ Everyone on your team should add their name along with a link to their GitHub
 your repo access and to practice PR'ing with your team _before_ you start
 coding!
 
-- Anna Bowen: [GitHub](https://github.com/bowenanna) / [GitHub](https://www.linkedin.com/in/realannabowen)
+- Anna Bowen: [GitHub](https://github.com/bowenanna) / [LinkedIn](https://www.linkedin.com/in/realannabowen)
 - Clarissa Jaime: [GitHub](https://github.com/clarissajaime) / [LinkedIn](https://linkedin.com/in/clarissajaime)
 - Ivan Rebolledo: [GitHub](https://github.com/ivannissimrch) / [LinkedIn](https://www.linkedin.com/in/ivan-rebolledo-012b17244/)
 - Emily Arnold: [GitHub](https://github.com/elta79) / [LinkedIn](www.linkedin.com/in/elta7679)
