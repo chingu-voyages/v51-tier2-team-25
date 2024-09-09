@@ -40,4 +40,4 @@ coding!
 - Emily Arnold: [GitHub](https://github.com/elta79) / [LinkedIn](www.linkedin.com/in/elta7679)
 - Hilda: [GitHub](https://github.com/Hilda0205) / [LinkedIn](https://www.linkedin.com/in/hildavallapuram/)
 - Leonardo: [GitHub](https://github.com/Leonardostdesign) / [LinkedIn](https://www.linkedin.com/in/leonardostdesign/)
-
+- Satomi Li: [GitHub](https://github.com/Satomili) / [LinkedIn](https://www.linkedin.com/in/satomili/)
