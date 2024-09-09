@@ -43,10 +43,11 @@ This project is built by a talented team. You can find their GitHub and LinkedIn
 
 - **Anna Bowen**: [GitHub](https://github.com/bowenanna) / [LinkedIn](https://www.linkedin.com/in/realannabowen)
 - **Clarissa Jaime**: [GitHub](https://github.com/clarissajaime) / [LinkedIn](https://linkedin.com/in/clarissajaime)
-- **Ivan Rebolledo**: [GitHub](https://github.com/ivannissimrch) / [LinkedIn](https://www.linkedin.com/in/ivan-rebolledo-012b17244/)
 - **Emily Arnold**: [GitHub](https://github.com/elta79) / [LinkedIn](www.linkedin.com/in/elta7679)
 - **Hilda Vallapuram**: [GitHub](https://github.com/Hilda0205) / [LinkedIn](https://www.linkedin.com/in/hildavallapuram/)
+- **Ivan Rebolledo**: [GitHub](https://github.com/ivannissimrch) / [LinkedIn](https://www.linkedin.com/in/ivan-rebolledo-012b17244/)
 - **Leonardo**: [GitHub](https://github.com/Leonardostdesign) / [LinkedIn](https://www.linkedin.com/in/leonardostdesign/)
+- **Satomi Li**: [GitHub](https://github.com/Satomili) / [LinkedIn](https://www.linkedin.com/in/satomili/)
 
 ---
 
