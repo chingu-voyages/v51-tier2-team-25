@@ -48,6 +48,7 @@ This project is built by a talented team. You can find their GitHub and LinkedIn
 - **Ivan Rebolledo**: [GitHub](https://github.com/ivannissimrch) / [LinkedIn](https://www.linkedin.com/in/ivan-rebolledo-012b17244/)
 - **Leonardo**: [GitHub](https://github.com/Leonardostdesign) / [LinkedIn](https://www.linkedin.com/in/leonardostdesign/)
 - **Satomi Li**: [GitHub](https://github.com/Satomili) / [LinkedIn](https://www.linkedin.com/in/satomili/)
+- **Patrick Pate**: [GitHub](https://github.com/patpate89) / [LinkedIn](https://www.linkedin.com/in/patrick-pate/)
 
 ---
 
