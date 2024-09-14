@@ -1,9 +1,9 @@
+import GroupForm from "./GroupForm";
 const Home = () => {
   return (
     <div>
-      <h1 className="text-3xl font-bold underline justify-center">
-        Hello world!
-      </h1>
+
+      <GroupForm />
     </div>
   );
 };
