@@ -1,12 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
-function GroupForm(){
-  
+const GroupForm =({ onClose }) => {
+ 
+  const generateGroupId = () => {
+    return Math.floor(10000 + Math.random() * 900000)
+  }
   // Initialize state for formData
   const [formData, setFormData] = useState(
     {
       groupName:'',
-      groupId:'',
+      groupId: generateGroupId(),
       groupDescription:'',
       allottedBudget:'',
     }
@@ -37,20 +41,6 @@ function GroupForm(){
     }))
     //**TEST console.log("Form Canceled")
   }
-
-  const generateGroupId = () => {
-    return Math.floor(10000 + Math.random() * 900000)
-  }
-
-  // generate group id when component mounts
-  useEffect(()=>{
-    if(!formData.groupId){
-      setFormData(prevFormData =>({
-        ...prevFormData,
-        groupId: generateGroupId()
-      }))
-    }
-  }, [])
 
   const renderGroupId = () => {
     return formData.groupId ? <p className='absolute p-0 m-0 text-xs text-gray-400 top-1 right-10'>#{formData.groupId}</p> : null
@@ -92,9 +82,18 @@ function GroupForm(){
 
   }
 
+  const handleOnClose = () =>{
+    if (typeof onClose === 'function'){
+      onClose()
+    }else{
+      console.warn('onClose is not a function')
+    }
+  }
+
   return (
     <> 
-      <div className='relative border border-black-100 w-[535px] h-[625px] rounded-md p-6 flex flex-col m-8'>
+      <div className='relative border border-black-100 w-[535px] h-[625px] rounded-md p-6 flex flex-col m-8 font-geologica'>
+        <p className='absolute top-0 p-0 m-0 text-gray-400 cursor-pointer right-2 text-s'  onClick={handleOnClose}>&times;</p>
         <div className='flex items-center justify-between pb-4 mb-5 border-b border-black-200'>
           <h1 className='p-0 text-md'>New Group</h1>
           <p className='p-0 text-xs text-gray-400'>* Mandatory fields</p>
@@ -137,7 +136,7 @@ function GroupForm(){
             </label>
           </div>
           
-          <label className='flex flex-col text-sm'>
+          <label className='flex flex-col text-sm '>
             Group description*
             <textarea 
               className='border border-gray-300 rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500'              
@@ -154,7 +153,7 @@ function GroupForm(){
 
           <div className='absolute bottom-0 left-0 right-0 flex items-center w-full pr-4 bg-gray-200 place-content-end'>
             <button className='text-sm' type='button' onClick={cancelForm}>Cancel</button>
-            <button className='px-4 py-2 m-2 text-sm bg-gray-300 rounded-xl'type='submit'>Create group</button>
+            <button className='px-4 py-2 m-2 text-sm hover:bg-hover bg-button text-gray-50 rounded-xl'type='submit'>Create group</button>
           </div>
 
         </form>
@@ -162,5 +161,9 @@ function GroupForm(){
     </>
     
   )
+}
+
+GroupForm.propTypes = {
+  onClose: PropTypes.func.isRequired,
 }
 export default GroupForm
