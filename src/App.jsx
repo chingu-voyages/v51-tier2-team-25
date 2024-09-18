@@ -38,6 +38,11 @@ function App() {
   //     prevFriends.filter((friend) => friend.id !== friendToDeleteId)
   //   );
   // }
+  function deleteGroup(groupId) {
+    setGroups((prevGroups) =>
+      prevGroups.filter((group) => group !== groupId)
+    );
+  }
 
   const router = createBrowserRouter([
     {
@@ -67,7 +72,7 @@ function App() {
 
   return (
     <AppContext.Provider
-      value={{ groups, addNewGroup, friends, addFriendToList }}
+      value={{ groups, addNewGroup, deleteGroup, friends, addFriendToList }}
     >
       <RouterProvider router={router} />
     </AppContext.Provider>
