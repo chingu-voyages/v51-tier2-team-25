@@ -10,7 +10,7 @@ export const AppContext = createContext([]);
 
 function App() {
   const [groups, setGroups] = useState(
-    JSON.parse(localStorage.getItem("formData")) || []
+    JSON.parse(localStorage.getItem("groupsData")) || []
   );
   const [friends, setFriends] = useState(
     JSON.parse(localStorage.getItem("friendsData")) || []
