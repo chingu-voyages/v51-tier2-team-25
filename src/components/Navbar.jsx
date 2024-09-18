@@ -1,19 +1,23 @@
 import { NavLink } from "react-router-dom";
 import { useState, useContext } from "react";
-import GroupForm from "./GroupForm.jsx";
+import AddGroup from "./AddGroup.jsx";
 import { AppContext } from "../App";
 
 import AddFriend from "./AddFriend.jsx";
 
 export default function Navbar() {
+
+  // TESTING ONLY -REMOVE
+  // localStorage.clear()
+  
   const [isAddGroupModalOpen, setIsAddGroupModalOpen] = useState(false);
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
   const { groups, friends } = useContext(AppContext);
 
-  function openModal() {
+  function openAddGroupModal() {
     setIsAddGroupModalOpen(true);
   }
-  function closeModal() {
+  function closeAddGroupModal() {
     setIsAddGroupModalOpen(false);
   }
   function openAddFriendModal() {
@@ -25,13 +29,13 @@ export default function Navbar() {
   }
 
   return (
-    <aside className="w-1/4 p-4 flex flex-col">
+    <aside className="flex flex-col w-1/4 p-4">
       <nav className="h-screen">
         <ul className="space-y-4">
-          <li className="block py-2 px-4 ">Brand Name</li>
+          <li className="block px-4 py-2 ">Brand Name</li>
           <li>
             <NavLink
-              className="block py-2 px-4 rounded hover:bg-blue-700"
+              className="block px-4 py-2 rounded hover:bg-blue-700"
               to="/"
             >
               Home
@@ -39,7 +43,7 @@ export default function Navbar() {
           </li>
           <li>
             <NavLink
-              className="block py-2 px-4 rounded hover:bg-blue-700"
+              className="block px-4 py-2 rounded hover:bg-blue-700"
               to="/profile"
             >
               Profile
@@ -47,24 +51,24 @@ export default function Navbar() {
           </li>
 
           <li>
-            <div className="flex justify-between items-center py-2 px-4 rounded hover:bg-blue-700">
+            <div className="flex items-center justify-between px-4 py-2 rounded hover:bg-blue-700">
               <span>Groups</span>
               <button
-                onClick={openModal}
-                className="bg-amber-500 text-black py-1 px-2 rounded hover:bg-amber-600"
+                onClick={openAddGroupModal}
+                className="px-2 py-1 text-black rounded bg-amber-500 hover:bg-amber-600"
               >
                 +
               </button>
             </div>
             {groups.length > 0 && (
-              <ul className="ml-4 mt-2 space-y-2">
+              <ul className="mt-2 ml-4 space-y-2">
                 {groups.map((group) => (
-                  <li key={group.groupId}>
+                  <li key={group.id}>
                     <NavLink
-                      className="block py-1 px-2 rounded hover:bg-blue-700"
-                      to={`/group/${group.groupId}`}
+                      className="block px-2 py-1 rounded hover:bg-blue-700"
+                      to={`/group/${group.id}`}
                     >
-                      {group.groupName}
+                      {group.name}
                     </NavLink>
                   </li>
                 ))}
@@ -72,30 +76,30 @@ export default function Navbar() {
             )}
           </li>
           <li>
-            <div className="flex justify-between items-center py-2 px-4 rounded hover:bg-blue-700">
+            <div className="flex items-center justify-between px-4 py-2 rounded hover:bg-blue-700">
               <span>Friends</span>
               <button
 
                 onClick={openAddFriendModal}
 
-                className="bg-amber-500 text-black py-1 px-2 rounded hover:bg-amber-600"
+                className="px-2 py-1 text-black rounded bg-amber-500 hover:bg-amber-600"
               >
                 +
               </button>
             </div>
             {friends.length > 0 && (
-              <ul className="ml-4 mt-2 space-y-2">
+              <ul className="mt-2 ml-4 space-y-2">
                 {friends.map((friend) => (
 
                   <li key={friend.id} className="flex items-center">
                     <img
                       src="./public/images/profilePlaceholder.jpg"
-                      className="border border-none rounded-full  mr-4"
+                      className="mr-4 border border-none rounded-full"
                     />
 
 
                     <NavLink
-                      className="block py-1 px-2 rounded hover:bg-blue-700"
+                      className="block px-2 py-1 rounded hover:bg-blue-700"
                       to={`/friend/${friend.id}`}
                     >
                       {friend.name}
@@ -108,7 +112,9 @@ export default function Navbar() {
         </ul>
       </nav>
 
-      {isAddGroupModalOpen && <GroupForm closeModal={closeModal} />}
+      {isAddGroupModalOpen && (
+        <AddGroup closeAddGroupModal={closeAddGroupModal} />
+      )}
       {isAddFriendModalOpen && (
         <AddFriend closeAddFriendMenu={closeAddFriendMenu} />
       )}

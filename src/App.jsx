@@ -10,15 +10,15 @@ export const AppContext = createContext([]);
 
 function App() {
   const [groups, setGroups] = useState(
-    JSON.parse(localStorage.getItem("formData")) || []
+    JSON.parse(localStorage.getItem("groupsData")) || []
   );
   const [friends, setFriends] = useState(
     JSON.parse(localStorage.getItem("friendsData")) || []
   );
 
-  function addNewGroup(newGroup) {
-    setGroups([...groups, newGroup]);
-  }
+  // function addNewGroup(newGroup) {
+  //   setGroups([...groups, newGroup]);
+  // }
 
   // function editGroup(groupIdToEdit) {}
 
@@ -31,6 +31,11 @@ function App() {
   function addFriendToList(newFriend) {
     console.log(newFriend);
     setFriends((prevFriends) => [...prevFriends, newFriend]);
+  }
+
+  function addGroupToList(newGroup) {
+    console.log(newGroup);
+    setGroups((prevGroups) => [...prevGroups, newGroup]);
   }
 
   // function deleteFriendFromList(friendToDeleteId) {
@@ -67,7 +72,7 @@ function App() {
 
   return (
     <AppContext.Provider
-      value={{ groups, addNewGroup, friends, addFriendToList }}
+      value={{ groups, addGroupToList, friends, addFriendToList }}
     >
       <RouterProvider router={router} />
     </AppContext.Provider>
