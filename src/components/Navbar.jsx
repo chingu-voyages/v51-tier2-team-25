@@ -12,7 +12,6 @@ export default function Navbar() {
   function openModal() {
     setIsAddGroupModalOpen(true);
   }
-
   function closeModal() {
     setIsAddGroupModalOpen(false);
   }
