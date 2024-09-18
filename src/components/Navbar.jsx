@@ -2,18 +2,26 @@ import { NavLink } from "react-router-dom";
 import { useState, useContext } from "react";
 import GroupForm from "./GroupForm.jsx";
 import { AppContext } from "../App";
-import toast from "react-hot-toast";
+
+import AddFriend from "./AddFriend.jsx";
 
 export default function Navbar() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddGroupModalOpen, setIsAddGroupModalOpen] = useState(false);
+  const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
   const { groups, friends } = useContext(AppContext);
 
   function openModal() {
-    setIsModalOpen(true);
+    setIsAddGroupModalOpen(true);
   }
-
   function closeModal() {
-    setIsModalOpen(false);
+    setIsAddGroupModalOpen(false);
+  }
+  function openAddFriendModal() {
+    setIsAddFriendModalOpen(true);
+  }
+  function closeAddFriendMenu() {
+    setIsAddFriendModalOpen(false);
+
   }
 
   return (
@@ -67,7 +75,9 @@ export default function Navbar() {
             <div className="flex justify-between items-center py-2 px-4 rounded hover:bg-blue-700">
               <span>Friends</span>
               <button
-                onClick={() => toast("Will open add friend modal")}
+
+                onClick={openAddFriendModal}
+
                 className="bg-amber-500 text-black py-1 px-2 rounded hover:bg-amber-600"
               >
                 +
@@ -76,7 +86,14 @@ export default function Navbar() {
             {friends.length > 0 && (
               <ul className="ml-4 mt-2 space-y-2">
                 {friends.map((friend) => (
-                  <li key={friend.id}>
+
+                  <li key={friend.id} className="flex items-center">
+                    <img
+                      src="./public/images/profilePlaceholder.jpg"
+                      className="border border-none rounded-full  mr-4"
+                    />
+
+
                     <NavLink
                       className="block py-1 px-2 rounded hover:bg-blue-700"
                       to={`/friend/${friend.id}`}
@@ -90,7 +107,12 @@ export default function Navbar() {
           </li>
         </ul>
       </nav>
-      {isModalOpen && <GroupForm closeModal={closeModal} />}
+
+      {isAddGroupModalOpen && <GroupForm closeModal={closeModal} />}
+      {isAddFriendModalOpen && (
+        <AddFriend closeAddFriendMenu={closeAddFriendMenu} />
+      )}
+
     </aside>
   );
 }
