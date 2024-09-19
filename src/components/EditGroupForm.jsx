@@ -1,4 +1,6 @@
-export default function EditGroupForm() {
+import PropTypes from 'prop-types';
+
+export default function EditGroupForm({ closeEditGroupFormModal }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
@@ -14,7 +16,7 @@ export default function EditGroupForm() {
       >
         <div className="flex flex-col">
           <div className='flex items-center'>
-            <img src='./public/images/placeholder.jpg' className='border border-none rounded-full w-[80px] h-[80px] mr-4'/>
+            <img src='./public/images/placeholder.jpg' className='border border-none rounded-full w-[80px] h-[80px] mr-4' alt="Group placeholder"/>
             <div className='relative flex flex-col'>
                 <label className="text-sm">
                 Group name*
@@ -65,7 +67,7 @@ export default function EditGroupForm() {
           <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">
             <button
               type={"button"}
-              // onClick={closeAddGroupModal}
+              onClick={closeEditGroupFormModal}
               className="mr-2 text-sm"
             >
               Cancel
@@ -95,3 +97,7 @@ export default function EditGroupForm() {
     </div>
       );
 }
+
+EditGroupForm.propTypes = {
+  closeEditGroupFormModal: PropTypes.func.isRequired,
+};
