@@ -62,6 +62,30 @@ export default function EditGroupForm() {
             <p className='text-gray-200'>placeholder</p>
           </div>
 
+          <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">
+            <button
+              type={"button"}
+              // onClick={closeAddGroupModal}
+              className="mr-2 text-sm"
+            >
+              Cancel
+            </button>
+            <button
+              // type={"submit"}
+              className="px-3 py-2 mr-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
+            >
+              Delete group
+            </button>
+            <button
+              // type={"submit"}
+              className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
+            >
+              Edit group
+            </button>
+
+
+
+            </div>
 
         </div>
         
