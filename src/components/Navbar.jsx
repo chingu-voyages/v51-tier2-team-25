@@ -4,7 +4,6 @@ import AddGroup from "./AddGroup.jsx";
 import { AppContext } from "../App";
 
 import AddFriend from "./AddFriend.jsx";
-import EditGroupForm from "./EditGroupForm.jsx";
 
 export default function Navbar() {
 
@@ -119,7 +118,6 @@ export default function Navbar() {
       {isAddFriendModalOpen && (
         <AddFriend closeAddFriendMenu={closeAddFriendMenu} />
       )}
-      <EditGroupForm />
 
     </aside>
   );
