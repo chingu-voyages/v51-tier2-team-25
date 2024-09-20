@@ -6,7 +6,7 @@ export default {
       colors: {
         'button': '#74779c',
         'hover': '#585875',
-        'light-indigo': '#F0F1F5'
+        'light-indigo': '#F0F1F5',
       },
       fontFamily: {
         geologica: ['Geologica', 'sans-serif'],
