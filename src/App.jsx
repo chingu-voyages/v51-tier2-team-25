@@ -45,6 +45,14 @@ function App() {
   //   );
   // }
 
+  function deleteGroup(groupId) {
+    setGroups((prevGroups) =>{
+      const updatedGroups=prevGroups.filter((group) => group.id !== groupId);
+      localStorage.setItem("groupsData", JSON.stringify(updatedGroups)); // Update local storage
+      return updatedGroups;
+  });
+  }
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -77,6 +85,7 @@ function App() {
         groups,
         setGroups,
         addGroupToList,
+        deleteGroup,
         friends,
         addFriendToList,
         memberData,
