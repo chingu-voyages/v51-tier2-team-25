@@ -19,7 +19,8 @@ function App() {
     JSON.parse(localStorage.getItem("expensesData")) || []
   )
 
-  const [memberData, setMemberData] = useState({ name: "", id: "" });
+  const [memberData, setMemberData] = useState({ name: "",share:"", id: "" });
+
   // function addNewGroup(newGroup) {
   //   setGroups([...groups, newGroup]);
   // }
@@ -33,17 +34,17 @@ function App() {
   // }
 
   function addFriendToList(newFriend) {
-    console.log(newFriend);
+    console.log("addNewFriend-app", newFriend);
     setFriends((prevFriends) => [...prevFriends, newFriend]);
   }
 
   function addGroupToList(newGroup) {
-    console.log(newGroup);
+    console.log("addNewGroup-app",newGroup);
     setGroups((prevGroups) => [...prevGroups, newGroup]);
   }
 
   function addExpenseToList(newExpense){
-    console.log(newExpense)
+    console.log("addNewExpense-app",newExpense)
     setExpenses((prevExpenses)=>[...prevExpenses, newExpense])
   }
 

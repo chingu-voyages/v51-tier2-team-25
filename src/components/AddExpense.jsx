@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { AppContext } from "../App";
 import toast from "react-hot-toast";
 import PropTypes from 'prop-types'
+import SearchBar from "./SearchBar";
 
 // eslint-disable-next-line react/prop-types
 
@@ -141,10 +142,12 @@ export default function AddExpense({ closeAddExpense }) {
 
             {/* TODO PLACEHOLDER */}
             <div className='pt-4 mb-auto'>
-              <p className='border border-gray-300 rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500'>placeholder to add receipt</p>
+              <p className='border border-gray-300 border-dashed rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500'>placeholder to add receipt</p>
             </div>
             <div className='pt-4 mb-auto'>
-              <p className='border border-gray-300 rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500'>placeholder to add friends</p>
+              <p >Add members</p>
+              <SearchBar />
+              
             </div>
             
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">

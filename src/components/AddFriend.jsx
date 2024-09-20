@@ -6,10 +6,12 @@ import toast from "react-hot-toast";
 export default function AddFriend({ closeAddFriendMenu }) {
   //I'm using context but we can use props
   const { addFriendToList } = useContext(AppContext);
+
   //Maybe move this to a helper function also maybe use uuid library?
   const generateGroupId = () => {
     return Math.floor(10000 + Math.random() * 900000);
   };
+
   // Initialize state for friendsData
   const [friendsData, setFriendsData] = useState({
     name: "",
@@ -28,12 +30,22 @@ export default function AddFriend({ closeAddFriendMenu }) {
   const addNewFriend = (event) => {
     event.preventDefault();
     //get stored data from local storage or initialize array
+    
     let storedGroupData = JSON.parse(localStorage.getItem("friendsData")) || [];
+    
     //append new form data to array
     storedGroupData.push(friendsData);
+
     //save updated array to local storage
     localStorage.setItem("friendsData", JSON.stringify(storedGroupData));
     addFriendToList(friendsData);
+
+    //reset friendsData stat w/ new ID
+    setFriendsData({
+      name:"",
+      id:generateGroupId(),
+    })
+    
     closeAddFriendMenu();
     toast("New friend added");
   };
@@ -64,7 +76,8 @@ export default function AddFriend({ closeAddFriendMenu }) {
                   required
                 />
               </label>
-              <label className="flex flex-col pr-2 text-sm">
+              
+              {/* <label className="flex flex-col pr-2 text-sm">
                 Friend ID
                 <input
                   className="p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
@@ -75,7 +88,7 @@ export default function AddFriend({ closeAddFriendMenu }) {
                   maxLength="30"
                   required
                 />
-              </label>
+              </label> */}
               <button
                 type={"submit"}
                 className="px-3 py-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo "

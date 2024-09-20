@@ -20,7 +20,7 @@ export default function SearchBar() {
   const [isLoading, setIsLoading] = useState(false);
   const [isRtl, setIsRtl] = useState(false);
 
-  function adddSelectionToForm(optionselected) {
+  function addSelectionToForm(optionselected) {
     const selectedFriend = friends.filter(
       (friend) => friend.id === optionselected.value
     );
@@ -45,7 +45,7 @@ export default function SearchBar() {
         name="color"
         options={options}
         filterOption={filterOptions}
-        onChange={adddSelectionToForm}
+        onChange={addSelectionToForm}
       />
     </>
   );
