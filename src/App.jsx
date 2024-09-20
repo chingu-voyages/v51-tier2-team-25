@@ -16,6 +16,7 @@ function App() {
     JSON.parse(localStorage.getItem("friendsData")) || []
   );
 
+  const [memberData, setMemberData] = useState({ name: "", id: "" });
   // function addNewGroup(newGroup) {
   //   setGroups([...groups, newGroup]);
   // }
@@ -72,7 +73,14 @@ function App() {
 
   return (
     <AppContext.Provider
-      value={{ groups, addGroupToList, friends, addFriendToList }}
+      value={{
+        groups,
+        addGroupToList,
+        friends,
+        addFriendToList,
+        memberData,
+        setMemberData,
+      }}
     >
       <RouterProvider router={router} />
     </AppContext.Provider>
