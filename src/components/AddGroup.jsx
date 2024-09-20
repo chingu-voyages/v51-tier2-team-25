@@ -56,7 +56,7 @@ export default function AddGroup({ closeAddGroupModal }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
-      <div className="relative border border-black-100 w-[535px] h-[625px] rounded-md p-6 bg-white flex flex-col m-8 font-geologica">
+      <div className="relative border border-black-100 w-[535px] h-[625px] rounded-md p-6 bg-zinc-50 flex flex-col m-8 font-geologica">
         
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-black-200">
           <h1 className="p-0 text-md">New Group</h1>
@@ -69,7 +69,7 @@ export default function AddGroup({ closeAddGroupModal }) {
         >
           <div className="flex flex-col">
             <div className='flex items-center'>
-              <img src='./public/images/placeholder.jpg' className='border border-none rounded-full w-[80px] h-[80px] mr-4'/>
+              <img src='../public/images/placeholder.jpg' className='border border-none rounded-full w-[80px] h-[80px] mr-4'/>
               <div className='relative flex flex-col'>
                 <label className="text-sm">
                 Group name*
@@ -129,7 +129,7 @@ export default function AddGroup({ closeAddGroupModal }) {
                 type={"submit"}
                 className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
               >
-                Add
+                Create group
               </button>
             </div>
           </div>

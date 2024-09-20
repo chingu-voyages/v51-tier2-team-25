@@ -39,56 +39,59 @@ export default function AddFriend({ closeAddFriendMenu }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
-      <div className="relative border border-black-100 w-[535px]  rounded-md p-6 bg-white flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
+      <div className="relative flex flex-col p-6 m-8 border rounded-md border-black-100 bg-zinc-50 font-geologica min-h-64">
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-black-200">
-          <h1 className="p-0 text-md">New Friend</h1>
-          <p>*Mandatory fields</p>
+          <h1 className="p-0 text-md">Add Friend</h1>
+          
         </div>
 
         <form
           onSubmit={addNewFriend}
           className="flex flex-col flex-1 gap-6 overflow-auto border border-none"
         >
-          <div className="flex flex-col">
-            <label className="text-sm">
-              Member name*
-              <input
-                className="w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
-                type="text"
-                name="name"
-                value={friendsData.name}
-                onChange={handleChange}
-                maxLength="30"
-                required
-              />
-            </label>
-            <label className="text-sm">
-              Member ID*
-              <input
-                className="w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
-                type="text"
-                name="id"
-                disabled={true}
-                value={`#${friendsData.id}`}
-                maxLength="30"
-                required
-              />
-            </label>
-            <div className=" bg-gray-200 flex justify-end  mt-8">
+          <div className="flex flex-col ">
+            <div className='flex items-end'>
+              <label className="flex flex-col pr-2 text-sm">
+                Friend name
+                <input
+                  className="w-[194px] p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
+                  type="text"
+                  name="name"
+                  value={friendsData.name}
+                  onChange={handleChange}
+                  maxLength="30"
+                  required
+                />
+              </label>
+              <label className="flex flex-col pr-2 text-sm">
+                Friend ID
+                <input
+                  className="p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
+                  type="text"
+                  name="id"
+                  disabled={true}
+                  value={`#${friendsData.id}`}
+                  maxLength="30"
+                  required
+                />
+              </label>
+              <button
+                type={"submit"}
+                className="px-3 py-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo "
+              >
+                Add Friend
+              </button>
+            </div>
+            
+            <div className="absolute bottom-0 left-0 right-0 flex items-center w-full h-12 p-4 bg-light-indigo place-content-end ">
               <button
                 type={"button"}
                 onClick={closeAddFriendMenu}
-                className="px-4 py-2 m-2 text-sm hover:bg-hover text-black rounded-xl  bg-gray-200"
+                className="px-4 py-2 m-2 text-sm text-black rounded-xl"
               >
-                Cancel
-              </button>
-              <button
-                type={"submit"}
-                className="px-4 py-2 m-2 text-sm hover:bg-hover text-black rounded-xl  bg-gray-200 "
-              >
-                Add
-              </button>
+                Close
+              </button>              
             </div>
           </div>
         </form>
