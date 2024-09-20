@@ -15,6 +15,9 @@ function App() {
   const [friends, setFriends] = useState(
     JSON.parse(localStorage.getItem("friendsData")) || []
   );
+  const [expenses, setExpenses] = useState(
+    JSON.parse(localStorage.getItem("expensesData")) || []
+  )
 
   const [memberData, setMemberData] = useState({ name: "", id: "" });
   // function addNewGroup(newGroup) {
@@ -39,6 +42,11 @@ function App() {
     setGroups((prevGroups) => [...prevGroups, newGroup]);
   }
 
+  function addExpenseToList(newExpense){
+    console.log(newExpense)
+    setExpenses((prevExpenses)=>[...prevExpenses, newExpense])
+  }
+
   // function deleteFriendFromList(friendToDeleteId) {
   //   setFriends((prevFriends) =>
   //     prevFriends.filter((friend) => friend.id !== friendToDeleteId)
@@ -61,7 +69,7 @@ function App() {
         },
         {
           path: "group/:groupId",
-          element: <Groups />,
+          element: <Groups />,          
         },
         {
           path: "friend/:friendId",
@@ -73,6 +81,7 @@ function App() {
 
   return (
     <AppContext.Provider
+
       value={{
         groups,
         setGroups,
@@ -81,7 +90,10 @@ function App() {
         addFriendToList,
         memberData,
         setMemberData,
+        expenses, 
+        addExpenseToList
       }}
+
     >
       <RouterProvider router={router} />
     </AppContext.Provider>

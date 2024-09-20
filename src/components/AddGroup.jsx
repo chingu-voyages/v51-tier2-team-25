@@ -9,7 +9,7 @@ import MemberOnGroup from "./MembersOnGroup";
 // eslint-disable-next-line react/prop-types
 
 export default function AddGroup({ closeAddGroupModal }) {
-  //I'm using context but we can use props
+  
   const { addGroupToList } = useContext(AppContext);
 
   //Maybe move this to a helper function also maybe use uuid library?
@@ -57,6 +57,7 @@ export default function AddGroup({ closeAddGroupModal }) {
     toast("New group added");
   };
 
+
   function addMemberToGroup(newMember) {
     setGroupsData((prevData) => ({
       ...prevData,
@@ -64,10 +65,6 @@ export default function AddGroup({ closeAddGroupModal }) {
     }));
   }
 
-  //Add proptypes validation for eslint
-  AddGroup.propTypes = {
-    closeAddGroupModal: PropTypes.func.isRequired,
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
@@ -157,4 +154,8 @@ export default function AddGroup({ closeAddGroupModal }) {
       </div>
     </div>
   );
+}
+//Add proptypes validation for eslint
+AddGroup.propTypes = {
+  closeAddGroupModal: PropTypes.func.isRequired,
 }

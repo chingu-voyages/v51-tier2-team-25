@@ -25,12 +25,12 @@ export default function Navbar() {
   }
   function closeAddFriendMenu() {
     setIsAddFriendModalOpen(false);
-
   }
+  
 
   return (
-    <aside className="flex flex-col h-screen p-12 w-80 font-geologica">
-      <nav className="">
+    <aside className="flex flex-col h-screen p-12 font-geologica">
+      <nav className="w-48">
         <div className='flex items-center pb-12'>
           <img src='../public/images/placeholder.jpg' className='w-8 h-8 mr-2 border border-none rounded-full'/>
           <p className="block text-lg">Brand Name</p>
