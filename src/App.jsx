@@ -72,7 +72,7 @@ function App() {
 
   return (
     <AppContext.Provider
-      value={{ groups, addGroupToList, friends, addFriendToList }}
+      value={{ groups, setGroups, addGroupToList, friends, addFriendToList }}
     >
       <RouterProvider router={router} />
     </AppContext.Provider>
