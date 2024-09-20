@@ -3,7 +3,7 @@ import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../App";
 
 export default function EditGroupForm({ group, closeEditGroupFormModal }) {
-  const { groups, setGroups } = useContext(AppContext); // Get groups and setter from context
+  const { groups, setGroups, deleteGroup } = useContext(AppContext); // Get groups and setter from context
 
   // Temporary state for handling input changes
   const [tempGroupData, setTempGroupData] = useState({
@@ -43,6 +43,10 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
     closeEditGroupFormModal(); // Close the form after saving changes
   };
 
+  const handleDelete = () => {
+    deleteGroup(group.id); // Call deleteGroup with the group's ID
+    closeEditGroupFormModal(); // Close the form after deletion
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
@@ -116,7 +120,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
               Cancel
             </button>
             <button
-              onClick={() => console.log("This group is deleted!")}
+              onClick={handleDelete}
               className="px-3 py-2 mr-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo bg-red-600"
             >
               Delete group

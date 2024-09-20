@@ -45,6 +45,12 @@ function App() {
   //   );
   // }
 
+  function deleteGroup(groupId) {
+    setGroups((prevGroups) =>
+      prevGroups.filter((group) => group.id !== groupId)
+    );
+  }
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -77,6 +83,7 @@ function App() {
         groups,
         setGroups,
         addGroupToList,
+        deleteGroup,
         friends,
         addFriendToList,
         memberData,
