@@ -7,6 +7,7 @@ export default {
         'button': '#74779c',
         'hover': '#585875',
         'light-indigo': '#F0F1F5',
+        'border': '#D8DBE5'
       },
       fontFamily: {
         geologica: ['Geologica', 'sans-serif'],

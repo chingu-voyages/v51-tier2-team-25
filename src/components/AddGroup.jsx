@@ -4,12 +4,12 @@ import toast from "react-hot-toast";
 import PropTypes from "prop-types";
 import AddMember from "./AddMember";
 import SearchBar from "./SearchBar";
-import MemberOnGroup from "./MembersOnGroup";
+import MembersOnGroup from "./MembersOnGroup";
 
 // eslint-disable-next-line react/prop-types
 
 export default function AddGroup({ closeAddGroupModal }) {
-  //I'm using context but we can use props
+  
   const { addGroupToList } = useContext(AppContext);
 
   //Maybe move this to a helper function also maybe use uuid library?
@@ -57,17 +57,15 @@ export default function AddGroup({ closeAddGroupModal }) {
     toast("New group added");
   };
 
+  //to ensure member has id
   function addMemberToGroup(newMember) {
+    const memberWithId = {...newMember, id: generateGroupId()}
     setGroupsData((prevData) => ({
       ...prevData,
-      members: [...prevData.members, newMember],
+      members: [...prevData.members, memberWithId],
     }));
   }
 
-  //Add proptypes validation for eslint
-  AddGroup.propTypes = {
-    closeAddGroupModal: PropTypes.func.isRequired,
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
@@ -135,7 +133,7 @@ export default function AddGroup({ closeAddGroupModal }) {
             </div>
             <AddMember addMemberToGroup={addMemberToGroup} />
             <SearchBar />
-            <MemberOnGroup groupMembers={groupsData.members} />
+            <MembersOnGroup groupMembers={groupsData.members} />
 
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">
               <button
@@ -157,4 +155,10 @@ export default function AddGroup({ closeAddGroupModal }) {
       </div>
     </div>
   );
+
+}
+//Add proptypes validation for eslint
+AddGroup.propTypes = {
+  closeAddGroupModal: PropTypes.func.isRequired,
+
 }

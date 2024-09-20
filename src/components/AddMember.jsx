@@ -4,6 +4,7 @@ import { AppContext } from "../App";
 
 export default function AddMember({ addMemberToGroup }) {
   const { addFriendToList, memberData, setMemberData } = useContext(AppContext);
+  
   const generateMemberId = () => {
     return Math.floor(10000 + Math.random() * 900000);
   };
@@ -18,26 +19,37 @@ export default function AddMember({ addMemberToGroup }) {
   };
 
   const addNewGroupMember = () => {
-    addMemberToGroup(memberData);
+
+    const newMemberData = {
+      ...memberData, 
+      id: memberData.id || generateMemberId()
+    }
+    setMemberData(newMemberData)
+    addMemberToGroup(newMemberData)
+    
     let storedFriendsData =
       JSON.parse(localStorage.getItem("friendsData")) || [];
+
     //append new form data to array
-    storedFriendsData.push({ name: memberData.name, id: memberData.id });
+    storedFriendsData.push({ name: newMemberData.name, id: newMemberData.id });
+
     //save updated array to local storage
     localStorage.setItem("friendsData", JSON.stringify(storedFriendsData));
-    setMemberData((prevMemberData) => ({
-      ...prevMemberData,
+
+    //reset member data
+    setMemberData({
       name: "",
       share: "",
-      id: generateMemberId(),
-    }));
-    addFriendToList({ name: memberData.name, id: memberData.id });
+      id: "",
+   });
+
+    addFriendToList({ name: newMemberData.name, id: newMemberData.id });
   };
 
   return (
     <div className="flex">
       <input
-        className="w-2/6 p-2  m-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
+        className="w-2/6 p-2 m-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
         type="text"
         placeholder="Member name"
         value={memberData.name}
@@ -45,15 +57,17 @@ export default function AddMember({ addMemberToGroup }) {
         onChange={handleMemberDataChange}
       />
       <input
-        className="w-1/6 p-2 m-1  text-left text-gray-500 border border-gray-300 rounded-md h-9"
+        className="w-1/6 p-2 m-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
         type="text"
         placeholder="id"
         value={`#${memberData.id}`}
         name="id"
-        onChange={handleMemberDataChange}
+        // onChange={handleMemberDataChange}
+        readOnly
+        
       />
       <input
-        className="w-1/6 p-2 m-1  text-left text-gray-500 border border-gray-300 rounded-md h-9"
+        className="w-1/6 p-2 m-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
         type="text"
         placeholder="Share"
         value={memberData.share}
