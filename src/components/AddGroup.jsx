@@ -155,8 +155,10 @@ export default function AddGroup({ closeAddGroupModal }) {
       </div>
     </div>
   );
+
 }
 //Add proptypes validation for eslint
 AddGroup.propTypes = {
   closeAddGroupModal: PropTypes.func.isRequired,
+
 }
