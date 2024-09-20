@@ -127,15 +127,9 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
             >
               Edit group
             </button>
-
-
-
-            </div>
-
+          </div>
         </div>
-        
       </form>
-
       </div>
     </div>
       );
