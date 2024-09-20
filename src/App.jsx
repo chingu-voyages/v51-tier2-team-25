@@ -75,6 +75,7 @@ function App() {
     <AppContext.Provider
       value={{
         groups,
+        setGroups,
         addGroupToList,
         friends,
         addFriendToList,
