@@ -5,105 +5,135 @@ import PropTypes from 'prop-types'
 
 // eslint-disable-next-line react/prop-types
 
-export default function AddGroup({ closeAddGroupModal }) {
-  
-  const { addGroupToList } = useContext(AppContext);
 
-  //Maybe move this to a helper function also maybe use uuid library?
-  const generateGroupId = () => {
+export default function AddExpense({ closeAddExpense }) {
+  //I'm using context but we can use props
+  const { addExpenseToList } = useContext(AppContext);
+
+   //Maybe move this to a helper function also maybe use uuid library?
+   const generateGroupId = () => {
     return Math.floor(10000 + Math.random() * 900000);
   };
-
-  //render groupID to be visible on form
-  const renderGroupId = () => {
-    return groupsData.id ? <p className='absolute top-0 p-0 m-0 text-xs text-gray-400 right-8'>#{groupsData.id}</p> : null
-  }
-
+  // const generateDate = () =>{
+    
+  // }
+  
   // Initialize state for groupsData
-  const [groupsData, setGroupsData] = useState({
+  const [expensesData, setExpensesData] = useState({
     name: "",
-    id: generateGroupId(),
-    description:"",
-    allottedBudget:"",
+    amount:"",
+    date:"",
+    category:"",
+    description:'',
+    id:generateGroupId(),
   });
 
   // Handle input changes and updates form data state
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setGroupsData((prevGroupsData) => ({
-      ...prevGroupsData,
+    setExpensesData((prevExpensesData) => ({
+      ...prevExpensesData,
       [name]: value,
     }));
   };
 
-  const addNewGroup = (event) => {
+  const addNewExpense = (event) => {
     event.preventDefault();
     //get stored data from local storage or initialize array
-    let storedGroupData = JSON.parse(localStorage.getItem("groupsData")) || [];
+    let storedExpenseData = JSON.parse(localStorage.getItem("expensesData")) || [];
     //append new form data to array
-    storedGroupData.push(groupsData);
+    storedExpenseData.push(expensesData);
     //save updated array to local storage
-    localStorage.setItem("groupsData", JSON.stringify(storedGroupData));
-    addGroupToList(groupsData);
-    closeAddGroupModal();
-    toast("New group added");
+    localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
+    addExpenseToList(expensesData);
+    closeAddExpense();
+    toast("New expense added");
   };
-
-  
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
       <div className="relative border border-black-100 w-[535px] h-[625px] rounded-md p-6 bg-zinc-50 flex flex-col m-8 font-geologica">
         
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-black-200">
-          <h1 className="p-0 text-md">New Group</h1>
+          <h1 className="p-0 text-md">New Expense</h1>
           <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
         </div>
         
         <form
-          onSubmit={addNewGroup}
+          onSubmit={addNewExpense}
           className="flex flex-col flex-1 gap-6 overflow-auto border border-none"
         >
           <div className="flex flex-col">
             <div className='flex items-center'>
-              <img src='../public/images/placeholder.jpg' className='border border-none rounded-full w-[80px] h-[80px] mr-4'/>
+              
               <div className='relative flex flex-col'>
                 <label className="text-sm">
-                Group name*
+                Expense name*
                   <input
                     className="w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
                     type="text"
                     name="name"
-                    value={groupsData.name}
+                    value={expensesData.name}
                     onChange={handleChange}
                     maxLength="30"
                     required
                   />
                 </label>
-                {renderGroupId()}
+                
             </div>            
 
             <label className='ml-2 text-sm'>
-              Allotted budget
+              Amount*
               <input 
                 className='w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9'
                 type='number'
                 step='0.01'
                 min='0'
-                name='allottedBudget'
-                value={groupsData.allottedBudget}
+                name='amount'
+                value={expensesData.amount}
                 onChange={handleChange}
                 required
               />
             </label>
             </div>
+            <div className='flex items-center'>
+              <label className='text-sm'>
+                Date*
+                <input 
+                  className='w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9'
+                  type='date'
+                  name='date'
+                  value={expensesData.date}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+
+              <label className='ml-2 text-sm'>
+                Category*
+                <select
+                  className='w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9'
+                  name='category'
+                  value={expensesData.category}
+                  onChange={handleChange}
+                  required
+                  >
+                    <option value=''>--</option>
+                    <option value='cat1'>Category-1</option>
+                    <option value='cat2'>Category-2</option>
+                    <option value='cat3'>Category-3</option>
+                </select>              
+              </label>
+            </div>
+
+            
             
             <label className='flex flex-col pt-4 text-sm '>
-              Group description*
+              Expense description*
               <textarea 
                 className='border border-gray-300 rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500'              
                 name='description'
-                value={groupsData.description}
+                value={expensesData.description}
                 onChange={handleChange}
                 required
               />
@@ -111,13 +141,16 @@ export default function AddGroup({ closeAddGroupModal }) {
 
             {/* TODO PLACEHOLDER */}
             <div className='pt-4 mb-auto'>
-              <p className='text-gray-200'>placeholder</p>
+              <p className='border border-gray-300 rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500'>placeholder to add receipt</p>
+            </div>
+            <div className='pt-4 mb-auto'>
+              <p className='border border-gray-300 rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500'>placeholder to add friends</p>
             </div>
             
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">
               <button
                 type={"button"}
-                onClick={closeAddGroupModal}
+                onClick={closeAddExpense}
                 className="mr-2 text-sm"
               >
                 Close
@@ -126,7 +159,7 @@ export default function AddGroup({ closeAddGroupModal }) {
                 type={"submit"}
                 className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
               >
-                Create group
+                Create expense
               </button>
             </div>
           </div>
@@ -135,9 +168,8 @@ export default function AddGroup({ closeAddGroupModal }) {
     </div>     
 
   );
-
 }
 //Add proptypes validation for eslint
-AddGroup.propTypes = {
-  closeAddGroupModal: PropTypes.func.isRequired,
+AddExpense.propTypes = {
+  closeAddExpense: PropTypes.func.isRequired,
 }
