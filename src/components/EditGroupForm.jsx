@@ -117,7 +117,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
             </button>
             <button
               onClick={() => console.log("This group is deleted!")}
-              className="px-3 py-2 mr-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
+              className="px-3 py-2 mr-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo bg-red-600"
             >
               Delete group
             </button>
