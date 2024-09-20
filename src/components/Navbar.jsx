@@ -1,19 +1,23 @@
 import { NavLink } from "react-router-dom";
 import { useState, useContext } from "react";
-import GroupForm from "./GroupForm.jsx";
+import AddGroup from "./AddGroup.jsx";
 import { AppContext } from "../App";
 
 import AddFriend from "./AddFriend.jsx";
 
 export default function Navbar() {
+
+  // TESTING ONLY to clear local storage -REMOVE
+  // localStorage.clear()
+  
   const [isAddGroupModalOpen, setIsAddGroupModalOpen] = useState(false);
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
   const { groups, friends } = useContext(AppContext);
 
-  function openModal() {
+  function openAddGroupModal() {
     setIsAddGroupModalOpen(true);
   }
-  function closeModal() {
+  function closeAddGroupModal() {
     setIsAddGroupModalOpen(false);
   }
   function openAddFriendModal() {
@@ -25,77 +29,84 @@ export default function Navbar() {
   }
 
   return (
-    <aside className="w-1/4 p-4 flex flex-col">
-      <nav className="h-screen">
-        <ul className="space-y-4">
-          <li className="block py-2 px-4 ">Brand Name</li>
-          <li>
-            <NavLink
-              className="block py-2 px-4 rounded hover:bg-blue-700"
-              to="/"
-            >
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              className="block py-2 px-4 rounded hover:bg-blue-700"
+    <aside className="flex flex-col h-screen p-12 w-80 font-geologica">
+      <nav className="">
+        <div className='flex items-center pb-12'>
+          <img src='../public/images/placeholder.jpg' className='w-8 h-8 mr-2 border border-none rounded-full'/>
+          <p className="block text-lg">Brand Name</p>
+        </div>
+        <div className='flex items-center py-1 my-2 rounded hover:bg-light-indigo'>
+          <img src='../public/images/home_icon.png' className='mr-2'/>
+          <NavLink
+            className="block"
+            to="/"
+          >
+            Home
+          </NavLink>
+        </div>
+        <div className='flex items-center py-1 my-6 rounded hover:bg-light-indigo'>
+          <img src='../public/images/profile_icon.png' className='mr-2'/>
+          <NavLink
+              className="block"
               to="/profile"
             >
               Profile
             </NavLink>
-          </li>
+        </div>
 
-          <li>
-            <div className="flex justify-between items-center py-2 px-4 rounded hover:bg-blue-700">
-              <span>Groups</span>
+        <ul >
+          <li className="pt-6">
+            <div className="flex items-center justify-between py-2">
+              <span className="text-gray-400">Groups</span>
               <button
-                onClick={openModal}
-                className="bg-amber-500 text-black py-1 px-2 rounded hover:bg-amber-600"
+                onClick={openAddGroupModal}
+                className="w-6 h-6 text-center rounded-md text-light-indigo bg-button hover:bg-hover"
               >
                 +
               </button>
             </div>
             {groups.length > 0 && (
-              <ul className="ml-4 mt-2 space-y-2">
+              <ul className="">
                 {groups.map((group) => (
-                  <li key={group.groupId}>
+                  <li key={group.id} className="flex items-center py-1 my-2 rounded hover:bg-light-indigo">
+                    <img
+                      src="../public/images/profilePlaceHolder.png"
+                      className="w-6 h-6 mr-2 border border-none rounded-full"
+                    />
                     <NavLink
-                      className="block py-1 px-2 rounded hover:bg-blue-700"
-                      to={`/group/${group.groupId}`}
+                      className="block "
+                      to={`/group/${group.id}`}
                     >
-                      {group.groupName}
+                      {group.name}
                     </NavLink>
                   </li>
                 ))}
               </ul>
             )}
           </li>
-          <li>
-            <div className="flex justify-between items-center py-2 px-4 rounded hover:bg-blue-700">
-              <span>Friends</span>
+          <li className="pt-6">
+            <div className="flex items-center justify-between py-2">
+              <span className="text-gray-400">Friends</span>
               <button
-
                 onClick={openAddFriendModal}
-
-                className="bg-amber-500 text-black py-1 px-2 rounded hover:bg-amber-600"
+                className="w-6 h-6 text-center rounded-md text-light-indigo bg-button hover:bg-hover"
               >
                 +
               </button>
             </div>
             {friends.length > 0 && (
-              <ul className="ml-4 mt-2 space-y-2">
+              <ul className="">
                 {friends.map((friend) => (
 
-                  <li key={friend.id} className="flex items-center">
+                  <li key={friend.id} className="flex items-center py-1 my-2 rounded hover:bg-light-indigo">
                     <img
-                      src="./public/images/profilePlaceholder.jpg"
-                      className="border border-none rounded-full  mr-4"
+                      src="../public/images/profilePlaceHolder.png"
+                      className="w-6 h-6 mr-2 border border-none rounded-full"
                     />
 
 
                     <NavLink
-                      className="block py-1 px-2 rounded hover:bg-blue-700"
+                      className="block"
                       to={`/friend/${friend.id}`}
                     >
                       {friend.name}
@@ -108,7 +119,9 @@ export default function Navbar() {
         </ul>
       </nav>
 
-      {isAddGroupModalOpen && <GroupForm closeModal={closeModal} />}
+      {isAddGroupModalOpen && (
+        <AddGroup closeAddGroupModal={closeAddGroupModal} />
+      )}
       {isAddFriendModalOpen && (
         <AddFriend closeAddFriendMenu={closeAddFriendMenu} />
       )}

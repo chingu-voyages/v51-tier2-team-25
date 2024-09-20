@@ -10,15 +10,16 @@ export const AppContext = createContext([]);
 
 function App() {
   const [groups, setGroups] = useState(
-    JSON.parse(localStorage.getItem("formData")) || []
+    JSON.parse(localStorage.getItem("groupsData")) || []
   );
   const [friends, setFriends] = useState(
     JSON.parse(localStorage.getItem("friendsData")) || []
   );
 
-  function addNewGroup(newGroup) {
-    setGroups([...groups, newGroup]);
-  }
+  const [memberData, setMemberData] = useState({ name: "", id: "" });
+  // function addNewGroup(newGroup) {
+  //   setGroups([...groups, newGroup]);
+  // }
 
   // function editGroup(groupIdToEdit) {}
 
@@ -33,14 +34,20 @@ function App() {
     setFriends((prevFriends) => [...prevFriends, newFriend]);
   }
 
+  function addGroupToList(newGroup) {
+    console.log(newGroup);
+    setGroups((prevGroups) => [...prevGroups, newGroup]);
+  }
+
   // function deleteFriendFromList(friendToDeleteId) {
   //   setFriends((prevFriends) =>
   //     prevFriends.filter((friend) => friend.id !== friendToDeleteId)
   //   );
   // }
+
   function deleteGroup(groupId) {
     setGroups((prevGroups) =>
-      prevGroups.filter((group) => group !== groupId)
+      prevGroups.filter((group) => group.id !== groupId)
     );
   }
 
@@ -72,7 +79,16 @@ function App() {
 
   return (
     <AppContext.Provider
-      value={{ groups, addNewGroup, deleteGroup, friends, addFriendToList }}
+      value={{
+        groups,
+        setGroups,
+        addGroupToList,
+        deleteGroup,
+        friends,
+        addFriendToList,
+        memberData,
+        setMemberData,
+      }}
     >
       <RouterProvider router={router} />
     </AppContext.Provider>
