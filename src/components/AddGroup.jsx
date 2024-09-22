@@ -3,13 +3,12 @@ import { AppContext } from "../App";
 import toast from "react-hot-toast";
 import PropTypes from "prop-types";
 import AddMember from "./AddMember";
-import SearchBar from "./SearchBar";
 import MembersOnGroup from "./MembersOnGroup";
+import GroupType from "./GroupType";
 
 // eslint-disable-next-line react/prop-types
 
 export default function AddGroup({ closeAddGroupModal }) {
-  
   const { addGroupToList } = useContext(AppContext);
 
   //Maybe move this to a helper function also maybe use uuid library?
@@ -32,6 +31,7 @@ export default function AddGroup({ closeAddGroupModal }) {
     id: generateGroupId(),
     description: "",
     allottedBudget: "",
+    type: "",
     members: [],
   });
 
@@ -46,6 +46,10 @@ export default function AddGroup({ closeAddGroupModal }) {
 
   const addNewGroup = (event) => {
     event.preventDefault();
+    if (groupsData.type === "") {
+      toast("Please select a type");
+      return;
+    }
     //get stored data from local storage or initialize array
     let storedGroupData = JSON.parse(localStorage.getItem("groupsData")) || [];
     //append new form data to array
@@ -59,13 +63,25 @@ export default function AddGroup({ closeAddGroupModal }) {
 
   //to ensure member has id
   function addMemberToGroup(newMember) {
-    const memberWithId = {...newMember, id: generateGroupId()}
+    // const memberWithId = { ...newMember, id: generateGroupId() };
     setGroupsData((prevData) => ({
       ...prevData,
-      members: [...prevData.members, memberWithId],
+      members: [...prevData.members, newMember],
     }));
   }
 
+  function deleteMemberFromGroup(memberToDelete) {
+    setGroupsData((prevData) => ({
+      ...prevData,
+      members: prevData.members.filter(
+        (member) => member.id !== memberToDelete.id
+      ),
+    }));
+  }
+
+  function updateGroupType(typeSelected) {
+    setGroupsData((prevData) => ({ ...prevData, type: typeSelected }));
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
@@ -127,13 +143,18 @@ export default function AddGroup({ closeAddGroupModal }) {
               />
             </label>
 
-            {/* TODO PLACEHOLDER */}
-            <div className="pt-4 mb-auto">
-              <p className="text-gray-200">placeholder</p>
-            </div>
-            <AddMember addMemberToGroup={addMemberToGroup} />
-            <SearchBar />
-            <MembersOnGroup groupMembers={groupsData.members} />
+            <GroupType
+              groupsData={groupsData}
+              updateGroupType={updateGroupType}
+            />
+            <AddMember
+              addMemberToGroup={addMemberToGroup}
+              groupMembers={groupsData.members}
+            />
+            <MembersOnGroup
+              groupMembers={groupsData.members}
+              deleteMemberFromGroup={deleteMemberFromGroup}
+            />
 
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">
               <button
@@ -155,10 +176,8 @@ export default function AddGroup({ closeAddGroupModal }) {
       </div>
     </div>
   );
-
 }
 //Add proptypes validation for eslint
 AddGroup.propTypes = {
   closeAddGroupModal: PropTypes.func.isRequired,
-
-}
+};

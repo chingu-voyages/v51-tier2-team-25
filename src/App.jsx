@@ -17,49 +17,32 @@ function App() {
   );
   const [expenses, setExpenses] = useState(
     JSON.parse(localStorage.getItem("expensesData")) || []
-  )
-
-  const [memberData, setMemberData] = useState({ name: "",share:"", id: "" });
-
-  // function addNewGroup(newGroup) {
-  //   setGroups([...groups, newGroup]);
-  // }
-
-  // function editGroup(groupIdToEdit) {}
-
-  // function deleteGroup(groupIdToDelete) {
-  //   setGroups((prevGroups) =>
-  //     prevGroups.filter((group) => group !== groupIdToDelete)
-  //   );
-  // }
+  );
+  const [memberData, setMemberData] = useState({ name: "", share: "", id: "" });
 
   function addFriendToList(newFriend) {
     console.log("addNewFriend-app", newFriend);
-    setFriends((prevFriends) => [...prevFriends, newFriend]);
+    const updatedFriends = [...friends, newFriend];
+    setFriends(updatedFriends);
+    localStorage.setItem("friendsData", JSON.stringify(updatedFriends));
   }
 
   function addGroupToList(newGroup) {
-    console.log("addNewGroup-app",newGroup);
+    console.log("addNewGroup-app", newGroup);
     setGroups((prevGroups) => [...prevGroups, newGroup]);
   }
 
-  function addExpenseToList(newExpense){
-    console.log("addNewExpense-app",newExpense)
-    setExpenses((prevExpenses)=>[...prevExpenses, newExpense])
+  function addExpenseToList(newExpense) {
+    console.log("addNewExpense-app", newExpense);
+    setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
   }
 
-  // function deleteFriendFromList(friendToDeleteId) {
-  //   setFriends((prevFriends) =>
-  //     prevFriends.filter((friend) => friend.id !== friendToDeleteId)
-  //   );
-  // }
-
   function deleteGroup(groupId) {
-    setGroups((prevGroups) =>{
-      const updatedGroups=prevGroups.filter((group) => group.id !== groupId);
+    setGroups((prevGroups) => {
+      const updatedGroups = prevGroups.filter((group) => group.id !== groupId);
       localStorage.setItem("groupsData", JSON.stringify(updatedGroups)); // Update local storage
       return updatedGroups;
-  });
+    });
   }
 
   const router = createBrowserRouter([
@@ -78,7 +61,7 @@ function App() {
         },
         {
           path: "group/:groupId",
-          element: <Groups />,          
+          element: <Groups />,
         },
         {
           path: "friend/:friendId",
@@ -90,7 +73,6 @@ function App() {
 
   return (
     <AppContext.Provider
-
       value={{
         groups,
         setGroups,
@@ -100,10 +82,9 @@ function App() {
         addFriendToList,
         memberData,
         setMemberData,
-        expenses, 
-        addExpenseToList
+        expenses,
+        addExpenseToList,
       }}
-
     >
       <RouterProvider router={router} />
     </AppContext.Provider>

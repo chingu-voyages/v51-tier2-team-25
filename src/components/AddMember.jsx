@@ -1,79 +1,28 @@
 /* eslint-disable react/prop-types */
-import { useContext } from "react";
-import { AppContext } from "../App";
+import { useState } from "react";
+import SearchBar from "./SearchBar";
 
-export default function AddMember({ addMemberToGroup }) {
-  const { addFriendToList, memberData, setMemberData } = useContext(AppContext);
-  
-  const generateMemberId = () => {
-    return Math.floor(10000 + Math.random() * 900000);
-  };
+export default function AddMember({ addMemberToGroup, groupMembers }) {
+  const [newMember, setNewMember] = useState("");
 
-  // Handle input changes and updates form data state
-  const handleMemberDataChange = (event) => {
-    const { name, value } = event.target;
-    setMemberData((prevMemberData) => ({
-      ...prevMemberData,
-      [name]: value,
-    }));
-  };
+  function handleMemberSelected(newMember) {
+    setNewMember(newMember);
+  }
 
   const addNewGroupMember = () => {
-
-    const newMemberData = {
-      ...memberData, 
-      id: memberData.id || generateMemberId()
+    const isMemberAllreadyIncluded = groupMembers.some(
+      (member) =>
+        member.userName.toLowerCase() === newMember.userName.toLowerCase()
+    );
+    if (isMemberAllreadyIncluded) {
+      return;
     }
-    setMemberData(newMemberData)
-    addMemberToGroup(newMemberData)
-    
-    let storedFriendsData =
-      JSON.parse(localStorage.getItem("friendsData")) || [];
-
-    //append new form data to array
-    storedFriendsData.push({ name: newMemberData.name, id: newMemberData.id });
-
-    //save updated array to local storage
-    localStorage.setItem("friendsData", JSON.stringify(storedFriendsData));
-
-    //reset member data
-    setMemberData({
-      name: "",
-      share: "",
-      id: "",
-   });
-
-    addFriendToList({ name: newMemberData.name, id: newMemberData.id });
+    addMemberToGroup(newMember);
   };
 
   return (
-    <div className="flex">
-      <input
-        className="w-2/6 p-2 m-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
-        type="text"
-        placeholder="Member name"
-        value={memberData.name}
-        name="name"
-        onChange={handleMemberDataChange}
-      />
-      <input
-        className="w-1/6 p-2 m-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
-        type="text"
-        placeholder="id"
-        value={`#${memberData.id}`}
-        name="id"
-        // onChange={handleMemberDataChange}
-        readOnly
-        
-      />
-      <input
-        className="w-1/6 p-2 m-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
-        type="text"
-        placeholder="Share"
-        value={memberData.share}
-        name="share"
-        onChange={handleMemberDataChange}
-      />
+    <div className="flex w-full">
+      <SearchBar handleMemberSelected={handleMemberSelected} />
       <button
         onClick={addNewGroupMember}
         type="button"
