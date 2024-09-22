@@ -45,6 +45,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
     setGroups(updatedGroups);
     localStorage.setItem("groupsData", JSON.stringify(updatedGroups)); // Update localStorage
     closeEditGroupFormModal(); // Close the form after saving changes
+    toast(`Changes saved`);
   };
 
   const handleDelete = () => {
