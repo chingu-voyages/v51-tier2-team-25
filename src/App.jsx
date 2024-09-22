@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider} from "react-router-dom";
 import RootLayout from "./pages/Root.jsx";
 import ErrorPage from "./pages/Error.jsx";
 import Profile from "./pages/Profile.jsx";
@@ -7,6 +7,7 @@ import Friends from "./pages/Friends.jsx";
 import Home from "./pages/Home.jsx";
 import { createContext, useState } from "react";
 export const AppContext = createContext([]);
+
 
 function App() {
   const [groups, setGroups] = useState(
@@ -20,6 +21,7 @@ function App() {
   )
 
   const [memberData, setMemberData] = useState({ name: "",share:"", id: "" });
+
 
   // function addNewGroup(newGroup) {
   //   setGroups([...groups, newGroup]);
@@ -51,12 +53,6 @@ function App() {
   }
   console.log("expenses from app", expenses)
 
-  // function deleteFriendFromList(friendToDeleteId) {
-  //   setFriends((prevFriends) =>
-  //     prevFriends.filter((friend) => friend.id !== friendToDeleteId)
-  //   );
-  // }
-
   function deleteGroup(groupId) {
     setGroups((prevGroups) =>{
       const updatedGroups=prevGroups.filter((group) => group.id !== groupId);
@@ -73,7 +69,7 @@ function App() {
       children: [
         {
           path: "",
-          element: <Home />,
+          element: <Home/>,
         },
         {
           path: "profile",
@@ -104,7 +100,7 @@ function App() {
         memberData,
         setMemberData,
         expenses, 
-        addExpenseToList
+        addExpenseToList,
       }}
 
     >
