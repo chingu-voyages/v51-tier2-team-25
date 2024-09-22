@@ -32,6 +32,7 @@ export default function SearchBar() {
     });
   }
 
+
   return (
     <>
       <Select
@@ -46,6 +47,7 @@ export default function SearchBar() {
         options={options}
         filterOption={filterOptions}
         onChange={addSelectionToForm}
+        placeholder="Search in your list of friends"
       />
     </>
   );
