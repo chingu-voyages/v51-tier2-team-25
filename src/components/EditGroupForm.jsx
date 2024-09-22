@@ -1,9 +1,13 @@
 import PropTypes from 'prop-types';
 import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../App";
+import { useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast";
+
 
 export default function EditGroupForm({ group, closeEditGroupFormModal }) {
   const { groups, setGroups, deleteGroup } = useContext(AppContext); // Get groups and setter from context
+  const navigate = useNavigate();
 
   // Temporary state for handling input changes
   const [tempGroupData, setTempGroupData] = useState({
@@ -44,8 +48,11 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
   };
 
   const handleDelete = () => {
+    const groupName = tempGroupData.name;
     deleteGroup(group.id); // Call deleteGroup with the group's ID
     closeEditGroupFormModal(); // Close the form after deletion
+    navigate("/");
+    toast(`Group ${groupName} was deleted`);
   };
 
   return (
