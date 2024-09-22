@@ -18,7 +18,20 @@ function App() {
   const [expenses, setExpenses] = useState(
     JSON.parse(localStorage.getItem("expensesData")) || []
   );
+
   const [memberData, setMemberData] = useState({ name: "", share: "", id: "" });
+
+  // function addNewGroup(newGroup) {
+  //   setGroups([...groups, newGroup]);
+  // }
+
+  // function editGroup(groupIdToEdit) {}
+
+  // function deleteGroup(groupIdToDelete) {
+  //   setGroups((prevGroups) =>
+  //     prevGroups.filter((group) => group !== groupIdToDelete)
+  //   );
+  // }
 
   function addFriendToList(newFriend) {
     console.log("addNewFriend-app", newFriend);
