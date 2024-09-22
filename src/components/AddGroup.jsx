@@ -41,12 +41,11 @@ export default function AddGroup({ closeAddGroupModal }) {
   const handleChange = (event) => {
     const { name, value } = event.target;
     const newValue =event.target.value
-    newValue.trim() === '' ? toast("Input cannot be empty or contain only spaces"):
+    newValue.trim() === '' && newValue.length >0 ? toast("Input cannot be empty or contain only spaces"):
     setGroupsData((prevGroupsData) => ({
       ...prevGroupsData,
       [name]: value,
-    }));
-    
+    }));    
     
   };
 
