@@ -136,7 +136,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
               type="submit"
               className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
             >
-              Edit group
+              Save
             </button>
           </div>
         </div>
