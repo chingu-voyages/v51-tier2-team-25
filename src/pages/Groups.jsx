@@ -32,8 +32,13 @@ export default function Groups() {
     <>
       <div className='flex flex-col w-2/3 min-w-[785px] gap-6 font-geologica'>
         <div className='p-6 mt-12 border rounded-md border-border bg-zinc-50'>
-          <div className='flex w-full justify-between'>
-            <img className='w-32 h-32 rounded-full' src='../public/images/placeholder.jpg'/>
+          <div className='flex w-full justify-between relative'>
+            <div className='relative'>
+              <img className='w-32 h-32 rounded-full p-3' src='../public/images/placeholder.jpg'/>
+              <div className="absolute left-1/2 bottom-0 transform -translate-x-1/2 bg-white text-gray-700 px-2 py-1 rounded-xl border-2 text-xs font-light">
+                {currentGroup?.category}
+              </div>
+            </div>
             <div>
               <div className="flex item-center items-center">
                 <h1 className='text-2xl'>{currentGroup?.name}</h1>
