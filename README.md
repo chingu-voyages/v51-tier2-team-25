@@ -49,6 +49,7 @@ This project is built by a talented team. You can find their GitHub and LinkedIn
 - **Leonardo**: [GitHub](https://github.com/Leonardostdesign) / [LinkedIn](https://www.linkedin.com/in/leonardostdesign/)
 - **Satomi Li**: [GitHub](https://github.com/Satomili) / [LinkedIn](https://www.linkedin.com/in/satomili/)
 - **Patrick Pate**: [GitHub](https://github.com/patpate89) / [LinkedIn](https://www.linkedin.com/in/patrick-pate/)
+- **Lamont R. Thompson**: [GitHub](https://github.com/lthompson1206) / [LinkedIn](https://www.linkedin.com/in/lamont-thompson-psm-saa/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app)
 
 ---
 

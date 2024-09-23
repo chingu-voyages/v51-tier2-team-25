@@ -3,15 +3,13 @@ import { AppContext } from "../App";
 import toast from "react-hot-toast";
 import PropTypes from "prop-types";
 import AddMember from "./AddMember";
-import SearchBar from "./SearchBar";
 import MembersOnGroup from "./MembersOnGroup";
 import GroupTypeSelection from "./GroupTypeSelection";
 
 // eslint-disable-next-line react/prop-types
 
 export default function AddGroup({ closeAddGroupModal }) {
-  
-  const { addGroupToList} = useContext(AppContext);
+  const { addGroupToList } = useContext(AppContext);
 
   //Maybe move this to a helper function also maybe use uuid library?
   const generateGroupId = () => {
@@ -25,9 +23,8 @@ export default function AddGroup({ closeAddGroupModal }) {
     description: "",
     allottedBudget: "",
     members: [],
-    category:"",
+    category: "",
   });
-
 
   //render groupID to be visible on form
   const renderGroupId = () => {
@@ -41,17 +38,21 @@ export default function AddGroup({ closeAddGroupModal }) {
   // Handle input changes and updates form data state
   const handleChange = (event) => {
     const { name, value } = event.target;
-    const newValue =event.target.value
-    newValue.trim() === '' && newValue.length >0 ? toast("Input cannot be empty or contain only spaces"):
-    setGroupsData((prevGroupsData) => ({
-      ...prevGroupsData,
-      [name]: value,
-    }));    
-    
+    const newValue = event.target.value;
+    newValue.trim() === "" && newValue.length > 0
+      ? toast("Input cannot be empty or contain only spaces")
+      : setGroupsData((prevGroupsData) => ({
+          ...prevGroupsData,
+          [name]: value,
+        }));
   };
 
   const addNewGroup = (event) => {
     event.preventDefault();
+    if (groupsData.category === "") {
+      toast("Please select a category");
+      return;
+    }
     //get stored data from local storage or initialize array
     let storedGroupData = JSON.parse(localStorage.getItem("groupsData")) || [];
     //append new form data to array
@@ -65,22 +66,20 @@ export default function AddGroup({ closeAddGroupModal }) {
 
   //to ensure member has id
   function addMemberToGroup(newMember) {
-    //check if member is in group
-    const isAlreadyMember = groupsData.members.some(
-      (member)=> member.id === newMember.id
-    )
-    if(isAlreadyMember){
-      toast("Member is already in the group")
-      return //no changes to state
-    }
-    //Add new member to group members list    
-    setGroupsData((prevData) => ({      
-        ...prevData,
-        members: [...prevData.members, newMember],  
+    setGroupsData((prevData) => ({
+      ...prevData,
+      members: [...prevData.members, newMember],
     }));
-    
   }
 
+  function deleteMemberFromGroup(memberToDelete) {
+    setGroupsData((prevData) => ({
+      ...prevData,
+      members: prevData.members.filter(
+        (member) => member.id !== memberToDelete.id
+      ),
+    }));
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-gray-800 bg-opacity-75">
@@ -145,22 +144,19 @@ export default function AddGroup({ closeAddGroupModal }) {
                 rows={6}
               />
             </label>
-            
-            <GroupTypeSelection 
+
+            <GroupTypeSelection
               handleChange={handleChange}
               groupsData={groupsData}
             />
-            
-            <div className="pt-4 mb-auto">
-              <p className="text-gray-200"></p>
-            </div>
-            <div className="flex items-center w-full " >
-              <div className='flex-grow'>
-                <SearchBar className=''/>
-              </div>              
-              <AddMember addMemberToGroup={addMemberToGroup} />
-            </div>
-            <MembersOnGroup groupMembers={groupsData.members} />
+            <AddMember
+              addMemberToGroup={addMemberToGroup}
+              groupMembers={groupsData.members}
+            />
+            <MembersOnGroup
+              groupMembers={groupsData.members}
+              deleteMemberFromGroup={deleteMemberFromGroup}
+            />
 
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">
               <button
@@ -182,10 +178,8 @@ export default function AddGroup({ closeAddGroupModal }) {
       </div>
     </div>
   );
-
 }
 //Add proptypes validation for eslint
 AddGroup.propTypes = {
   closeAddGroupModal: PropTypes.func.isRequired,
-
-}
+};

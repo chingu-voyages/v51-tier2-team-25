@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./pages/Root.jsx";
 import ErrorPage from "./pages/Error.jsx";
 import Profile from "./pages/Profile.jsx";
@@ -7,7 +7,6 @@ import Friends from "./pages/Friends.jsx";
 import Home from "./pages/Home.jsx";
 import { createContext, useState } from "react";
 export const AppContext = createContext([]);
-
 
 function App() {
   const [groups, setGroups] = useState(
@@ -18,47 +17,35 @@ function App() {
   );
   const [expenses, setExpenses] = useState(
     JSON.parse(localStorage.getItem("expensesData")) || []
-  )
-
-  const [memberData, setMemberData] = useState({ name: "",share:"", id: "" });
-
-
-  // function addNewGroup(newGroup) {
-  //   setGroups([...groups, newGroup]);
-  // }
-
-  // function editGroup(groupIdToEdit) {}
-
-  // function deleteGroup(groupIdToDelete) {
-  //   setGroups((prevGroups) =>
-  //     prevGroups.filter((group) => group !== groupIdToDelete)
-  //   );
-  // }
+  );
+  const [memberData, setMemberData] = useState({ name: "", share: "", id: "" });
 
   function addFriendToList(newFriend) {
     console.log("addNewFriend-app", newFriend);
-    setFriends((prevFriends) => [...prevFriends, newFriend]);    
+    const updatedFriends = [...friends, newFriend];
+    setFriends(updatedFriends);
+    localStorage.setItem("friendsData", JSON.stringify(updatedFriends));
   }
-  console.log("friends from app", friends)
+  console.log("friends from app", friends);
 
   function addGroupToList(newGroup) {
-    console.log("addNewGroup-app",newGroup);
+    console.log("addNewGroup-app", newGroup);
     setGroups((prevGroups) => [...prevGroups, newGroup]);
   }
-  console.log("groups from app:", groups)
+  console.log("groups from app:", groups);
 
-  function addExpenseToList(newExpense){
-    console.log("addNewExpense-app",newExpense)
-    setExpenses((prevExpenses)=>[...prevExpenses, newExpense])
+  function addExpenseToList(newExpense) {
+    console.log("addNewExpense-app", newExpense);
+    setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
   }
-  console.log("expenses from app", expenses)
+  console.log("expenses from app", expenses);
 
   function deleteGroup(groupId) {
-    setGroups((prevGroups) =>{
-      const updatedGroups=prevGroups.filter((group) => group.id !== groupId);
+    setGroups((prevGroups) => {
+      const updatedGroups = prevGroups.filter((group) => group.id !== groupId);
       localStorage.setItem("groupsData", JSON.stringify(updatedGroups)); // Update local storage
       return updatedGroups;
-  });
+    });
   }
 
   const router = createBrowserRouter([
@@ -69,7 +56,7 @@ function App() {
       children: [
         {
           path: "",
-          element: <Home/>,
+          element: <Home />,
         },
         {
           path: "profile",
@@ -77,7 +64,7 @@ function App() {
         },
         {
           path: "group/:groupId",
-          element: <Groups />,          
+          element: <Groups />,
         },
         {
           path: "friend/:friendId",
@@ -89,7 +76,6 @@ function App() {
 
   return (
     <AppContext.Provider
-
       value={{
         groups,
         setGroups,
@@ -99,12 +85,11 @@ function App() {
         addFriendToList,
         memberData,
         setMemberData,
-        expenses, 
+        expenses,
         addExpenseToList,
       }}
-
     >
-    <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </AppContext.Provider>
   );
 }
