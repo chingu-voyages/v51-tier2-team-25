@@ -3,6 +3,7 @@ import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../App";
 import { useNavigate } from 'react-router-dom';
 import toast from "react-hot-toast";
+import GroupTypeSelection from "./GroupTypeSelection";
 import AddMember from "./AddMember";
 import MembersOnGroup from "./MembersOnGroup";
 export default function EditGroupForm({ group, closeEditGroupFormModal }) {
@@ -132,10 +133,10 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
               />
             </label>
 
-            {/* TODO PLACEHOLDER */}
-            <div className='pt-4 mb-auto'>
-              <p className='text-gray-200'>placeholder</p>
-            </div>
+            <GroupTypeSelection
+              handleChange={handleChange}
+              groupsData={tempGroupData} // Pass the updated tempGroupData
+            />
 
             <AddMember
               addMemberToGroup={addMemberToGroup}
