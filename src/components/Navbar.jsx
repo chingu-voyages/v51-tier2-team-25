@@ -37,13 +37,13 @@ export default function Navbar() {
           <p className="block text-lg">Brand Name</p>
         </div>
         <div className="flex items-center py-1 my-2 rounded hover:bg-light-indigo">
-          <img src="../public/images/home_icon.png" className="mr-2" />
+          <img src="../public/images/Home.svg" className="mr-2" />
           <NavLink className="block" to="/">
             Home
           </NavLink>
         </div>
         <div className="flex items-center py-1 my-6 rounded hover:bg-light-indigo">
-          <img src="../public/images/profile_icon.png" className="mr-2" />
+          <img src="../public/images/Profile.svg" className="mr-2" />
           <NavLink className="block" to="/profile">
             Profile
           </NavLink>

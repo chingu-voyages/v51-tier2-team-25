@@ -5,8 +5,8 @@ export default function MembersOnGroup({
   deleteMemberFromGroup,
 }) {
   const noMembersMessage = (
-    <div className="flex items-star m-2">
-      <img src="../public/images/profile_icon.png" className="m-2" />
+    <div className="flex items-center m-2">
+      <img src="../public/images/Profile.svg" className="m-2" />
       <p className="text-xs text-gray-500">
         There is no one added to expense yet. Try searching and adding from your
         friend list or quickly add someone by entering their user name
@@ -20,11 +20,11 @@ export default function MembersOnGroup({
     <ul className="flex flex-wrap">
       {groupMembers.map((member) => (
         <li
-          className=" flex justify-items-start items-center w-2/6  p-2 m-1 text-sm bg-gray-300 rounded-xl"
+          className="flex items-center w-2/6 p-2 m-1 text-sm bg-gray-300 rounded-md justify-items-start"
           key={member.id}
         >
           <button
-            className="mx-2 hover:bg-hover border rounded-md p-1 h-4 flex items-center border-current"
+            className="flex items-center h-4 p-1 mx-2 border border-current rounded-md hover:bg-hover"
             onClick={() => deleteMemberFromGroup(member)}
           >
             x
