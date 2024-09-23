@@ -32,25 +32,30 @@ export default function Groups() {
     <>
       <div className='flex flex-col w-2/3 min-w-[785px] gap-6 font-geologica'>
         <div className='p-6 mt-12 border rounded-md border-border bg-zinc-50'>
-          <div className='flex'>
-            <img className='w-32 h-32 rounded-full' src='../public/images/placeholder.jpg'/>
-            <div className="relative w-full pl-6">
-              <div className='flex items-center justify-between gap-12'>
-                <div className="flex item-center items-center">
-                  <h1 className='text-2xl'>{currentGroup?.name}</h1>
-                  <p className='pl-2 text-xs text-gray-600'>#{currentGroup?.id}</p>
-                </div>
-                <img className='h-4'src='../public/images/Edit.svg' onClick={openEditGroupFormModal}/>                      
+          <div className='flex w-full relative justify-between'>
+            <div className='relative min-w-max'>
+              <img className='w-32 h-32 rounded-full p-3' src='../public/images/placeholder.jpg'/>
+              <div className="absolute left-1/2 top-24 transform -translate-x-1/2 bg-white text-gray-700 px-2 py-1 rounded-xl border-2 text-xs font-light">
+                {currentGroup?.category}
               </div>
-              <p className='pt-2 text-gray-600 text-s'>{currentGroup?.description}</p>  
-            </div>            
-          </div>                
+            </div>
+            <div className='pl-3 w-full'>
+              <div className="flex item-center items-center">
+                <h1 className='text-2xl'>{currentGroup?.name}</h1>
+                <p className='pl-2 text-xs text-gray-600'>#{currentGroup?.id}</p>
+              </div>
+              <p className='pt-2 text-gray-600 text-xs break-words max-w-xl leading-relaxed'>
+                {currentGroup?.description}
+              </p>  
+            </div>
+            <img className='h-4'src='../public/images/Edit.svg' onClick={openEditGroupFormModal}/>   
+          </div>
           
           <div className='flex items-end pt-6'>
 
             <div className='flex items-center w-1/2'>
               <img className='w-8 h-8 rounded-full' src='../public/images/placeholder.jpg'/>
-              <p className='pl-2 text-sm text-gray-500'># members</p>
+              <p className='pl-2 text-sm text-gray-500'>{currentGroup?.members.length} members</p>
             </div>
 
             <div className='flex items-center w-full gap-6 place-content-end'>
