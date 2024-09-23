@@ -37,10 +37,19 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
   // Handle input changes in the temporary state
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setTempGroupData({
-      ...tempGroupData,
-      [name]: value,
-    });
+    const newValue = value.trim(); // Trim the value to check for spaces
+
+    // Allow the user to type freely, but validate input for spaces only
+    if (newValue === "" && value !== "") {
+      // Show a toast if the input is only spaces
+      toast("Input cannot be empty or contain only spaces");
+    } else {
+      // Update the state if the input is valid
+      setTempGroupData((prevData) => ({
+        ...prevData,
+        [name]: value, // Allow spaces while typing
+      }));
+    }
   };
 
   // Handle form submission
