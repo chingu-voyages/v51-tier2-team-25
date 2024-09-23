@@ -40,6 +40,16 @@ function App() {
   }
   console.log("expenses from app", expenses);
 
+  function updateGroup(updatedGroup) {
+    setGroups((prevGroups) => {
+      const updatedGroups = prevGroups.map((group) =>
+        group.id === updatedGroup.id ? {...group, ...updatedGroup} : group
+      )
+      localStorage.setItem("groupsData", JSON.stringify(updatedGroups))
+      return updatedGroups
+    })
+  }
+
   function deleteGroup(groupId) {
     setGroups((prevGroups) => {
       const updatedGroups = prevGroups.filter((group) => group.id !== groupId);
@@ -78,7 +88,7 @@ function App() {
     <AppContext.Provider
       value={{
         groups,
-        setGroups,
+        updateGroup,
         addGroupToList,
         deleteGroup,
         friends,

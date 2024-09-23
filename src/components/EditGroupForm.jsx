@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 
 export default function EditGroupForm({ group, closeEditGroupFormModal }) {
-  const { groups, setGroups, deleteGroup } = useContext(AppContext); // Get groups and setter from context
+  const { updateGroup, deleteGroup } = useContext(AppContext); // Get groups and setter from context
   const navigate = useNavigate();
 
   // Temporary state for handling input changes
@@ -39,11 +39,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedGroups = groups.map((g) =>
-      g.id === group.id ? { ...g, ...tempGroupData } : g
-    );
-    setGroups(updatedGroups);
-    localStorage.setItem("groupsData", JSON.stringify(updatedGroups)); // Update localStorage
+    updateGroup({...group, ...tempGroupData}) // Call updateGroup from AppContext
     closeEditGroupFormModal(); // Close the form after saving changes
     toast(`Changes saved`);
   };
