@@ -115,7 +115,7 @@ export default function AddGroup({ closeAddGroupModal }) {
           <div className="flex flex-col">
             <div className="flex items-start">
               <img
-                src="../public/images/placeholder.jpg"
+                src="../images/placeholder.jpg"
                 className="border border-none rounded-full w-[80px] h-[80px] mr-4"
               />
               <div className="relative flex flex-col">

@@ -98,7 +98,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
           <div className="flex flex-col">
             <div className='flex items-center'>
               <img
-                src="../public/images/placeholder.jpg"
+                src="../images/placeholder.jpg"
                 className="border border-none rounded-full w-[80px] h-[80px] mr-4"
               />
               <div className='relative flex flex-col'>
