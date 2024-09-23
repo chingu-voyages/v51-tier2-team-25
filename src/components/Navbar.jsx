@@ -6,10 +6,9 @@ import { AppContext } from "../App";
 import AddFriend from "./AddFriend.jsx";
 
 export default function Navbar() {
-
   // TESTING ONLY to clear local storage -REMOVE
   // localStorage.clear()
-  
+
   const [isAddGroupModalOpen, setIsAddGroupModalOpen] = useState(false);
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
   const { groups, friends } = useContext(AppContext);
@@ -26,35 +25,31 @@ export default function Navbar() {
   function closeAddFriendMenu() {
     setIsAddFriendModalOpen(false);
   }
-  
 
   return (
     <aside className="flex flex-col h-screen p-12 font-geologica">
       <nav className="w-48">
-        <div className='flex items-center pb-12'>
-          <img src='../public/images/placeholder.jpg' className='w-8 h-8 mr-2 border border-none rounded-full'/>
+        <div className="flex items-center pb-12">
+          <img
+            src="../public/images/placeholder.jpg"
+            className="w-8 h-8 mr-2 border border-none rounded-full"
+          />
           <p className="block text-lg">Brand Name</p>
         </div>
-        <div className='flex items-center py-1 my-2 rounded hover:bg-light-indigo'>
-          <img src='../public/images/home_icon.png' className='mr-2'/>
-          <NavLink
-            className="block"
-            to="/"
-          >
+        <div className="flex items-center py-1 my-2 rounded hover:bg-light-indigo">
+          <img src="../public/images/home_icon.png" className="mr-2" />
+          <NavLink className="block" to="/">
             Home
           </NavLink>
         </div>
-        <div className='flex items-center py-1 my-6 rounded hover:bg-light-indigo'>
-          <img src='../public/images/profile_icon.png' className='mr-2'/>
-          <NavLink
-              className="block"
-              to="/profile"
-            >
-              Profile
-            </NavLink>
+        <div className="flex items-center py-1 my-6 rounded hover:bg-light-indigo">
+          <img src="../public/images/profile_icon.png" className="mr-2" />
+          <NavLink className="block" to="/profile">
+            Profile
+          </NavLink>
         </div>
 
-        <ul >
+        <ul>
           <li className="pt-6">
             <div className="flex items-center justify-between py-2">
               <span className="text-gray-400">Groups</span>
@@ -68,15 +63,15 @@ export default function Navbar() {
             {groups.length > 0 && (
               <ul className="">
                 {groups.map((group) => (
-                  <li key={group.id} className="flex items-center py-1 my-2 rounded hover:bg-light-indigo">
+                  <li
+                    key={group.id}
+                    className="flex items-center py-1 my-2 rounded hover:bg-light-indigo"
+                  >
                     <img
                       src="../public/images/profilePlaceHolder.png"
                       className="w-6 h-6 mr-2 border border-none rounded-full"
                     />
-                    <NavLink
-                      className="block "
-                      to={`/group/${group.id}`}
-                    >
+                    <NavLink className="block " to={`/group/${group.id}`}>
                       {group.name}
                     </NavLink>
                   </li>
@@ -97,19 +92,17 @@ export default function Navbar() {
             {friends.length > 0 && (
               <ul className="">
                 {friends.map((friend) => (
-
-                  <li key={friend.id} className="flex items-center py-1 my-2 rounded hover:bg-light-indigo">
+                  <li
+                    key={friend.id}
+                    className="flex items-center py-1 my-2 rounded hover:bg-light-indigo"
+                  >
                     <img
                       src="../public/images/profilePlaceHolder.png"
                       className="w-6 h-6 mr-2 border border-none rounded-full"
                     />
 
-
-                    <NavLink
-                      className="block"
-                      to={`/friend/${friend.id}`}
-                    >
-                      {friend.name}
+                    <NavLink className="block" to={`/friend/${friend.id}`}>
+                      {friend.userName}
                     </NavLink>
                   </li>
                 ))}
@@ -125,7 +118,6 @@ export default function Navbar() {
       {isAddFriendModalOpen && (
         <AddFriend closeAddFriendMenu={closeAddFriendMenu} />
       )}
-
     </aside>
   );
 }
