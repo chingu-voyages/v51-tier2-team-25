@@ -34,7 +34,7 @@ export default function Groups() {
         <div className='p-6 mt-12 border rounded-md border-border bg-zinc-50'>
           <div className='flex w-full relative justify-between'>
             <div className='relative min-w-max'>
-              <img className='w-32 h-32 rounded-full p-3' src='../public/images/placeholder.jpg'/>
+              <img className='w-32 h-32 rounded-full p-3' src='../images/placeholder.jpg'/>
               <div className="absolute left-1/2 top-24 transform -translate-x-1/2 bg-white text-gray-700 px-2 py-1 rounded-xl border-2 text-xs font-light">
                 {currentGroup?.category}
               </div>
@@ -48,13 +48,13 @@ export default function Groups() {
                 {currentGroup?.description}
               </p>  
             </div>
-            <img className='h-4'src='../public/images/Edit.svg' onClick={openEditGroupFormModal}/>   
+            <img className='h-4'src='../images/Edit.svg' onClick={openEditGroupFormModal}/>   
           </div>
           
           <div className='flex items-end pt-6'>
 
             <div className='flex items-center w-1/2'>
-              <img className='w-8 h-8 rounded-full' src='../public/images/placeholder.jpg'/>
+              <img className='w-8 h-8 rounded-full' src='../images/placeholder.jpg'/>
               <p className='pl-2 text-sm text-gray-500'>{currentGroup?.members.length} members</p>
             </div>
 
