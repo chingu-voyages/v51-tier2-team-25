@@ -48,14 +48,14 @@ export default function Groups() {
                 {currentGroup?.description}
               </p>  
             </div>
-            <img className='h-4 border-2'src='../public/images/Edit.svg' onClick={openEditGroupFormModal}/>   
+            <img className='h-4'src='../public/images/Edit.svg' onClick={openEditGroupFormModal}/>   
           </div>
           
           <div className='flex items-end pt-6'>
 
             <div className='flex items-center w-1/2'>
               <img className='w-8 h-8 rounded-full' src='../public/images/placeholder.jpg'/>
-              <p className='pl-2 text-sm text-gray-500'># members</p>
+              <p className='pl-2 text-sm text-gray-500'>{currentGroup?.members.length} members</p>
             </div>
 
             <div className='flex items-center w-full gap-6 place-content-end'>
