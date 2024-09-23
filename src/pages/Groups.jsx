@@ -36,8 +36,10 @@ export default function Groups() {
             <img className='w-32 h-32 rounded-full' src='../public/images/placeholder.jpg'/>
             <div className="relative w-full pl-6">
               <div className='flex items-center justify-between gap-12'>
-                <h1 className='text-2xl'>{currentGroup?.name}</h1>
-                <p className='absolute text-xs text-gray-600 left-28 top-3'>#{currentGroup?.id}</p>
+                <div className="flex item-center items-center">
+                  <h1 className='text-2xl'>{currentGroup?.name}</h1>
+                  <p className='pl-2 text-xs text-gray-600'>#{currentGroup?.id}</p>
+                </div>
                 <img className='h-4'src='../public/images/Edit.svg' onClick={openEditGroupFormModal}/>                      
               </div>
               <p className='pt-2 text-gray-600 text-s'>{currentGroup?.description}</p>  
