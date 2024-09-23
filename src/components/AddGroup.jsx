@@ -11,20 +11,11 @@ import GroupTypeSelection from "./GroupTypeSelection";
 
 export default function AddGroup({ closeAddGroupModal }) {
   
-  const { addGroupToList } = useContext(AppContext);
+  const { addGroupToList} = useContext(AppContext);
 
   //Maybe move this to a helper function also maybe use uuid library?
   const generateGroupId = () => {
     return Math.floor(10000 + Math.random() * 900000);
-  };
-
-  //render groupID to be visible on form
-  const renderGroupId = () => {
-    return groupsData.id ? (
-      <p className="absolute top-0 p-0 m-0 text-xs text-gray-400 right-8">
-        #{groupsData.id}
-      </p>
-    ) : null;
   };
 
   // Initialize state for groupsData
@@ -36,6 +27,16 @@ export default function AddGroup({ closeAddGroupModal }) {
     members: [],
     category:"",
   });
+
+
+  //render groupID to be visible on form
+  const renderGroupId = () => {
+    return groupsData.id ? (
+      <p className="absolute top-0 p-0 m-0 text-xs text-gray-400 right-8">
+        #{groupsData.id}
+      </p>
+    ) : null;
+  };
 
   // Handle input changes and updates form data state
   const handleChange = (event) => {
@@ -64,17 +65,26 @@ export default function AddGroup({ closeAddGroupModal }) {
 
   //to ensure member has id
   function addMemberToGroup(newMember) {
-    const memberWithId = {...newMember, id: generateGroupId()}
-    setGroupsData((prevData) => ({
-      ...prevData,
-      members: [...prevData.members, memberWithId],
+    //check if member is in group
+    const isAlreadyMember = groupsData.members.some(
+      (member)=> member.id === newMember.id
+    )
+    if(isAlreadyMember){
+      toast("Member is already in the group")
+      return //no changes to state
+    }
+    //Add new member to group members list    
+    setGroupsData((prevData) => ({      
+        ...prevData,
+        members: [...prevData.members, newMember],  
     }));
+    
   }
 
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-gray-800 bg-opacity-75">
-      <div className="relative border border-black-100 w-[535px] min-h-[625px] rounded-md p-6 bg-zinc-50 flex flex-col m-8 font-geologica">
+      <div className="relative border border-black-100 w-[535px] h-[625px] rounded-md p-6 bg-zinc-50 flex flex-col m-8 font-geologica">
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-black-200">
           <h1 className="p-0 text-md">New Group</h1>
           <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
@@ -142,7 +152,7 @@ export default function AddGroup({ closeAddGroupModal }) {
             />
             
             <div className="pt-4 mb-auto">
-              <p className="text-gray-200">Group Type*</p>
+              <p className="text-gray-200"></p>
             </div>
             <div className="flex items-center w-full " >
               <div className='flex-grow'>
