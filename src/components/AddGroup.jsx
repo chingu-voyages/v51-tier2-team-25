@@ -16,6 +16,9 @@ export default function AddGroup({ closeAddGroupModal }) {
     return Math.floor(10000 + Math.random() * 900000);
   };
 
+  // Dont allow none numeric keys
+  const blockInvalidChar = (e) => ['e','E','+','-'].includes(e.key) && e.preventDefault()
+
   // Initialize state for groupsData
   const [groupsData, setGroupsData] = useState({
     name: "",
@@ -37,14 +40,29 @@ export default function AddGroup({ closeAddGroupModal }) {
 
   // Handle input changes and updates form data state
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    const newValue = event.target.value;
-    newValue.trim() === "" && newValue.length > 0
-      ? toast("Input cannot be empty or contain only spaces")
-      : setGroupsData((prevGroupsData) => ({
-          ...prevGroupsData,
-          [name]: value,
-        }));
+    const { name, value, type } = event.target; 
+    
+    //check if value is empty or contains only spaces
+    if (value.trim()==="" && value.length > 0){
+      toast("Input cannot be empty or contain only spaces")
+      return
+    }
+
+    //check if value exceeds max allowed
+    if(type === "number"){
+      const newValue=parseFloat(value)
+
+      if(!isNaN(newValue) && newValue > 1000000){
+        toast("Alloted budget cannot exceed $1,000,000")
+        return
+      }
+    }
+
+    setGroupsData((prevGroupsData) => ({
+      ...prevGroupsData,
+      [name]: value,
+    }));
+    
   };
 
   const addNewGroup = (event) => {
@@ -53,6 +71,7 @@ export default function AddGroup({ closeAddGroupModal }) {
       toast("Please select a category");
       return;
     }
+    
     //get stored data from local storage or initialize array
     let storedGroupData = JSON.parse(localStorage.getItem("groupsData")) || [];
     //append new form data to array
@@ -122,10 +141,13 @@ export default function AddGroup({ closeAddGroupModal }) {
                   className="w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
                   type="number"
                   step={0.01}
-                  min={0}
+                  min={0.01}
+                  max={1000000}
+                  maxLength={7}                  
                   name="allottedBudget"
                   value={groupsData.allottedBudget}
                   onChange={handleChange}
+                  onKeyDown={blockInvalidChar}
                   required
                 />
               </label>
