@@ -35,7 +35,7 @@ export default function Groups() {
           <div className='flex w-full relative justify-between'>
             <div className='relative min-w-max'>
               <img className='w-32 h-32 rounded-full p-3' src='../public/images/placeholder.jpg'/>
-              <div className="absolute left-1/2 bottom-0 transform -translate-x-1/2 bg-white text-gray-700 px-2 py-1 rounded-xl border-2 text-xs font-light">
+              <div className="absolute left-1/2 top-24 transform -translate-x-1/2 bg-white text-gray-700 px-2 py-1 rounded-xl border-2 text-xs font-light">
                 {currentGroup?.category}
               </div>
             </div>
