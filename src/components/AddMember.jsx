@@ -27,15 +27,25 @@ export default function AddMember({ addMemberToGroup, groupMembers }) {
   };
 
   return (
-    <div className="flex w-full">
-      <SearchBar handleMemberSelected={handleMemberSelected} />
-      <button
-        onClick={addNewGroupMember}
-        type="button"
-        className="w-2/6 px-4 py-2 m-1 text-sm bg-gray-300 rounded-xl"
-      >
-        Add to group
-      </button>
+    <div>
+      <p className="my-4 text-sm">Add members</p>
+      <div className='flex items-center justify-end'>
+
+        <div className="flex-grow mr-2">
+          <SearchBar handleMemberSelected={handleMemberSelected} />
+        </div>
+        
+        <button
+          onClick={addNewGroupMember}
+          type="button"
+          className="px-3 py-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo"
+        >
+          Add to group
+        </button>
+        
+      </div>
+      
     </div>
+    
   );
 }
