@@ -19,7 +19,8 @@
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.26.2",
     "react-select": "^5.8.1",
-    "sort-by": "^1.2.0"
+    "sort-by": "^1.2.0",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
