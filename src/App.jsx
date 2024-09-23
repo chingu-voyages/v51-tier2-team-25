@@ -37,18 +37,21 @@ function App() {
 
   function addFriendToList(newFriend) {
     console.log("addNewFriend-app", newFriend);
-    setFriends((prevFriends) => [...prevFriends, newFriend]);
+    setFriends((prevFriends) => [...prevFriends, newFriend]);    
   }
+  console.log("friends from app", friends)
 
   function addGroupToList(newGroup) {
     console.log("addNewGroup-app",newGroup);
     setGroups((prevGroups) => [...prevGroups, newGroup]);
   }
+  console.log("groups from app:", groups)
 
   function addExpenseToList(newExpense){
     console.log("addNewExpense-app",newExpense)
     setExpenses((prevExpenses)=>[...prevExpenses, newExpense])
   }
+  console.log("expenses from app", expenses)
 
   function deleteGroup(groupId) {
     setGroups((prevGroups) =>{
@@ -101,7 +104,7 @@ function App() {
       }}
 
     >
-      <RouterProvider router={router} />
+    <RouterProvider router={router} />
     </AppContext.Provider>
   );
 }

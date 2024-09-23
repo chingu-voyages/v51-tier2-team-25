@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 
 // eslint-disable-next-line react/prop-types
 export default function AddFriend({ closeAddFriendMenu }) {
+  
   //I'm using context but we can use props
   const { addFriendToList } = useContext(AppContext);
 
@@ -45,10 +46,12 @@ export default function AddFriend({ closeAddFriendMenu }) {
       name:"",
       id:generateGroupId(),
     })
-    
+
     closeAddFriendMenu();
     toast("New friend added");
   };
+
+  
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
