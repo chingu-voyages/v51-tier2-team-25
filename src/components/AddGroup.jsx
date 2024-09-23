@@ -83,15 +83,15 @@ export default function AddGroup({ closeAddGroupModal }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-gray-800 bg-opacity-75">
-      <div className="relative border border-black-100 w-[535px] h-[625px] rounded-md p-6 bg-zinc-50 flex flex-col m-8 font-geologica">
-        <div className="flex items-center justify-between pb-4 mb-5 border-b border-black-200">
+      <div className="relative border border-black-100 w-[535px] min-h-[649px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica ">
+        <div className="flex items-center justify-between pb-10 mb-5 border-b border-black-200">
           <h1 className="p-0 text-md">New Group</h1>
           <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
         </div>
 
         <form
           onSubmit={addNewGroup}
-          className="flex flex-col flex-1 gap-6 overflow-visible border border-none"
+          className="flex flex-col flex-1 gap-6 overflow-visible border border-none pb[-80px] "
         >
           <div className="flex flex-col">
             <div className="flex items-start">
@@ -157,22 +157,26 @@ export default function AddGroup({ closeAddGroupModal }) {
               groupMembers={groupsData.members}
               deleteMemberFromGroup={deleteMemberFromGroup}
             />
+            <div className='relative left-0 right-0 w-[calc(100%+48px)] -ml-6 bg-light-indigo rounded-b-md mt-4'>
 
-            <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">
-              <button
-                type={"button"}
-                onClick={closeAddGroupModal}
-                className="mr-2 text-sm"
-              >
-                Close
-              </button>
-              <button
-                type={"submit"}
-                className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
-              >
-                Create group
-              </button>
+              <div className="sticky bottom-0 left-0 right-0 flex items-center p-4 place-content-end ">
+                <button
+                  type={"button"}
+                  onClick={closeAddGroupModal}
+                  className="mr-2 text-sm"
+                >
+                  Close
+                </button>
+                <button
+                  type={"submit"}
+                  className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
+                >
+                  Create group
+                </button>
+              </div>
+
             </div>
+            
           </div>
         </form>
       </div>
