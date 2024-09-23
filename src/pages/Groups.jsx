@@ -33,14 +33,14 @@ export default function Groups() {
       <div className='flex flex-col w-2/3 min-w-[785px] gap-6 font-geologica'>
         <div className='p-6 mt-12 border rounded-md border-border bg-zinc-50'>
           <div className='flex'>
-            <img className='w-32 h-32 rounded-full' src='../public/images/placeholder.jpg'/>
+            <img className='w-32 h-32 rounded-full' src='../images/placeholder.jpg'/>
             <div className="relative w-full pl-6">
               <div className='flex items-center justify-between gap-12'>
                 <div className="flex item-center items-center">
                   <h1 className='text-2xl'>{currentGroup?.name}</h1>
                   <p className='pl-2 text-xs text-gray-600'>#{currentGroup?.id}</p>
                 </div>
-                <img className='h-4'src='../public/images/Edit.svg' onClick={openEditGroupFormModal}/>                      
+                <img className='h-4'src='../images/Edit.svg' onClick={openEditGroupFormModal}/>                      
               </div>
               <p className='pt-2 text-gray-600 text-s'>{currentGroup?.description}</p>  
             </div>            
@@ -49,7 +49,7 @@ export default function Groups() {
           <div className='flex items-end pt-6'>
 
             <div className='flex items-center w-1/2'>
-              <img className='w-8 h-8 rounded-full' src='../public/images/placeholder.jpg'/>
+              <img className='w-8 h-8 rounded-full' src='../images/placeholder.jpg'/>
               <p className='pl-2 text-sm text-gray-500'># members</p>
             </div>
 
