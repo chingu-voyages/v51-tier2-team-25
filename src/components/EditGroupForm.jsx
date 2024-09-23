@@ -45,7 +45,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateGroup({...group, ...tempGroupData}) // Call updateGroup from AppContext
+    updateGroup(tempGroupData) // Call updateGroup from AppContext
     closeEditGroupFormModal(); // Close the form after saving changes
     toast(`Changes saved`);
   };
