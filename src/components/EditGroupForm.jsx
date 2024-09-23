@@ -99,7 +99,10 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
         >
           <div className="flex flex-col">
             <div className='flex items-center'>
-              <img src='./public/images/placeholder.jpg' className='border border-none rounded-full w-[80px] h-[80px] mr-4' alt="Group placeholder"/>
+              <img
+                src="../public/images/placeholder.jpg"
+                className="border border-none rounded-full w-[80px] h-[80px] mr-4"
+              />
               <div className='relative flex flex-col'>
                   <label className="text-sm">
                   Group name*
