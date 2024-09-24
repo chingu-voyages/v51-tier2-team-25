@@ -112,7 +112,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
         </div>
 
         <form
-          className="flex flex-col flex-1 gap-6 overflow-visible border border-none"
+          className="flex flex-col flex-1 gap-6 border-none"
           onSubmit={handleSubmit}
         >
           <div className="flex flex-col">
@@ -158,7 +158,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
             <label className='flex flex-col pt-4 text-sm '>
               Group description*
               <textarea 
-                className='w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border h-9'              
+                className='w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border'              
                 name='description'
                 value={tempGroupData.description}
                 onChange={handleChange}
@@ -195,13 +195,13 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
               </button>
               <button
                 onClick={handleDelete}
-                className="px-3 py-2 mr-2 text-sm bg-red-600 border-none rounded-lg hover:bg-red-800 text-light-indigo"
+                className="px-3 py-2 mr-2 text-sm bg-red-600 rounded-lg hover:bg-red-800 text-light-indigo"
               >
                 Delete group
               </button>
               <button
                 type="submit"
-                className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
+                className="px-3 py-2 text-sm rounded-lg hover:bg-hover bg-button text-light-indigo"
               >
                 Save
               </button>
