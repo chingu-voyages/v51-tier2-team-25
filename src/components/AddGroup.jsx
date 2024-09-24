@@ -76,7 +76,7 @@ export default function AddGroup({ closeAddGroupModal }) {
     }
 
     if (groupsData.category === "") {
-      toast("Please select a category");
+      toast("Please select a Group type");
       return;
     }
     
