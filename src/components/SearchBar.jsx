@@ -28,14 +28,14 @@ export default function SearchBar({ handleMemberSelected, ref }) {
     friends.length === 0
       ? "Please add a friend first"
       : "Search on your list of friends";
-  const isFriendListEmpty = friends.length === 0;
+  // const isFriendListEmpty = friends.length === 0;
 
   const filterOptions = (option, inputValue) =>
     option.value.toLowerCase().includes(inputValue);
 
   const [isClearable, setIsClearable] = useState(true);
   const [isSearchable, setIsSearchable] = useState(true);
-  const [isDisabled, setIsDisabled] = useState(isFriendListEmpty);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isRtl, setIsRtl] = useState(false);
 
@@ -64,6 +64,7 @@ export default function SearchBar({ handleMemberSelected, ref }) {
         isSearchable={isSearchable}
         name="color"
         options={options}
+        noOptionsMessage={() => "List is empty add a friend first"}
         filterOption={filterOptions}
         onChange={addSelectionToForm}
         maxMenuHeight={150}
