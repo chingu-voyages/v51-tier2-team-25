@@ -154,7 +154,10 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
                 name='description'
                 value={tempGroupData.description}
                 onChange={handleChange}
+                maxLength={350}
+                placeholder="Write your text here."
                 required
+                rows={6}
               />
             </label>
 
