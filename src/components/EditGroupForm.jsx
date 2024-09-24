@@ -10,6 +10,9 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
   const { updateGroup, deleteGroup } = useContext(AppContext);
   const navigate = useNavigate();
 
+  // Dont allow none numeric keys
+  const blockInvalidChar = (e) => ['e','E','+','-'].includes(e.key) && e.preventDefault()
+
   // Temporary state for handling input changes
   const [tempGroupData, setTempGroupData] = useState({
     name: group.name || "",
@@ -36,18 +39,27 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
 
   // Handle input changes in the temporary state
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
     const newValue = value.trim();
 
     if (newValue === "" && value !== "") {
       toast("Input cannot be empty or contain only spaces");
-    } else {
-      // Update the state if the input is valid
-      setTempGroupData((prevData) => ({
-        ...prevData,
-        [name]: value, 
-      }));
+      return
+    } 
+    
+    if(type === "number"){
+      const newValue=parseFloat(value)
+
+      if(!isNaN(newValue) && newValue > 1000000){
+        toast("Alloted budget cannot exceed $1,000,000")
+        return
+      }
     }
+    // Update the state if the input is valid
+    setTempGroupData((prevData) => ({
+      ...prevData,
+      [name]: value, 
+    }));
   };
 
   // Handle form submission
@@ -122,11 +134,14 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
                 <input 
                   className='w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9'
                   type='number'
-                  step='0.01'
-                  min='0'
+                  step={0.01}
+                  min={0.01}
+                  max={1000000}
+                  maxLength={7}   
                   name='allottedBudget'
                   value={tempGroupData.allottedBudget}
                   onChange={handleChange}
+                  onKeyDown={blockInvalidChar}
                   required
                 />
               </label>
