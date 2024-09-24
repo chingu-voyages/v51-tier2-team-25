@@ -175,7 +175,7 @@ export default function AddGroup({ closeAddGroupModal }) {
               addMemberToGroup={addMemberToGroup}
               groupMembers={groupsData.members}
             />
-            <div className="pb-12 mt-2 overflow-y-auto max-h-28">
+            <div className="pb-12 mt-2 overflow-y-auto max-h-32">
               <MembersOnGroup
                 groupMembers={groupsData.members}
                 deleteMemberFromGroup={deleteMemberFromGroup}
