@@ -24,6 +24,11 @@ export default function SearchBar({ handleMemberSelected, ref }) {
       label: friend.userName,
     };
   });
+  const placeHolderMessage =
+    friends.length === 0
+      ? "Please add a friend first"
+      : "Search on your list of friends";
+  // const isFriendListEmpty = friends.length === 0;
 
   const filterOptions = (option, inputValue) =>
     option.value.toLowerCase().includes(inputValue);
@@ -49,7 +54,7 @@ export default function SearchBar({ handleMemberSelected, ref }) {
     <div className="w-full">
       <Select
         styles={customStyles}
-        placeholder={"Search on your list of friends"}
+        placeholder={placeHolderMessage}
         className="basic-single"
         classNamePrefix="select"
         isDisabled={isDisabled}
@@ -59,6 +64,7 @@ export default function SearchBar({ handleMemberSelected, ref }) {
         isSearchable={isSearchable}
         name="color"
         options={options}
+        noOptionsMessage={() => "List is empty add a friend first"}
         filterOption={filterOptions}
         onChange={addSelectionToForm}
         maxMenuHeight={150}
