@@ -10,7 +10,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
   const { updateGroup, deleteGroup } = useContext(AppContext);
   const navigate = useNavigate();
 
-  // Dont allow none numeric keys
+  // Do not allow none numeric keys
   const blockInvalidChar = (e) => ['e','E','+','-'].includes(e.key) && e.preventDefault()
 
   // Temporary state for handling input changes
@@ -112,7 +112,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
         </div>
 
         <form
-          className="flex flex-col flex-1 gap-6 overflow-auto border border-none"
+          className="flex flex-col flex-1 gap-6 overflow-visible border border-none"
           onSubmit={handleSubmit}
         >
           <div className="flex flex-col">
@@ -140,7 +140,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
               <label className='ml-2 text-sm'>
                 Allotted budget
                 <input 
-                  className='w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9'
+                  className='w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9'
                   type='number'
                   step={0.01}
                   min={0.01}
@@ -158,14 +158,14 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
             <label className='flex flex-col pt-4 text-sm '>
               Group description*
               <textarea 
-                className='border border-gray-300 rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500'              
+                className='w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border h-9'              
                 name='description'
                 value={tempGroupData.description}
                 onChange={handleChange}
                 maxLength={350}
                 placeholder="Write your text here."
                 required
-                rows={6}
+                rows={3}
               />
             </label>
 
@@ -178,10 +178,12 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
               addMemberToGroup={addMemberToGroup}
               groupMembers={tempGroupData.members}
             />
-            <MembersOnGroup
-              groupMembers={tempGroupData.members}
-              deleteMemberFromGroup={deleteMemberFromGroup}
-            />
+            <div className="pb-12 mt-2 overflow-y-auto max-h-32">
+              <MembersOnGroup
+                groupMembers={tempGroupData.members}
+                deleteMemberFromGroup={deleteMemberFromGroup}
+              />
+            </div> 
 
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">
               <button
