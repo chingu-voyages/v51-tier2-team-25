@@ -67,6 +67,14 @@ export default function AddGroup({ closeAddGroupModal }) {
 
   const addNewGroup = (event) => {
     event.preventDefault();
+
+    const budgetRegex = /^(0|[1-9]\d*)(\.\d+)?$/; 
+
+    if (!budgetRegex.test(groupsData.allottedBudget)) {
+      toast("Allotted budget must be a valid number");
+      return;
+    }
+
     if (groupsData.category === "") {
       toast("Please select a category");
       return;

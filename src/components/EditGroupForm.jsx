@@ -66,13 +66,9 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate allottedBudget before saving
-    const { allottedBudget } = tempGroupData;
+    const budgetRegex = /^(0|[1-9]\d*)(\.\d+)?$/;
 
-    // Check if allottedBudget is valid using regex
-    const budgetRegex = /^(0|[1-9]\d*)(\.\d+)?$/; // Validates: 0, 0.3, 1, 2.5, but not 03 or 04.5
-
-    if (!budgetRegex.test(allottedBudget)) {
+    if (!budgetRegex.test(tempGroupData.allottedBudget)) {
       toast("Allotted budget must be a valid number");
       return;
     }
