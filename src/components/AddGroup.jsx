@@ -67,8 +67,16 @@ export default function AddGroup({ closeAddGroupModal }) {
 
   const addNewGroup = (event) => {
     event.preventDefault();
+
+    const budgetRegex = /^(0|[1-9]\d*)(\.\d+)?$/; 
+
+    if (!budgetRegex.test(groupsData.allottedBudget)) {
+      toast("Allotted budget must be a valid number");
+      return;
+    }
+
     if (groupsData.category === "") {
-      toast("Please select a category");
+      toast("Please select a Group type");
       return;
     }
     
@@ -102,15 +110,16 @@ export default function AddGroup({ closeAddGroupModal }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-gray-800 bg-opacity-75">
-      <div className="relative border border-black-100 w-[535px] h-[625px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica">
-        <div className="flex items-center justify-between pb-4 mb-5 border-b border-black-200">
+      <div className="relative  w-[535px] h-[625px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica overflow-y-auto">
+        
+        <div className="flex items-center justify-between pb-4 mb-5 border-b border-border">
           <h1 className="p-0 text-md">New Group</h1>
           <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
         </div>
 
         <form
           onSubmit={addNewGroup}
-          className="flex flex-col flex-1 gap-6 overflow-visible border border-none "
+          className="flex flex-col flex-1 gap-6 border-none "
         >
           <div className="flex flex-col">
             <div className="flex items-start">
@@ -135,28 +144,31 @@ export default function AddGroup({ closeAddGroupModal }) {
                 {renderGroupId()}
               </div>
 
-              <label className="ml-2 text-sm">
-                Allotted budget
-                <input
-                  className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
-                  type="number"
-                  step={0.01}
-                  min={0.01}
-                  max={1000000}
-                  maxLength={7}                  
-                  name="allottedBudget"
-                  value={groupsData.allottedBudget}
-                  onChange={handleChange}
-                  onKeyDown={blockInvalidChar}
-                  required
-                />
-              </label>
+              <div className='relative flex flex-col'>
+                <label className="ml-2 text-sm">
+                  Allotted budget
+                  <input
+                    className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                    type="number"
+                    step={0.01}
+                    min={0.01}
+                    max={1000000}
+                    maxLength={7}                  
+                    name="allottedBudget"
+                    value={groupsData.allottedBudget}
+                    onChange={handleChange}
+                    onKeyDown={blockInvalidChar}
+                    required
+                  />
+                </label>
+                <p className="ml-2 text-xs text-gray-400">$1,000,000 max.</p>
+              </div>
             </div>
 
             <label className="flex flex-col pt-4 text-sm ">
               Group description*
               <textarea
-                className="w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border h-9"
+                className="w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border"
                 name="description"
                 value={groupsData.description}
                 onChange={handleChange}
@@ -192,7 +204,7 @@ export default function AddGroup({ closeAddGroupModal }) {
               </button>
               <button
                 type={"submit"}
-                className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
+                className="px-3 py-2 text-sm rounded-lg hover:bg-hover bg-button text-light-indigo"
               >
                 Create group
               </button>
@@ -200,6 +212,8 @@ export default function AddGroup({ closeAddGroupModal }) {
             
           </div>
         </form>
+
+        
       </div>
     </div>
   );
