@@ -104,9 +104,10 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
-      <div className="relative border border-black-100 w-[535px] h-[625px] rounded-md p-6 bg-white flex flex-col m-8 font-geologica">
-        <div className="flex items-center justify-between pb-4 mb-5 border-b border-black-200">
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-gray-800 bg-opacity-75">
+      <div className="relative  w-[535px] h-[625px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica overflow-y-auto">
+        
+        <div className="flex items-center justify-between pb-4 mb-5 border-b border-border">
           <h1 className="p-0 text-md">Edit Group</h1>
           <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
         </div>
@@ -116,7 +117,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
           onSubmit={handleSubmit}
         >
           <div className="flex flex-col">
-            <div className='flex items-center'>
+            <div className='flex items-start'>
               <img
                 src="../images/placeholder.jpg"
                 className="border border-none rounded-full w-[80px] h-[80px] mr-4"
@@ -125,34 +126,38 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
                   <label className="text-sm">
                   Group name*
                     <input
-                      className="w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
+                      className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
                       type="text"
                       name="name"
                       value={tempGroupData.name}
                       onChange={handleChange}
-                      maxLength="30"
+                      maxLength={30}
                       required
                     />
                   </label>
-                  <p className='absolute top-0 p-0 m-0 text-xs text-gray-400 right-8'>#{group.id}</p>
+                  <p className="text-xs text-gray-400">30 character max.</p>
+                  <p className="absolute top-0 p-0 m-0 text-xs text-gray-400 right-8">#{tempGroupData.id}</p>
               </div>  
 
-              <label className='ml-2 text-sm'>
-                Allotted budget
-                <input 
-                  className='w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9'
-                  type='number'
-                  step={0.01}
-                  min={0.01}
-                  max={1000000}
-                  maxLength={7}   
-                  name='allottedBudget'
-                  value={tempGroupData.allottedBudget}
-                  onChange={handleChange}
-                  onKeyDown={blockInvalidChar}
-                  required
-                />
-              </label>
+              <div className='relative flex flex-col'>
+                  <label className='ml-2 text-sm'>
+                  Allotted budget
+                  <input 
+                    className='w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9'
+                    type='number'
+                    step={0.01}
+                    min={0.01}
+                    max={1000000}
+                    maxLength={7}   
+                    name='allottedBudget'
+                    value={tempGroupData.allottedBudget}
+                    onChange={handleChange}
+                    onKeyDown={blockInvalidChar}
+                    required
+                  />
+                </label>
+                <p className="ml-2 text-xs text-gray-400">$1,000,000 max.</p>
+              </div>
             </div>
 
             <label className='flex flex-col pt-4 text-sm '>
@@ -171,7 +176,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
 
             <GroupTypeSelection
               handleChange={handleChange}
-              groupsData={tempGroupData} // Pass the updated tempGroupData
+              groupsData={tempGroupData} 
             />
 
             <AddMember
