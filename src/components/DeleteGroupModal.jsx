@@ -5,14 +5,14 @@ const DeleteGroupModal = ({ isOpen, onConfirm, onCancel, groupName }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-gray-800 bg-opacity-75">
-      <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
-        <h2 className="text-xl font-bold mb-4">Delete Group Confirmation</h2>
-        <p className="mb-4">Are you sure you want to delete the {groupName} group?</p>
-        <p className="mb-6 text-sm text-gray-600">All open expenses will be removed, and any money accumulated so far will be refunded to the respective members.</p>
-        <div className="flex justify-end space-x-4">
-          <button onClick={onCancel} className="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
-          <button onClick={onConfirm} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Delete Group</button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75 ">
+      <div className="relative bg-white pt-6 pl-6 pr-6 pb-16 rounded-[8px] shadow-xl w-[535px] h-[183px]">
+        <h2 className="text-[14px] mb-3 font-medium text-title">Delete Group?</h2>
+        <div className="border-t bg-border h-[1px]"/>
+        <p className="text-[12px] text-gray-600 mt-4 leading-[16.5px] text-modal-text">Are you sure you want to delete the <span className="font-bold">{groupName}</span> group? All open expenses will be removed, and any money accumulated so far will be refunded to the respective members.</p>
+        <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-2 bg-light-indigo place-content-end rounded-b-[8px]">
+          <button onClick={onCancel} className="font-normal text-sm px-3 py-2 mr-2 text-gray-600 rounded-[8px] hover:text-gray-800">Cancel</button>
+          <button onClick={onConfirm} className="font-bold text-sm px-3 py-2 mr-2  bg-red-600 rounded-lg hover:bg-red-800 text-light-indigo">Delete Group</button>
         </div>
       </div>
     </div>
