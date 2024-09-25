@@ -6,6 +6,8 @@ import toast from "react-hot-toast";
 import GroupTypeSelection from "./GroupTypeSelection";
 import AddMember from "./AddMember";
 import MembersOnGroup from "./MembersOnGroup";
+import DeleteGroupModal from './DeleteGroupModal';
+
 export default function EditGroupForm({ group, closeEditGroupFormModal }) {
   const { updateGroup, deleteGroup } = useContext(AppContext);
   const navigate = useNavigate();
@@ -19,6 +21,8 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
     category: group.category || "",
     members: group.members || []
   });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
      // This ensures the form is pre-filled with the group data when opened
@@ -59,9 +63,19 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
   };
 
   const handleDelete = () => {
+    console.log("Delete button clicked");
+    setIsModalOpen(true);
+    console.log("isModalOpen set to true");
+  };
+
+  // In the render method
+console.log("Current isModalOpen state:", isModalOpen);
+
+  const confirmDelete = () => {
     const groupName = tempGroupData.name;
     deleteGroup(group.id); // Call deleteGroup with the group's ID
     closeEditGroupFormModal(); // Close the form after deletion
+    setIsModalOpen(false); // This closes the modal
     navigate("/");
     toast(`Group ${groupName} was deleted`);
   };
@@ -84,6 +98,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
   }
 
   return (
+    <div>
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
       <div className="relative border border-black-100 w-[535px] h-[625px] rounded-md p-6 bg-white flex flex-col m-8 font-geologica">
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-black-200">
@@ -166,6 +181,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
                 Cancel
               </button>
               <button
+              type="button"
                 onClick={handleDelete}
                 className="px-3 py-2 mr-2 text-sm bg-red-600 border-none rounded-lg hover:bg-red-800 text-light-indigo"
               >
@@ -182,6 +198,13 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
         </form>
       </div>
     </div>
+    <DeleteGroupModal
+  isOpen={isModalOpen}
+  onConfirm={confirmDelete}
+  onCancel={() => setIsModalOpen(false)}
+  groupName={tempGroupData.name}
+/>
+  </div>
       );
 }
 
