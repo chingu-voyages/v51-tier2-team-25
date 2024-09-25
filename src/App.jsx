@@ -6,6 +6,8 @@ import Groups from "./pages/Groups.jsx";
 import Friends from "./pages/Friends.jsx";
 import Home from "./pages/Home.jsx";
 import { createContext, useState } from "react";
+import Expenses from "./pages/Expenses.jsx";
+import Statistics from "./pages/Statistics.jsx"
 export const AppContext = createContext([]);
 
 function App() {
@@ -75,6 +77,16 @@ function App() {
         {
           path: "group/:groupId",
           element: <Groups />,
+          children: [
+            {
+              path:"expenses",
+              element:<Expenses />
+            },
+            {
+              path:"statistics",
+              element:<Statistics />
+            }
+          ]
         },
         {
           path: "friend/:friendId",

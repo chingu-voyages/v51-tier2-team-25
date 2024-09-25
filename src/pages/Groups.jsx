@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { NavLink, Outlet, useParams } from "react-router-dom";
 import { useState, useContext } from "react";
 import { AppContext } from "../App";
 import EditGroupForm from "../components/EditGroupForm";
@@ -30,7 +30,7 @@ export default function Groups() {
   }
   return (
     <>
-      <div className='flex flex-col w-2/3 min-w-[785px] gap-6 font-geologica'>
+      <div className='flex flex-col w-[785px] gap-6 font-geologica'>
         <div className='p-6 mt-12 border rounded-md border-border bg-zinc-50'>
           <div className='relative flex justify-between w-full'>
             <div className='relative min-w-max'>
@@ -95,8 +95,18 @@ export default function Groups() {
             )}
           </div>
         </div>
-        <div className='w-full bg-gray-200 border border-gray-700 rounded-md h-36'>Placeholder for Expense/Statics Tabs</div>
-        <div className='w-full bg-gray-200 border border-gray-700 rounded-md h-36'>Placeholder for Expense/Statics Display</div>
+        <div className="flex gap-1">
+          <div className='bg-gray-200 rounded-t-md'>
+            <NavLink className='px-2 py-1 text-sm' to={`expenses`}>Expenses</NavLink>
+          </div>
+
+          <div className='bg-gray-200 rounded-t-md'>
+            <NavLink className='px-2 py-1 text-sm' to={`statistics`}>Statistics</NavLink>
+          </div>
+        </div>
+        
+
+        <Outlet />
       </div>
       
     </>
