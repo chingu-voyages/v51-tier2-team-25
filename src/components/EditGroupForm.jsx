@@ -1,12 +1,18 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../App";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import GroupTypeSelection from "./GroupTypeSelection";
 import AddMember from "./AddMember";
 import MembersOnGroup from "./MembersOnGroup";
-export default function EditGroupForm({ group, closeEditGroupFormModal }) {
+import { Link } from "react-router-dom";
+
+export default function EditGroupForm({
+  group,
+  closeEditGroupFormModal,
+  openAddFriendModal,
+}) {
   const { updateGroup, deleteGroup } = useContext(AppContext);
   const navigate = useNavigate();
 
@@ -17,11 +23,11 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
     description: group.description || "",
     allottedBudget: group.allottedBudget || "",
     category: group.category || "",
-    members: group.members || []
+    members: group.members || [],
   });
 
   useEffect(() => {
-     // This ensures the form is pre-filled with the group data when opened
+    // This ensures the form is pre-filled with the group data when opened
     if (group) {
       setTempGroupData({
         name: group.name,
@@ -29,7 +35,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
         description: group.description,
         allottedBudget: group.allottedBudget,
         category: group.category,
-        members: group.members
+        members: group.members,
       });
     }
   }, [group]);
@@ -45,7 +51,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
       // Update the state if the input is valid
       setTempGroupData((prevData) => ({
         ...prevData,
-        [name]: value, 
+        [name]: value,
       }));
     }
   };
@@ -53,7 +59,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateGroup(tempGroupData) // Call updateGroup from AppContext
+    updateGroup(tempGroupData); // Call updateGroup from AppContext
     closeEditGroupFormModal(); // Close the form after saving changes
     toast(`Changes saved`);
   };
@@ -96,35 +102,37 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
           onSubmit={handleSubmit}
         >
           <div className="flex flex-col">
-            <div className='flex items-center'>
+            <div className="flex items-center">
               <img
                 src="../images/placeholder.jpg"
                 className="border border-none rounded-full w-[80px] h-[80px] mr-4"
               />
-              <div className='relative flex flex-col'>
-                  <label className="text-sm">
+              <div className="relative flex flex-col">
+                <label className="text-sm">
                   Group name*
-                    <input
-                      className="w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
-                      type="text"
-                      name="name"
-                      value={tempGroupData.name}
-                      onChange={handleChange}
-                      maxLength="30"
-                      required
-                    />
-                  </label>
-                  <p className='absolute top-0 p-0 m-0 text-xs text-gray-400 right-8'>#{group.id}</p>
-              </div>  
+                  <input
+                    className="w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
+                    type="text"
+                    name="name"
+                    value={tempGroupData.name}
+                    onChange={handleChange}
+                    maxLength="30"
+                    required
+                  />
+                </label>
+                <p className="absolute top-0 p-0 m-0 text-xs text-gray-400 right-8">
+                  #{group.id}
+                </p>
+              </div>
 
-              <label className='ml-2 text-sm'>
+              <label className="ml-2 text-sm">
                 Allotted budget
-                <input 
-                  className='w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9'
-                  type='number'
-                  step='0.01'
-                  min='0'
-                  name='allottedBudget'
+                <input
+                  className="w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  name="allottedBudget"
                   value={tempGroupData.allottedBudget}
                   onChange={handleChange}
                   required
@@ -132,11 +140,11 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
               </label>
             </div>
 
-            <label className='flex flex-col pt-4 text-sm '>
+            <label className="flex flex-col pt-4 text-sm ">
               Group description*
-              <textarea 
-                className='border border-gray-300 rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500'              
-                name='description'
+              <textarea
+                className="border border-gray-300 rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500"
+                name="description"
                 value={tempGroupData.description}
                 onChange={handleChange}
                 required
@@ -152,6 +160,17 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
               addMemberToGroup={addMemberToGroup}
               groupMembers={tempGroupData.members}
             />
+            <div className="flex items-center justify-between pb-4 mb-4 border-b border-border mt-4">
+              <Link
+                onClick={() => {
+                  closeEditGroupFormModal();
+                  openAddFriendModal();
+                }}
+                className="p-0 text-sm text-gray-400 underline  hover:text-black"
+              >
+                Add new friends to your friend list
+              </Link>
+            </div>
             <MembersOnGroup
               groupMembers={tempGroupData.members}
               deleteMemberFromGroup={deleteMemberFromGroup}
@@ -182,10 +201,11 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
         </form>
       </div>
     </div>
-      );
+  );
 }
 
 EditGroupForm.propTypes = {
   group: PropTypes.object.isRequired,
   closeEditGroupFormModal: PropTypes.func.isRequired,
+  openAddFriendModal: PropTypes.func.isRequired,
 };

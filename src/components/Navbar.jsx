@@ -4,6 +4,7 @@ import AddGroup from "./AddGroup.jsx";
 import { AppContext } from "../App";
 
 import AddFriend from "./AddFriend.jsx";
+import LinkAddFriendModal from "./LinkAddFriendModal.jsx";
 
 export default function Navbar() {
   // TESTING ONLY to clear local storage -REMOVE
@@ -11,12 +12,16 @@ export default function Navbar() {
 
   const [isAddGroupModalOpen, setIsAddGroupModalOpen] = useState(false);
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
+  const [isLinkAddFriendModalOpen, setIsLinkAddFriendModalOpen] =
+    useState(false);
   const { groups, friends } = useContext(AppContext);
 
   function openAddGroupModal() {
+    console.log("open group modal");
     setIsAddGroupModalOpen(true);
   }
   function closeAddGroupModal() {
+    console.log("close group modal");
     setIsAddGroupModalOpen(false);
   }
   function openAddFriendModal() {
@@ -24,6 +29,13 @@ export default function Navbar() {
   }
   function closeAddFriendMenu() {
     setIsAddFriendModalOpen(false);
+  }
+  function openLinkAddFriendModal() {
+    setIsLinkAddFriendModalOpen(true);
+  }
+  function closeLinkAddFriendModal() {
+    setIsLinkAddFriendModalOpen(false);
+    setIsAddGroupModalOpen(true);
   }
 
   return (
@@ -113,10 +125,19 @@ export default function Navbar() {
       </nav>
 
       {isAddGroupModalOpen && (
-        <AddGroup closeAddGroupModal={closeAddGroupModal} />
+        <AddGroup
+          closeAddGroupModal={closeAddGroupModal}
+          openLinkAddFriendModal={openLinkAddFriendModal}
+        />
       )}
       {isAddFriendModalOpen && (
         <AddFriend closeAddFriendMenu={closeAddFriendMenu} />
+      )}
+      {isLinkAddFriendModalOpen && (
+        <LinkAddFriendModal
+          closeLinkAddFriendModal={closeLinkAddFriendModal}
+          openAddGroupModal={openAddFriendModal}
+        />
       )}
     </aside>
   );
