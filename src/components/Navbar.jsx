@@ -27,7 +27,7 @@ export default function Navbar() {
   function openAddFriendModal() {
     setIsAddFriendModalOpen(true);
   }
-  function closeAddFriendMenu() {
+  function closeAddFriendModal() {
     setIsAddFriendModalOpen(false);
   }
   function openLinkAddFriendModal() {
@@ -131,7 +131,7 @@ export default function Navbar() {
         />
       )}
       {isAddFriendModalOpen && (
-        <AddFriend closeAddFriendMenu={closeAddFriendMenu} />
+        <AddFriend closeAddFriendModal={closeAddFriendModal} />
       )}
       {isLinkAddFriendModalOpen && (
         <LinkAddFriendModal

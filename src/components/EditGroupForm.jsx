@@ -7,8 +7,13 @@ import GroupTypeSelection from "./GroupTypeSelection";
 import AddMember from "./AddMember";
 import MembersOnGroup from "./MembersOnGroup";
 import DeleteGroupModal from "./DeleteGroupModal";
+import { Link } from "react-router-dom";
 
-export default function EditGroupForm({ group, closeEditGroupFormModal }) {
+export default function EditGroupForm({
+  group,
+  closeEditGroupFormModal,
+  openAddFriendModal,
+}) {
   const { updateGroup, deleteGroup } = useContext(AppContext);
   const navigate = useNavigate();
 
@@ -200,6 +205,17 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
                 addMemberToGroup={addMemberToGroup}
                 groupMembers={tempGroupData.members}
               />
+              <div className="flex items-center justify-between pb-4 mb-4 border-b border-border mt-4">
+                <Link
+                  onClick={() => {
+                    closeEditGroupFormModal();
+                    openAddFriendModal();
+                  }}
+                  className="p-0 text-sm text-gray-400 underline  hover:text-black"
+                >
+                  Add new friends to your friend list
+                </Link>
+              </div>
               <div className="pb-12 mt-2 overflow-y-auto max-h-32">
                 <MembersOnGroup
                   groupMembers={tempGroupData.members}

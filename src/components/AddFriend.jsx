@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
-export default function AddFriend({ closeAddFriendMenu }) {
+export default function AddFriend({ closeAddFriendModal }) {
   const { addFriendToList, friends } = useContext(AppContext);
   const navigate = useNavigate();
   // Initialize state for newFriendData
@@ -37,7 +37,7 @@ export default function AddFriend({ closeAddFriendMenu }) {
     }
 
     addFriendToList(newFriendData);
-    closeAddFriendMenu();
+    closeAddFriendModal();
     toast("New friend added");
     navigate(`friend/${newFriendData.id}`);
   };
@@ -91,7 +91,7 @@ export default function AddFriend({ closeAddFriendMenu }) {
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full h-12 p-4 bg-light-indigo place-content-end ">
               <button
                 type={"button"}
-                onClick={closeAddFriendMenu}
+                onClick={closeAddFriendModal}
                 className="px-4 py-2 m-2 text-sm text-black rounded-xl"
               >
                 Close
