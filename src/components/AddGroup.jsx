@@ -5,10 +5,14 @@ import PropTypes from "prop-types";
 import AddMember from "./AddMember";
 import MembersOnGroup from "./MembersOnGroup";
 import GroupTypeSelection from "./GroupTypeSelection";
+import { Link } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
 
-export default function AddGroup({ closeAddGroupModal }) {
+export default function AddGroup({
+  closeAddGroupModal,
+  openLinkAddFriendModal,
+}) {
   const { addGroupToList } = useContext(AppContext);
 
   //Maybe move this to a helper function also maybe use uuid library?
@@ -17,7 +21,8 @@ export default function AddGroup({ closeAddGroupModal }) {
   };
 
   // Do not allow none numeric keys
-  const blockInvalidChar = (e) => ['e','E','+','-'].includes(e.key) && e.preventDefault()
+  const blockInvalidChar = (e) =>
+    ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
 
   // Initialize state for groupsData
   const [groupsData, setGroupsData] = useState({
@@ -25,7 +30,7 @@ export default function AddGroup({ closeAddGroupModal }) {
     id: generateGroupId(),
     description: "",
     allottedBudget: "",
-    members: [],
+    members: JSON.parse(localStorage.getItem("temporaryMembers")) || [],
     category: "",
   });
 
@@ -40,21 +45,21 @@ export default function AddGroup({ closeAddGroupModal }) {
 
   // Handle input changes and updates form data state
   const handleChange = (event) => {
-    const { name, value, type } = event.target; 
-    
+    const { name, value, type } = event.target;
+
     //check if value is empty or contains only spaces
-    if (value.trim()==="" && value.length > 0){
-      toast("Input cannot be empty or contain only spaces")
-      return
+    if (value.trim() === "" && value.length > 0) {
+      toast("Input cannot be empty or contain only spaces");
+      return;
     }
 
     //check if value exceeds max allowed
-    if(type === "number"){
-      const newValue=parseFloat(value)
+    if (type === "number") {
+      const newValue = parseFloat(value);
 
-      if(!isNaN(newValue) && newValue > 1000000){
-        toast("Alloted budget cannot exceed $1,000,000")
-        return
+      if (!isNaN(newValue) && newValue > 1000000) {
+        toast("Alloted budget cannot exceed $1,000,000");
+        return;
       }
     }
 
@@ -62,13 +67,12 @@ export default function AddGroup({ closeAddGroupModal }) {
       ...prevGroupsData,
       [name]: value,
     }));
-    
   };
 
   const addNewGroup = (event) => {
     event.preventDefault();
 
-    const budgetRegex = /^(0|[1-9]\d*)(\.\d+)?$/; 
+    const budgetRegex = /^(0|[1-9]\d*)(\.\d+)?$/;
 
     if (!budgetRegex.test(groupsData.allottedBudget)) {
       toast("Allotted budget must be a valid number");
@@ -79,7 +83,7 @@ export default function AddGroup({ closeAddGroupModal }) {
       toast("Please select a Group type");
       return;
     }
-    
+
     //get stored data from local storage or initialize array
     let storedGroupData = JSON.parse(localStorage.getItem("groupsData")) || [];
     //append new form data to array
@@ -89,10 +93,13 @@ export default function AddGroup({ closeAddGroupModal }) {
     addGroupToList(groupsData);
     closeAddGroupModal();
     toast("New group added");
+    //reset temporary members
+    localStorage.setItem("temporaryMembers", JSON.stringify([]));
   };
 
   //to ensure member has id
   function addMemberToGroup(newMember) {
+    // const updatedMembers = [...groupsData.members, newMember];
     setGroupsData((prevData) => ({
       ...prevData,
       members: [...prevData.members, newMember],
@@ -110,9 +117,7 @@ export default function AddGroup({ closeAddGroupModal }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-gray-800 bg-opacity-75">
-
       <div className="relative  w-[535px] h-[625px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica overflow-y-auto">
-
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-border">
           <h1 className="p-0 text-md">New Group</h1>
           <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
@@ -145,7 +150,7 @@ export default function AddGroup({ closeAddGroupModal }) {
                 {renderGroupId()}
               </div>
 
-              <div className='relative flex flex-col'>
+              <div className="relative flex flex-col">
                 <label className="ml-2 text-sm">
                   Allotted budget
                   <input
@@ -154,7 +159,7 @@ export default function AddGroup({ closeAddGroupModal }) {
                     step={0.01}
                     min={0.01}
                     max={1000000}
-                    maxLength={7}                  
+                    maxLength={7}
                     name="allottedBudget"
                     value={groupsData.allottedBudget}
                     onChange={handleChange}
@@ -188,17 +193,37 @@ export default function AddGroup({ closeAddGroupModal }) {
               addMemberToGroup={addMemberToGroup}
               groupMembers={groupsData.members}
             />
+            <div className="flex items-center justify-between pb-4 mb-4 border-b border-border mt-4">
+              <Link
+                to="/"
+                onClick={() => {
+                  localStorage.setItem(
+                    "temporaryMembers",
+                    JSON.stringify(groupsData.members)
+                  );
+                  closeAddGroupModal();
+                  openLinkAddFriendModal();
+                }}
+                className="p-0 text-sm text-gray-400 underline hover:text-black "
+              >
+                Add new friends to your friend list
+              </Link>
+            </div>
+
             <div className="pb-12 mt-2 overflow-y-auto max-h-32">
               <MembersOnGroup
                 groupMembers={groupsData.members}
                 deleteMemberFromGroup={deleteMemberFromGroup}
               />
-            </div>           
+            </div>
 
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end">
               <button
                 type={"button"}
-                onClick={closeAddGroupModal}
+                onClick={() => {
+                  closeAddGroupModal();
+                  localStorage.setItem("temporaryMembers", JSON.stringify([]));
+                }}
                 className="mr-2 text-sm"
               >
                 Close
@@ -210,11 +235,8 @@ export default function AddGroup({ closeAddGroupModal }) {
                 Create group
               </button>
             </div>
-            
           </div>
         </form>
-
-        
       </div>
     </div>
   );
@@ -222,4 +244,5 @@ export default function AddGroup({ closeAddGroupModal }) {
 //Add proptypes validation for eslint
 AddGroup.propTypes = {
   closeAddGroupModal: PropTypes.func.isRequired,
+  openLinkAddFriendModal: PropTypes.func.isRequired,
 };

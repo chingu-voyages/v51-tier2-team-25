@@ -2,12 +2,10 @@ import { useContext, useState } from "react";
 import { AppContext } from "../App";
 import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
-import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-// eslint-disable-next-line react/prop-types
-export default function AddFriend({ closeAddFriendModal }) {
+export default function LinkAddFriendModal({ closeLinkAddFriendModal }) {
   const { addFriendToList, friends } = useContext(AppContext);
-  const navigate = useNavigate();
   // Initialize state for newFriendData
   const [newFriendData, setNewFriendData] = useState({
     name: "",
@@ -37,13 +35,12 @@ export default function AddFriend({ closeAddFriendModal }) {
     }
 
     addFriendToList(newFriendData);
-    closeAddFriendModal();
+    closeLinkAddFriendModal();
     toast("New friend added");
-    navigate(`friend/${newFriendData.id}`);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75 ">
       <div className="relative flex flex-col p-6 m-8 border rounded-md border-black-100 bg-zinc-50 font-geologica min-h-64">
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-black-200">
           <h1 className="p-0 text-md">Add Friend</h1>
@@ -91,7 +88,9 @@ export default function AddFriend({ closeAddFriendModal }) {
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full h-12 p-4 bg-light-indigo place-content-end ">
               <button
                 type={"button"}
-                onClick={closeAddFriendModal}
+                onClick={() => {
+                  closeLinkAddFriendModal();
+                }}
                 className="px-4 py-2 m-2 text-sm text-black rounded-xl"
               >
                 Close
@@ -103,3 +102,7 @@ export default function AddFriend({ closeAddFriendModal }) {
     </div>
   );
 }
+
+LinkAddFriendModal.propTypes = {
+  closeLinkAddFriendModal: PropTypes.func.isRequired,
+};
