@@ -9,34 +9,35 @@ const GroupTypeSelection = ({ handleChange, groupsData }) => {
   
       <p className='mt-4 text-sm font-normal'>Group type*</p>
       <div className="flex items-center gap-1 mt-2">
-        {groupTypes.map(category =>{
+        {groupTypes.map(groupType =>{
           return(
           <label 
-            key={category}
+            key={groupType}
             className={`text-sm pr-3 py-2 border rounded-md cursor-pointer hover:font-bold border-border ${
-              groupsData.category === category
+              groupsData.groupType === groupType
                 ? 'bg-button text-gray'
                 : 'bg-zinc-50 text-black'
             }`}>
           <input
             className="invisible"
             type="radio"
-            name="category"
-            value={category}
-            checked={groupsData.category === category}          
+            name="groupType"
+            value={groupType}
+            checked={groupsData.groupType === groupType}          
             onChange={handleChange}
           />
-          {category}
+          {groupType}
         </label>)
         })}
       </div>
     </>
   )
 }
+
 GroupTypeSelection.propTypes ={
   handleChange: PropTypes.func.isRequired,
   groupsData: PropTypes.shape({
-    category: PropTypes.string.isRequired,
+    groupType: PropTypes.string.isRequired,
   }).isRequired,
 }
 

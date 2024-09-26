@@ -43,19 +43,19 @@ export default function Navbar() {
       <nav className="w-48">
         <div className="flex items-center pb-12">
           <img
-            src="../images/placeholder.jpg"
+            src="../../images/placeholder.jpg"
             className="w-8 h-8 mr-2 border border-none rounded-full"
           />
           <p className="block text-lg">Brand Name</p>
         </div>
         <div className="flex items-center py-1 my-2 rounded hover:bg-light-indigo">
-          <img src="../images/Home.svg" className="mr-2" />
+          <img src="../../images/Home.svg" className="mr-2" />
           <NavLink className="block" to="/">
             Home
           </NavLink>
         </div>
         <div className="flex items-center py-1 my-6 rounded hover:bg-light-indigo">
-          <img src="../images/Profile.svg" className="mr-2" />
+          <img src="../../images/Profile.svg" className="mr-2" />
           <NavLink className="block" to="/profile">
             Profile
           </NavLink>
@@ -80,7 +80,7 @@ export default function Navbar() {
                     className="flex items-center py-1 my-2 rounded hover:bg-light-indigo"
                   >
                     <img
-                      src="../images/profilePlaceHolder.png"
+                      src="../../images/profilePlaceHolder.png"
                       className="w-6 h-6 mr-2 border border-none rounded-full"
                     />
                     <NavLink className="block " to={`/group/${group.id}`}>
@@ -109,7 +109,7 @@ export default function Navbar() {
                     className="flex items-center py-1 my-2 rounded hover:bg-light-indigo"
                   >
                     <img
-                      src="../images/profilePlaceHolder.png"
+                      src="../../images/profilePlaceHolder.png"
                       className="w-6 h-6 mr-2 border border-none rounded-full"
                     />
 

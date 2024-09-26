@@ -1,5 +1,5 @@
-import { NavLink, Outlet, useParams } from "react-router-dom";
-import { useState, useContext } from "react";
+import { NavLink, Outlet, useParams, useNavigate } from "react-router-dom";
+import { useState, useContext, useEffect } from "react";
 import { AppContext } from "../App";
 import EditGroupForm from "../components/EditGroupForm";
 import AddExpense from "../components/AddExpense";
@@ -8,6 +8,7 @@ import EditAddFriendModal from "../components/EditAddFriendModal";
 export default function Groups() {
   const { groupId } = useParams(); // Get the groupId from the URL
   const { groups } = useContext(AppContext); // Get all groups from context
+  const navigate = useNavigate()  
 
   const [isEditGroupFormModalOpen, setIsEditGroupFormModalOpen] =
     useState(false);
@@ -18,10 +19,17 @@ export default function Groups() {
   // Find the current group based on the groupId
   const currentGroup = groups.find((group) => group.id === Number(groupId));
 
+  //console.log('current group expenses:',currentGroup?.expenses)  
+
+  useEffect(()=>{
+    if(currentGroup){
+      navigate(`expenses`) //auto navigate to expense page when group loads
+    }
+  },[currentGroup, navigate])
+
   function openEditGroupFormModal() {
     setIsEditGroupFormModalOpen(true);
   }
-
   function closeEditGroupFormModal() {
     setIsEditGroupFormModalOpen(false);
   }
@@ -47,10 +55,12 @@ export default function Groups() {
             <div className="relative min-w-max">
               <img
                 className="w-32 h-32 p-3 rounded-full"
-                src="../images/placeholder.jpg"
+                src="../../images/placeholder.jpg"
               />
               <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-1/2 top-24 rounded-xl">
-                {currentGroup?.category}
+
+                {currentGroup?.groupType}
+
               </div>
             </div>
             <div className="w-full pl-3">
@@ -67,7 +77,7 @@ export default function Groups() {
 
             <img
               className="h-4"
-              src="../images/Setting.svg"
+              src="../../images/Setting.svg"
               onClick={openEditGroupFormModal}
             />
           </div>
@@ -76,7 +86,7 @@ export default function Groups() {
             <div className="flex items-center w-1/2">
               <img
                 className="w-8 h-8 rounded-full"
-                src="../images/placeholder.jpg"
+                src="../../images/placeholder.jpg"
               />
               <p className="pl-2 text-sm text-gray-500">
                 {currentGroup?.members.length} members
@@ -108,6 +118,7 @@ export default function Groups() {
               <AddExpense
                 closeAddExpense={closeAddExpense}
                 addExpenseToList={addExpenseToList}
+                currentGroup={currentGroup}
               />
             )}
             {isEditGroupFormModalOpen && (
