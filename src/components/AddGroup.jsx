@@ -27,7 +27,7 @@ export default function AddGroup({
   // Initialize state for groupsData
   const [groupsData, setGroupsData] = useState(
     temporaryGroupData
-      ? { ...temporaryGroupData, id: generateGroupId() }
+      ? temporaryGroupData
       : {
           name: "",
           id: generateGroupId(),
