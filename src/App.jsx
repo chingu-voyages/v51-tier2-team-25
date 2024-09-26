@@ -20,7 +20,12 @@ function App() {
   const [expenses, setExpenses] = useState(
     JSON.parse(localStorage.getItem("expensesData")) || []
   );
+
   const [memberData, setMemberData] = useState({ name: "", share: "", id: "" });
+
+  //members added from group to expense
+  const [participantData, setParticipantData] = useState({name:"", share:"", id:""}
+  )
 
   function addFriendToList(newFriend) {
     console.log("addNewFriend-app", newFriend);
@@ -56,8 +61,7 @@ function App() {
       return updatedGroups
     })
   }
-  console.log("expenses from app", expenses);
-  
+  console.log("expenses from app", expenses);  
 
   function updateGroup(updatedGroup) {
     setGroups((prevGroups) => {
@@ -86,7 +90,45 @@ function App() {
       return updatedExpenses;
     });
   }
-  
+  //updates expenses states @ global
+  function addParticipantToExpense(expenseId, newParticipant){
+    setExpenses(prevExpense =>{
+      const updatedExpenses = prevExpense.map(expense=>{
+        if(expense.id === expenseId){
+          return{
+            ...expense,
+            participants:[...expense.participants, newParticipant ]
+          }
+        }
+        return expense;
+      })
+      //update local storage w/ participants
+      localStorage.setItem("expensesData", JSON.stringify(updatedExpenses))
+      return updatedExpenses
+    })
+    //Update group w/updated expense
+    setGroups(prevGroups =>{
+      const updatedGroups = prevGroups.map(group => {
+        if(group.id === newParticipant.groupId){
+          return{
+            ...group,
+            expenses: group.expenses.map((expense) =>
+              expense.id === expenseId
+              ?{
+                ...expense,
+                participants: [...expense.participants, newParticipant]
+              }
+              :expense
+            )
+          }
+        }
+        return group
+      })
+      localStorage.setItem("groupsData", JSON.stringify(updatedGroups))
+      return updatedGroups
+    })
+
+  }
 
   const router = createBrowserRouter([
     {
@@ -137,7 +179,10 @@ function App() {
         setMemberData,
         expenses,
         addExpenseToList,
-        updateExpenseInList 
+        updateExpenseInList,
+        participantData,
+        setParticipantData,
+        addParticipantToExpense,
       }}
     >
       <RouterProvider router={router} />

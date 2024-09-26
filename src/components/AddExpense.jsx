@@ -6,15 +6,15 @@ import SearchBar from "./SearchBar";
 import ExpenseCategorySelection from './ExpenseCategorySelection'
 import { v4 as uuidv4 } from "uuid";
 
+
 // eslint-disable-next-line react/prop-types
 
 export default function AddExpense({ closeAddExpense, currentGroup }) {
 
   //I'm using context but we can use props
-  const { addExpenseToList, } = useContext(AppContext);
+  const { addExpenseToList } = useContext(AppContext);
   
-  //Generate today's date
-  
+  //Generate today's date  
   const generateDate = () =>{
     const date = new Date()
     // console.log(date)
@@ -30,8 +30,12 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     category:"",
     description:'',
     id:uuidv4(),
-    groupId:currentGroup.id
+    groupId:currentGroup.id,
+    participants:[]
   });
+
+  //Temp state to hold participant
+  const [selectedParticipant, setSelectedParticipant] = useState(null)
 
   // Handle input changes and updates form data state
   const handleChange = (event, selectOptionName) => {
@@ -50,6 +54,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     }    
   };
 
+
   const addNewExpense = (event) => {
     event.preventDefault();
 
@@ -63,11 +68,18 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
     addExpenseToList(expensesData);
     closeAddExpense();
-    toast("New expense added");
-    console.log("expensesData from Addexpense",expensesData)
+    toast("New expense added");    
   };
 
-
+  const addParticipant = () =>{
+    if(selectedParticipant){
+      setExpensesData((prevData) => ({
+        ...prevData,
+        participants: [...prevData.participants, selectedParticipant],
+      }))
+      setSelectedParticipant(null)
+    }
+  } 
  
 
   return (
@@ -146,9 +158,25 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
             <div className='pt-4 mb-auto'>
               <p className='border border-gray-300 border-dashed rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500'>placeholder to add receipt</p>
             </div>
+
             <div className='pt-4 mb-auto'>
-              <p >Add members</p>
-              <SearchBar />              
+              <p >Add participants</p>
+              <div className="flex items-center">
+                <SearchBar 
+                  handleParticipantAdded={(participant)=>setSelectedParticipant(participant)}
+                  purpose="participant" //specifies purpose of search bar is participant
+                  groupMembers={currentGroup?.members || []}
+                />
+                <button
+                  onClick={addParticipant}
+                  type="button"
+                  className="px-3 py-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo"
+                >Add</button>
+              </div>
+              {/* DISPLAY PARTICIPANTS     */}
+              <ul>{expensesData.participants.map(participant =>(
+                <li key={participant.id}>{participant.name}</li>))}
+              </ul>
             </div>
             
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">

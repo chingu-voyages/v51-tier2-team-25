@@ -1,5 +1,5 @@
-import { NavLink, Outlet, useParams } from "react-router-dom";
-import { useState, useContext } from "react";
+import { NavLink, Outlet, useParams, useNavigate } from "react-router-dom";
+import { useState, useContext, useEffect } from "react";
 import { AppContext } from "../App";
 import EditGroupForm from "../components/EditGroupForm";
 import AddExpense from "../components/AddExpense";
@@ -8,6 +8,7 @@ import EditAddFriendModal from "../components/EditAddFriendModal";
 export default function Groups() {
   const { groupId } = useParams(); // Get the groupId from the URL
   const { groups } = useContext(AppContext); // Get all groups from context
+  const navigate = useNavigate()  
 
   const [isEditGroupFormModalOpen, setIsEditGroupFormModalOpen] =
     useState(false);
@@ -19,6 +20,12 @@ export default function Groups() {
   const currentGroup = groups.find((group) => group.id === Number(groupId));
 
   console.log('current group expenses:',currentGroup?.expenses)  
+
+  useEffect(()=>{
+    if(currentGroup){
+      navigate(`expenses`) //auto navigate to expense page when group loads
+    }
+  },[currentGroup, navigate])
 
   function openEditGroupFormModal() {
     setIsEditGroupFormModalOpen(true);
