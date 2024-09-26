@@ -90,6 +90,7 @@ function App() {
       return updatedExpenses;
     });
   }
+
   //updates expenses states @ global
   function addParticipantToExpense(expenseId, newParticipant){
     setExpenses(prevExpense =>{
@@ -129,6 +130,17 @@ function App() {
     })
 
   }
+
+
+  function deleteExpenseInList(expenseId) {
+    setExpenses((prevExpenses) => {
+      const updatedExpenses = prevExpenses.filter((expense) => expense.id !== expenseId)
+      localStorage.setItem("expensesData", JSON.stringify(updatedExpenses)); // Update local storage
+      return updatedExpenses
+    })
+  }
+  
+
 
   const router = createBrowserRouter([
     {
@@ -183,6 +195,7 @@ function App() {
         participantData,
         setParticipantData,
         addParticipantToExpense,
+        deleteExpenseInList
       }}
     >
       <RouterProvider router={router} />

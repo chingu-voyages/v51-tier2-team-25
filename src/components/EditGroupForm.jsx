@@ -91,9 +91,7 @@ export default function EditGroupForm({
   };
 
   const handleDelete = () => {
-    console.log("Delete button clicked");
     setIsModalOpen(true);
-    console.log("isModalOpen set to true");
   };
 
   // In the render method
@@ -236,7 +234,7 @@ export default function EditGroupForm({
                 <button
                   type="button"
                   onClick={handleDelete}
-                  className="px-3 py-2 mr-2 text-sm bg-red-600 rounded-lg hover:bg-red-800 text-light-indigo"
+                  className="px-3 py-2 mr-2 text-sm border-none rounded-lg hover:bg-red-600 bg-red-500 text-white"
                 >
                   Delete group
                 </button>
