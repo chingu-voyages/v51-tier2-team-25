@@ -14,6 +14,8 @@ export default {
         'title':'#292929',
         'input-text':'#989898',
         'input-border':'#DCDCDC',
+        'modal-text': '#464646'
+
       },
       fontFamily: {
         sans: ['Outfit', 'sans-serif'],

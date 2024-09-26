@@ -11,19 +11,24 @@ export default function AddExpense({ closeAddExpense }) {
   //I'm using context but we can use props
   const { addExpenseToList } = useContext(AppContext);
 
-   //Maybe move this to a helper function also maybe use uuid library?
-   const generateGroupId = () => {
+  //Maybe move this to a helper function also maybe use uuid library?
+  const generateGroupId = () => {
     return Math.floor(10000 + Math.random() * 900000);
   };
-  // const generateDate = () =>{
-    
-  // }
+  //Generate today's date
+  const generateDate = () =>{
+    const date = new Date()
+    console.log(date)
+    const formatDate = date.toLocaleDateString()
+    return formatDate
+  }
+  
   
   // Initialize state for groupsData
   const [expensesData, setExpensesData] = useState({
     name: "",
     amount:"",
-    date:"",
+    date:generateDate(),
     category:"",
     description:'',
     id:generateGroupId(),
@@ -49,13 +54,14 @@ export default function AddExpense({ closeAddExpense }) {
     addExpenseToList(expensesData);
     closeAddExpense();
     toast("New expense added");
+    console.log("expensesData from Addexpense",expensesData)
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
-      <div className="relative border border-black-100 w-[535px] h-[625px] rounded-md p-6 bg-zinc-50 flex flex-col m-8 font-geologica">
+      <div className="relative border w-[535px] h-[625px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica">
         
-        <div className="flex items-center justify-between pb-4 mb-5 border-b border-black-200">
+        <div className="flex items-center justify-between pb-4 mb-5 border-b border-border">
           <h1 className="p-0 text-md">New Expense</h1>
           <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
         </div>
@@ -97,18 +103,11 @@ export default function AddExpense({ closeAddExpense }) {
               />
             </label>
             </div>
-            <div className='flex items-center'>
-              <label className='text-sm'>
-                Date*
-                <input 
-                  className='w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9'
-                  type='date'
-                  name='date'
-                  value={expensesData.date}
-                  onChange={handleChange}
-                  required
-                />
-              </label>
+            <div className='flex items-start justify-between pt-4'>
+              <div className='flex flex-col'>
+                <p className='text-sm'>Date*</p>
+                <p className='mt-4 text-sm text-input-text '>{generateDate()}</p>
+              </div>
 
               <label className='ml-2 text-sm'>
                 Category*
