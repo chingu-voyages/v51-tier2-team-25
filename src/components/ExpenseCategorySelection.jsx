@@ -12,19 +12,31 @@ const ExpenseCategorySelection = ({ handleChange }) => {
     { value: "diningOut",label:"Dining Out 🍽️"},
     { value: "transportation",label:"Transportation 🚗"},
   ]
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isFocused ? "#D1D5DB" : "white",
+      color: state.isActive ? "black" : "",
+      "&:active": {
+        backgroundColor: "#D1D5DB",
+      },
+      fontSize:'12px'   
+    }),
+    control:(provided)=>({
+      ...provided,
+      fontSize:'12px'
+    })
+  };
 
   return(
-    <>
-      <label className='text-sm'>
-        Category*
-        <Select 
-          defaultValue={null}
-          onChange={(selectedOption)=>handleChange(selectedOption, 'category')}
-          options={options} 
-          placeholder="Choose a category"
-        />
-      </label>
-      
+    <>      
+      <Select 
+        defaultValue={null}
+        onChange={(selectedOption)=>handleChange(selectedOption, 'category')}
+        options={options} 
+        placeholder="Choose a category"
+        styles={customStyles}
+      />
     </>
   )
 
