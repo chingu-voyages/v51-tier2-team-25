@@ -107,11 +107,10 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
                     name="name"
                     value={expensesData.name}
                     onChange={handleChange}
-                    maxLength="30"
+                    maxLength={30}
                     required
                   />
-                </label>
-                
+                </label>                
               </div>            
 
               <label className='ml-2 text-sm'>
@@ -139,8 +138,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
                 <ExpenseCategorySelection 
                   handleChange={handleChange}
                 />  
-              </div>
-                          
+              </div>                          
             </div>            
             
             <label className='flex flex-col pt-4 text-sm '>
