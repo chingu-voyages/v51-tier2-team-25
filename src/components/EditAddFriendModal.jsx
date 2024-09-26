@@ -2,12 +2,15 @@ import { useContext, useState } from "react";
 import { AppContext } from "../App";
 import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
-import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
+// import { useNavigate } from "react-router-dom";
 
-// eslint-disable-next-line react/prop-types
-export default function AddFriend({ closeAddFriendModal }) {
+export default function EditAddFriendModal({
+  closeAddFriendModal,
+  openEditGroupFormModal,
+}) {
   const { addFriendToList, friends } = useContext(AppContext);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // Initialize state for newFriendData
   const [newFriendData, setNewFriendData] = useState({
     name: "",
@@ -38,8 +41,8 @@ export default function AddFriend({ closeAddFriendModal }) {
 
     addFriendToList(newFriendData);
     closeAddFriendModal();
+    openEditGroupFormModal();
     toast("New friend added");
-    navigate(`friend/${newFriendData.id}`);
   };
 
   return (
@@ -91,7 +94,10 @@ export default function AddFriend({ closeAddFriendModal }) {
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full h-12 p-4 bg-light-indigo place-content-end ">
               <button
                 type={"button"}
-                onClick={closeAddFriendModal}
+                onClick={() => {
+                  closeAddFriendModal();
+                  openEditGroupFormModal();
+                }}
                 className="px-4 py-2 m-2 text-sm text-black rounded-xl"
               >
                 Close
@@ -103,3 +109,8 @@ export default function AddFriend({ closeAddFriendModal }) {
     </div>
   );
 }
+
+EditAddFriendModal.propTypes = {
+  closeAddFriendModal: PropTypes.func.isRequired,
+  openEditGroupFormModal: PropTypes.func.isRequired,
+};

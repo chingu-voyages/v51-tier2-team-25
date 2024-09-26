@@ -77,6 +77,17 @@ function App() {
     });
   }
 
+  function updateExpenseInList(updatedExpense) {
+    setExpenses((prevExpenses) => {
+      const updatedExpenses = prevExpenses.map((expense) =>
+        expense.id === updatedExpense.id ? { ...expense, ...updatedExpense } : expense
+      );
+      localStorage.setItem("expensesData", JSON.stringify(updatedExpenses));
+      return updatedExpenses;
+    });
+  }
+  
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -126,6 +137,7 @@ function App() {
         setMemberData,
         expenses,
         addExpenseToList,
+        updateExpenseInList 
       }}
     >
       <RouterProvider router={router} />
