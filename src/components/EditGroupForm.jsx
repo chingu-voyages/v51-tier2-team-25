@@ -89,9 +89,7 @@ export default function EditGroupForm({
   };
 
   const handleDelete = () => {
-    console.log("Delete button clicked");
     setIsModalOpen(true);
-    console.log("isModalOpen set to true");
   };
 
   // In the render method

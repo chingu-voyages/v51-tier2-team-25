@@ -46,9 +46,7 @@ export default function EditExpense({ closeEditExpense, expense }) {
   };
 
   const handleDelete = () => {
-    console.log("Delete button clicked");
     setIsModalOpen(true);
-    console.log("isModalOpen set to true");
   };
 
   const confirmDelete = () => {
