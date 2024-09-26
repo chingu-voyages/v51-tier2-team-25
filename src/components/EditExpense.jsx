@@ -3,9 +3,11 @@ import { AppContext } from "../App";
 import toast from "react-hot-toast";
 import PropTypes from 'prop-types';
 import SearchBar from "./SearchBar";
+import DeleteExpenseModal from "./DeleteExpenseModal";
 
 export default function EditExpense({ closeEditExpense, expense }) {
-  const { updateExpenseInList} = useContext(AppContext); 
+  const { updateExpenseInList, deleteExpenseInList } = useContext(AppContext); 
+
   const [expenseData, setExpenseData] = useState({
         name: "",
         amount: "",
@@ -14,6 +16,8 @@ export default function EditExpense({ closeEditExpense, expense }) {
         description: "",
         id: "",
   });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if(expense){
@@ -41,11 +45,19 @@ export default function EditExpense({ closeEditExpense, expense }) {
     return date.toLocaleDateString();
   };
 
-// Satomi's part
-//   const deleteExpense = () => {
-//     closeEditExpense();
-//     toast("Expense deleted successfully");
-//   };
+  const handleDelete = () => {
+    console.log("Delete button clicked");
+    setIsModalOpen(true);
+    console.log("isModalOpen set to true");
+  };
+
+  const confirmDelete = () => {
+    const expenseName = expenseData.name;
+    deleteExpenseInList(expense.id); // Call deleteGroup with the group's ID
+    closeEditExpense(); // Close the form after deletion
+    setIsModalOpen(false); // This closes the modal
+    toast(`Expense ${expenseName} was deleted`);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
@@ -146,7 +158,7 @@ export default function EditExpense({ closeEditExpense, expense }) {
               </button>
               <button
                 type="button"
-                // onClick={handleDelete}
+                onClick={handleDelete}
                 className="px-3 py-2 text-sm border-none rounded-lg hover:bg-red-600 bg-red-500 text-white"
               >
                 Remove expense
@@ -161,6 +173,13 @@ export default function EditExpense({ closeEditExpense, expense }) {
             </div>
         </form>
       </div>
+
+      <DeleteExpenseModal
+        isOpen={isModalOpen}
+        onConfirm={confirmDelete}
+        onCancel={() => setIsModalOpen(false)}
+        expenseName={expenseData.name}
+      />
     </div>
   );
 }
