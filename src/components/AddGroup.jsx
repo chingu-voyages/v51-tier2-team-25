@@ -35,6 +35,7 @@ export default function AddGroup({
           allottedBudget: "",
           members: [],
           category: "",
+          groupType: "",
         }
   );
   //render groupID to be visible on form
@@ -81,7 +82,7 @@ export default function AddGroup({
       return;
     }
 
-    if (groupsData.category === "") {
+    if (groupsData.groupType === "") {
       toast("Please select a Group type");
       return;
     }
@@ -95,22 +96,10 @@ export default function AddGroup({
     addGroupToList(groupsData);
     closeAddGroupModal();
     toast("New group added");
-    //reset temporary members
-
-    localStorage.setItem(
-      "temporaryGroupData",
-      JSON.stringify({
-        name: "",
-        id: generateGroupId(),
-        description: "",
-        allottedBudget: "",
-        members: [],
-        category: "",
-      })
-    );
+    localStorage.removeItem("temporaryGroupData");
   };
 
-  //to ensure member has id
+  //update groupsData by adding new member to members array
   function addMemberToGroup(newMember) {
     // const updatedMembers = [...groupsData.members, newMember];
     setGroupsData((prevData) => ({
@@ -128,6 +117,16 @@ export default function AddGroup({
     }));
   }
 
+  function createTemporaryGroupData() {
+    localStorage.setItem(
+      "temporaryGroupData",
+      JSON.stringify({
+        ...groupsData,
+        members: groupsData.members,
+      })
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-gray-800 bg-opacity-75">
       <div className="relative  w-[535px] h-[625px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica overflow-y-auto">
@@ -143,7 +142,7 @@ export default function AddGroup({
           <div className="flex flex-col">
             <div className="flex items-start">
               <img
-                src="../images/placeholder.jpg"
+                src="../../images/placeholder.jpg"
                 className="border border-none rounded-full w-[80px] h-[80px] mr-4"
               />
               <div className="relative flex flex-col">
@@ -206,17 +205,11 @@ export default function AddGroup({
               addMemberToGroup={addMemberToGroup}
               groupMembers={groupsData.members}
             />
-            <div className="flex items-center justify-between pb-4 mb-4 border-b border-border mt-4">
+            <div className="flex items-center justify-between pb-4 mt-4 mb-4 border-b border-border">
               <Link
                 to="/"
                 onClick={() => {
-                  localStorage.setItem(
-                    "temporaryGroupData",
-                    JSON.stringify({
-                      ...groupsData,
-                      members: groupsData.members,
-                    })
-                  );
+                  createTemporaryGroupData();
                   closeAddGroupModal();
                   openLinkAddFriendModal();
                 }}
@@ -238,17 +231,7 @@ export default function AddGroup({
                 type={"button"}
                 onClick={() => {
                   closeAddGroupModal();
-                  localStorage.setItem(
-                    "temporaryGroupData",
-                    JSON.stringify({
-                      name: "",
-                      id: "",
-                      description: "",
-                      allottedBudget: "",
-                      members: [],
-                      category: "",
-                    })
-                  );
+                  localStorage.removeItem("temporaryGroupData");
                 }}
                 className="mr-2 text-sm"
               >

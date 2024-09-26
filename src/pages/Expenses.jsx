@@ -18,14 +18,15 @@ export default function Expenses() {
   };
 
   return (
-    <div className="p-4">
+    <div className="">
       {expenses.length === 0 ? (
         <p>No expenses found.</p>
       ) : (
         expenses.map((expense)=>(
-          <div  key={expense.id} className="border border-gray-300 rounded-md p-4 flex justify-between items-center">
-          <div className="flex flex-col">
-            <h3>{expense.name}</h3>
+          <div key={expense.id} className="flex items-center justify-between p-4 my-2 border border-gray-300 rounded-md">
+          <div className="flex gap-2">
+            <p className="text-sm font-bold">{expense.name}</p>
+            <p className="text-sm">{expense.category}</p>
             </div>
             <button type="button" className="hover:bg-gray-200" onClick={() => openEditExpense(expense)}><img src="../../images/Edit.svg" alt="Edit" /></button>
         </div>

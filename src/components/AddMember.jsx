@@ -3,7 +3,10 @@ import { useState } from "react";
 import SearchBar from "./SearchBar";
 import toast from "react-hot-toast";
 
-export default function AddMember({ addMemberToGroup, groupMembers }) {
+export default function AddMember({ 
+  addMemberToGroup, 
+  groupMembers,
+}) {
   const [newMember, setNewMember] = useState("");
 
   function handleMemberSelected(newMember) {
@@ -25,6 +28,8 @@ export default function AddMember({ addMemberToGroup, groupMembers }) {
     }
 
     addMemberToGroup(newMember);
+
+    
   };
 
   return (
