@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { NavLink, Outlet, useParams } from "react-router-dom";
 import { useState, useContext } from "react";
 import { AppContext } from "../App";
 import EditGroupForm from "../components/EditGroupForm";
@@ -30,27 +30,36 @@ export default function Groups() {
   }
   return (
     <>
-      <div className='flex flex-col w-2/3 min-w-[785px] gap-6 font-geologica'>
+      <div className='flex flex-col w-[785px] gap-6 font-geologica'>
         <div className='p-6 mt-12 border rounded-md border-border bg-zinc-50'>
-          <div className='flex'>
-            <img className='w-32 h-32 rounded-full' src='../public/images/placeholder.jpg'/>
-            <div className="relative w-full pl-6">
-              <div className='flex items-center justify-between gap-12'>
-                <div className="flex item-center items-center">
-                  <h1 className='text-2xl'>{currentGroup?.name}</h1>
-                  <p className='pl-2 text-xs text-gray-600'>#{currentGroup?.id}</p>
-                </div>
-                <img className='h-4'src='../public/images/Edit.svg' onClick={openEditGroupFormModal}/>                      
+          <div className='relative flex justify-between w-full'>
+            <div className='relative min-w-max'>
+
+              <img className='w-32 h-32 p-3 rounded-full' src='../images/placeholder.jpg'/>
+              <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-1/2 top-24 rounded-xl">
+
+                {currentGroup?.category}
               </div>
-              <p className='pt-2 text-gray-600 text-s'>{currentGroup?.description}</p>  
-            </div>            
-          </div>                
+            </div>
+            <div className='w-full pl-3'>
+              <div className="flex items-center item-center">
+                <h1 className='text-2xl'>{currentGroup?.name}</h1>
+                <p className='pl-2 text-xs text-gray-600'>#{currentGroup?.id}</p>
+              </div>
+              <p className='max-w-xl pt-2 text-xs leading-relaxed text-gray-600 break-words'>
+                {currentGroup?.description}
+              </p>  
+            </div>
+
+            <img className='h-4'src='../images/Setting.svg' onClick={openEditGroupFormModal}/>   
+
+          </div>
           
           <div className='flex items-end pt-6'>
 
             <div className='flex items-center w-1/2'>
-              <img className='w-8 h-8 rounded-full' src='../public/images/placeholder.jpg'/>
-              <p className='pl-2 text-sm text-gray-500'># members</p>
+              <img className='w-8 h-8 rounded-full' src='../images/placeholder.jpg'/>
+              <p className='pl-2 text-sm text-gray-500'>{currentGroup?.members.length} members</p>
             </div>
 
             <div className='flex items-center w-full gap-6 place-content-end'>
@@ -86,8 +95,18 @@ export default function Groups() {
             )}
           </div>
         </div>
-        <div className='w-full bg-gray-200 border border-gray-700 rounded-md h-36'>Placeholder for Expense/Statics Tabs</div>
-        <div className='w-full bg-gray-200 border border-gray-700 rounded-md h-36'>Placeholder for Expense/Statics Display</div>
+        <div className="flex gap-1">
+          <div className='bg-gray-200 rounded-t-md'>
+            <NavLink className='px-2 py-1 text-sm' to={`expenses`}>Expenses</NavLink>
+          </div>
+
+          <div className='bg-gray-200 rounded-t-md'>
+            <NavLink className='px-2 py-1 text-sm' to={`statistics`}>Statistics</NavLink>
+          </div>
+        </div>
+        
+
+        <Outlet />
       </div>
       
     </>

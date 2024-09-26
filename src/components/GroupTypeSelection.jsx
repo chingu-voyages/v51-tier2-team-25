@@ -7,13 +7,13 @@ const GroupTypeSelection = ({ handleChange, groupsData }) => {
   return (
     <>
   
-      <p className='mt-4 text-sm'>Group type*</p>
-      <div className="flex items-center gap-2 mt-2">
+      <p className='mt-4 text-sm font-normal'>Group type*</p>
+      <div className="flex items-center gap-1 mt-2">
         {groupTypes.map(category =>{
           return(
           <label 
             key={category}
-            className={`text-sm pr-2 py-2 border rounded-md cursor-pointer border-border ${
+            className={`text-sm pr-3 py-2 border rounded-md cursor-pointer hover:font-bold border-border ${
               groupsData.category === category
                 ? 'bg-button text-gray'
                 : 'bg-zinc-50 text-black'
