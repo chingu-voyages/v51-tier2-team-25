@@ -3,26 +3,24 @@ import { AppContext } from "../App";
 import toast from "react-hot-toast";
 import PropTypes from 'prop-types'
 import SearchBar from "./SearchBar";
+import ExpenseCategorySelection from './ExpenseCategorySelection'
+import { v4 as uuidv4 } from "uuid";
 
 // eslint-disable-next-line react/prop-types
 
+export default function AddExpense({ closeAddExpense, currentGroup }) {
 
-export default function AddExpense({ closeAddExpense }) {
   //I'm using context but we can use props
-  const { addExpenseToList } = useContext(AppContext);
-
-  //Maybe move this to a helper function also maybe use uuid library?
-  const generateGroupId = () => {
-    return Math.floor(10000 + Math.random() * 900000);
-  };
+  const { addExpenseToList, } = useContext(AppContext);
+  
   //Generate today's date
+  
   const generateDate = () =>{
     const date = new Date()
-    console.log(date)
+    // console.log(date)
     const formatDate = date.toLocaleDateString()
     return formatDate
   }
-  
   
   // Initialize state for groupsData
   const [expensesData, setExpensesData] = useState({
@@ -31,24 +29,38 @@ export default function AddExpense({ closeAddExpense }) {
     date:generateDate(),
     category:"",
     description:'',
-    id:generateGroupId(),
+    id:uuidv4(),
+    groupId:currentGroup.id
   });
 
   // Handle input changes and updates form data state
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setExpensesData((prevExpensesData) => ({
-      ...prevExpensesData,
-      [name]: value,
-    }));
+  const handleChange = (event, selectOptionName) => {
+    
+    if(selectOptionName){
+      setExpensesData(prevExpensesData =>({
+        ...prevExpensesData,
+        [selectOptionName]:event.value,
+      }))
+    } else {
+        const { name, value } = event.target;
+        setExpensesData((prevExpensesData) => ({
+          ...prevExpensesData,
+          [name]: value,
+        }));
+    }
+    
   };
+
 
   const addNewExpense = (event) => {
     event.preventDefault();
+
     //get stored data from local storage or initialize array
     let storedExpenseData = JSON.parse(localStorage.getItem("expensesData")) || [];
+    
     //append new form data to array
     storedExpenseData.push(expensesData);
+    
     //save updated array to local storage
     localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
     addExpenseToList(expensesData);
@@ -56,6 +68,9 @@ export default function AddExpense({ closeAddExpense }) {
     toast("New expense added");
     console.log("expensesData from Addexpense",expensesData)
   };
+
+
+ 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
@@ -110,23 +125,11 @@ export default function AddExpense({ closeAddExpense }) {
               </div>
 
               <label className='ml-2 text-sm'>
-                Category*
-                <select
-                  className='w-full p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9'
-                  name='category'
-                  value={expensesData.category}
-                  onChange={handleChange}
-                  required
-                  >
-                    <option value=''>--</option>
-                    <option value='cat1'>Category-1</option>
-                    <option value='cat2'>Category-2</option>
-                    <option value='cat3'>Category-3</option>
-                </select>              
+                <ExpenseCategorySelection 
+                  handleChange={handleChange}
+                />
               </label>
-            </div>
-
-            
+            </div>            
             
             <label className='flex flex-col pt-4 text-sm '>
               Expense description*
@@ -145,8 +148,7 @@ export default function AddExpense({ closeAddExpense }) {
             </div>
             <div className='pt-4 mb-auto'>
               <p >Add members</p>
-              <SearchBar />
-              
+              <SearchBar />              
             </div>
             
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">
@@ -174,4 +176,5 @@ export default function AddExpense({ closeAddExpense }) {
 //Add proptypes validation for eslint
 AddExpense.propTypes = {
   closeAddExpense: PropTypes.func.isRequired,
+  currentGroup: PropTypes.object.isRequired
 }

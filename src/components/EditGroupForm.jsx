@@ -21,7 +21,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
     id: group.id,
     description: group.description || "",
     allottedBudget: group.allottedBudget || "",
-    category: group.category || "",
+    groupType: group.groupType || "",
     members: group.members || []
   });
 
@@ -35,7 +35,7 @@ export default function EditGroupForm({ group, closeEditGroupFormModal }) {
         id: group.id,
         description: group.description,
         allottedBudget: group.allottedBudget,
-        category: group.category,
+        groupType: group.groupType,
         members: group.members
       });
     }

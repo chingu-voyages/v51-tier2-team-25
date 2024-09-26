@@ -38,9 +38,26 @@ function App() {
 
   function addExpenseToList(newExpense) {
     console.log("addNewExpense-app", newExpense);
-    setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
+    //update expenses state
+    const updatedExpenses =[...expenses, newExpense]    
+    setExpenses(updatedExpenses);
+    localStorage.setItem("expensesData", JSON.stringify(updatedExpenses))
+
+    //update specific group w/ new expense
+    setGroups(prevGroups =>{
+      const updatedGroups = prevGroups.map(group =>{
+        if(group.id === newExpense.groupId){
+          return{...group, expenses: [...group.expenses, newExpense]}
+        }
+        return group
+      })
+      //save updated groups to local storage
+      localStorage.setItem("groupsData", JSON.stringify(updatedGroups))
+      return updatedGroups
+    })
   }
   console.log("expenses from app", expenses);
+  
 
   function updateGroup(updatedGroup) {
     setGroups((prevGroups) => {

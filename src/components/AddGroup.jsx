@@ -26,7 +26,8 @@ export default function AddGroup({ closeAddGroupModal }) {
     description: "",
     allottedBudget: "",
     members: [],
-    category: "",
+    groupType: "",
+    expenses:[]
   });
 
   //render groupID to be visible on form
@@ -75,7 +76,7 @@ export default function AddGroup({ closeAddGroupModal }) {
       return;
     }
 
-    if (groupsData.category === "") {
+    if (groupsData.groupType === "") {
       toast("Please select a Group type");
       return;
     }
@@ -91,7 +92,7 @@ export default function AddGroup({ closeAddGroupModal }) {
     toast("New group added");
   };
 
-  //to ensure member has id
+  //update groupsData by adding new member to members array
   function addMemberToGroup(newMember) {
     setGroupsData((prevData) => ({
       ...prevData,

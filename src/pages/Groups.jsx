@@ -14,11 +14,11 @@ export default function Groups() {
 
   // Find the current group based on the groupId
   const currentGroup = groups.find((group) => group.id === Number(groupId));
+  console.log('current group expenses:',currentGroup?.expenses)
   
   function openEditGroupFormModal() {
     setIsEditGroupFormModalOpen(true)
   }
-
   function closeEditGroupFormModal() {
     setIsEditGroupFormModalOpen(false)
   }
@@ -38,7 +38,7 @@ export default function Groups() {
               <img className='w-32 h-32 p-3 rounded-full' src='../images/placeholder.jpg'/>
               <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-1/2 top-24 rounded-xl">
 
-                {currentGroup?.category}
+                {currentGroup?.groupType}
               </div>
             </div>
             <div className='w-full pl-3'>
@@ -85,6 +85,7 @@ export default function Groups() {
               <AddExpense 
                 closeAddExpense ={closeAddExpense} 
                 addExpenseToList={addExpenseToList}
+                currentGroup={currentGroup}
               />
             }
             {isEditGroupFormModalOpen && (
