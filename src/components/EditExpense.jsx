@@ -159,9 +159,9 @@ export default function EditExpense({ closeEditExpense, expense }) {
               <button
                 type="button"
                 onClick={handleDelete}
-                className="px-3 py-2 text-sm border-none rounded-lg hover:bg-red-600 bg-red-500 text-white"
+                className="px-3 py-2 mr-2 text-sm border-none rounded-lg hover:bg-red-600 bg-red-500 text-white"
               >
-                Remove expense
+                Delete expense
               </button>
               <button
                 type="submit"
