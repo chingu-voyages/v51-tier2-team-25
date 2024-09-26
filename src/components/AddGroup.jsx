@@ -7,15 +7,12 @@ import MembersOnGroup from "./MembersOnGroup";
 import GroupTypeSelection from "./GroupTypeSelection";
 import { Link } from "react-router-dom";
 
-// eslint-disable-next-line react/prop-types
-
 export default function AddGroup({
   closeAddGroupModal,
   openLinkAddFriendModal,
 }) {
   const { addGroupToList } = useContext(AppContext);
 
-  //Maybe move this to a helper function also maybe use uuid library?
   const generateGroupId = () => {
     return Math.floor(10000 + Math.random() * 900000);
   };
@@ -24,16 +21,22 @@ export default function AddGroup({
   const blockInvalidChar = (e) =>
     ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
 
+  const temporaryGroupData = JSON.parse(
+    localStorage.getItem("temporaryGroupData")
+  );
   // Initialize state for groupsData
-  const [groupsData, setGroupsData] = useState({
-    name: "",
-    id: generateGroupId(),
-    description: "",
-    allottedBudget: "",
-    members: JSON.parse(localStorage.getItem("temporaryMembers")) || [],
-    category: "",
-  });
-
+  const [groupsData, setGroupsData] = useState(
+    temporaryGroupData
+      ? { ...temporaryGroupData, id: generateGroupId() }
+      : {
+          name: "",
+          id: generateGroupId(),
+          description: "",
+          allottedBudget: "",
+          members: [],
+          category: "",
+        }
+  );
   //render groupID to be visible on form
   const renderGroupId = () => {
     return groupsData.id ? (
@@ -52,7 +55,6 @@ export default function AddGroup({
       toast("Input cannot be empty or contain only spaces");
       return;
     }
-
     //check if value exceeds max allowed
     if (type === "number") {
       const newValue = parseFloat(value);
@@ -94,7 +96,18 @@ export default function AddGroup({
     closeAddGroupModal();
     toast("New group added");
     //reset temporary members
-    localStorage.setItem("temporaryMembers", JSON.stringify([]));
+
+    localStorage.setItem(
+      "temporaryGroupData",
+      JSON.stringify({
+        name: "",
+        id: generateGroupId(),
+        description: "",
+        allottedBudget: "",
+        members: [],
+        category: "",
+      })
+    );
   };
 
   //to ensure member has id
@@ -198,8 +211,11 @@ export default function AddGroup({
                 to="/"
                 onClick={() => {
                   localStorage.setItem(
-                    "temporaryMembers",
-                    JSON.stringify(groupsData.members)
+                    "temporaryGroupData",
+                    JSON.stringify({
+                      ...groupsData,
+                      members: groupsData.members,
+                    })
                   );
                   closeAddGroupModal();
                   openLinkAddFriendModal();
@@ -222,7 +238,17 @@ export default function AddGroup({
                 type={"button"}
                 onClick={() => {
                   closeAddGroupModal();
-                  localStorage.setItem("temporaryMembers", JSON.stringify([]));
+                  localStorage.setItem(
+                    "temporaryGroupData",
+                    JSON.stringify({
+                      name: "",
+                      id: "",
+                      description: "",
+                      allottedBudget: "",
+                      members: [],
+                      category: "",
+                    })
+                  );
                 }}
                 className="mr-2 text-sm"
               >

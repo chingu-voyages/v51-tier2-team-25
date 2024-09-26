@@ -16,8 +16,8 @@ export default function LinkAddFriendModal({ closeLinkAddFriendModal }) {
   // Handle input changes and updates form data state
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setNewFriendData((prevnewFriendData) => ({
-      ...prevnewFriendData,
+    setNewFriendData((prevNewFriendData) => ({
+      ...prevNewFriendData,
       [name]: value,
     }));
   };
