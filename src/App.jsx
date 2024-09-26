@@ -69,6 +69,14 @@ function App() {
       return updatedExpenses;
     });
   }
+
+  function deleteExpenseInList(expenseId) {
+    setExpenses((prevExpenses) => {
+      const updatedExpenses = prevExpenses.filter((expense) => expense.id !== expenseId)
+      localStorage.setItem("expensesData", JSON.stringify(updatedExpenses)); // Update local storage
+      return updatedExpenses
+    })
+  }
   
 
   const router = createBrowserRouter([
@@ -120,7 +128,8 @@ function App() {
         setMemberData,
         expenses,
         addExpenseToList,
-        updateExpenseInList 
+        updateExpenseInList,
+        deleteExpenseInList
       }}
     >
       <RouterProvider router={router} />
