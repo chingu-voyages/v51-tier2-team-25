@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import PropTypes from 'prop-types';
 import SearchBar from "./SearchBar";
 import DeleteExpenseModal from "./DeleteExpenseModal";
+import { Link } from "react-router-dom";
 
 export default function EditExpense({ closeEditExpense, expense }) {
   const { updateExpenseInList, deleteExpenseInList } = useContext(AppContext); 
