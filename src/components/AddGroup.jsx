@@ -24,17 +24,24 @@ export default function AddGroup({
   const blockInvalidChar = (e) =>
     ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
 
-  // Initialize state for groupsData
-  const [groupsData, setGroupsData] = useState({
-    name: "",
-    id: generateGroupId(),
-    description: "",
-    allottedBudget: "",
-    members: JSON.parse(localStorage.getItem("temporaryMembers")) || [],
-    groupType: "",
-    expenses:[]
+  const temporaryGroupData = JSON.parse(
+    localStorage.getItem("temporaryGroupData")
+  );
 
-  });
+  // Initialize state for groupsData
+  const [groupsData, setGroupsData] = useState(
+    temporaryGroupData
+      ? temporaryGroupData
+      : {
+          name: "",
+          id: generateGroupId(),
+          description: "",
+          allottedBudget: "",
+          members: [],
+          groupType: "",
+          expenses: [],
+        }
+  );
 
   //render groupID to be visible on form
   const renderGroupId = () => {
@@ -95,8 +102,7 @@ export default function AddGroup({
     addGroupToList(groupsData);
     closeAddGroupModal();
     toast("New group added");
-    //reset temporary members
-    localStorage.setItem("temporaryMembers", JSON.stringify([]));
+    localStorage.removeItem("temporaryGroupData");
   };
 
   //update groupsData by adding new member to members array
@@ -115,6 +121,16 @@ export default function AddGroup({
         (member) => member.id !== memberToDelete.id
       ),
     }));
+  }
+
+  function createTemporaryGroupData() {
+    localStorage.setItem(
+      "temporaryGroupData",
+      JSON.stringify({
+        ...groupsData,
+        members: groupsData.members,
+      })
+    );
   }
 
   return (
@@ -199,10 +215,7 @@ export default function AddGroup({
               <Link
                 to="/"
                 onClick={() => {
-                  localStorage.setItem(
-                    "temporaryMembers",
-                    JSON.stringify(groupsData.members)
-                  );
+                  createTemporaryGroupData();
                   closeAddGroupModal();
                   openLinkAddFriendModal();
                 }}
@@ -224,7 +237,7 @@ export default function AddGroup({
                 type={"button"}
                 onClick={() => {
                   closeAddGroupModal();
-                  localStorage.setItem("temporaryMembers", JSON.stringify([]));
+                  localStorage.removeItem("temporaryGroupData");
                 }}
                 className="mr-2 text-sm"
               >
