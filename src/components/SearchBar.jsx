@@ -78,6 +78,7 @@ export default function SearchBar({
       <Select
         styles={customStyles}
         placeholder={placeHolderMessage}
+        placeholder={placeHolderMessage}
         className="basic-single"
         classNamePrefix="select"
         isDisabled={isDisabled}
@@ -87,6 +88,7 @@ export default function SearchBar({
         isSearchable={isSearchable}
         name="color"
         options={options}
+        noOptionsMessage={() => "List is empty add a friend first"}
         filterOption={filterOptions}
         onChange={addSelectionToForm}
         maxMenuHeight={150}
