@@ -68,7 +68,8 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
     addExpenseToList(expensesData);
     closeAddExpense();
-    toast("New expense added");    
+    toast.success("New expense added");  
+    
   };
 
   const addParticipant = () =>{

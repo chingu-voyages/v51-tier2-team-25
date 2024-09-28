@@ -58,7 +58,7 @@ export default function AddGroup({
 
     //check if value is empty or contains only spaces
     if (value.trim() === "" && value.length > 0) {
-      toast("Input cannot be empty or contain only spaces");
+      toast.error("Input cannot be empty or contain only spaces");
       return;
     }
 
@@ -67,7 +67,7 @@ export default function AddGroup({
       const newValue = parseFloat(value);
 
       if (!isNaN(newValue) && newValue > 1000000) {
-        toast("Alloted budget cannot exceed $1,000,000");
+        toast.error("Alloted budget cannot exceed $1,000,000");
         return;
       }
     }
@@ -84,12 +84,12 @@ export default function AddGroup({
     const budgetRegex = /^(0|[1-9]\d*)(\.\d+)?$/;
 
     if (!budgetRegex.test(groupsData.allottedBudget)) {
-      toast("Allotted budget must be a valid number");
+      toast.error("Allotted budget must be a valid number");
       return;
     }
 
     if (groupsData.groupType === "") {
-      toast("Please select a Group type");
+      toast.error("Please select a Group type");
       return;
     }
 
@@ -101,7 +101,7 @@ export default function AddGroup({
     localStorage.setItem("groupsData", JSON.stringify(storedGroupData));
     addGroupToList(groupsData);
     closeAddGroupModal();
-    toast("New group added");
+    toast.success("New group added");
     localStorage.removeItem("temporaryGroupData");
   };
 
