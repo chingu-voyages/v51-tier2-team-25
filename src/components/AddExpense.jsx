@@ -22,12 +22,12 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     return formatDate
   }
   
-  // Initialize state for groupsData
+  // Initialize state for expensesData
   const [expensesData, setExpensesData] = useState({
     name: "",
     amount:"",
     date:generateDate(),
-    category:"",
+    category:null,
     description:'',
     id:uuidv4(),
     groupId:currentGroup.id,
@@ -67,9 +67,21 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     //save updated array to local storage
     localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
     addExpenseToList(expensesData);
-    closeAddExpense();
-    toast.success("New expense added");  
-    
+    // closeAddExpense();
+    toast.success("New expense added");
+     
+    setExpensesData({
+      name: "",
+      amount:"",
+      date:generateDate(),
+      category:null,
+      description:'',
+      id:uuidv4(),
+      groupId:currentGroup.id,
+      participants:[]
+    })
+
+    setSelectedParticipant(null)
   };
 
   const addParticipant = () =>{
@@ -84,7 +96,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
  
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
       <div className="relative border w-[535px] h-[625px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica">
         
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-border">
@@ -138,6 +150,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
                 <p className='w-full pb-1 text-sm'>Category*</p>
                 <ExpenseCategorySelection 
                   handleChange={handleChange}
+                  category={expensesData.category}
                 />  
               </div>                          
             </div>            
@@ -178,7 +191,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
               </ul>
             </div>
             
-            <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">
+            <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end rounded-b-md">
               <button
                 type={"button"}
                 onClick={closeAddExpense}
