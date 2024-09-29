@@ -61,14 +61,14 @@ export default function Navbar() {
         </div>
 
 
-        <div className={`md:block absolute z-10 w-full p-3 bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
-          <div className="flex items-center py-1 my-2 rounded hover:bg-light-indigo" onClick={handleNavClick}>
+        <div className={`md:block absolute z-10 w-full p-3 md:bg-white bg-[#F0F1F5] ${isMenuOpen ? 'block' : 'hidden'}`}>
+          <div className="flex items-center py-1 my-2 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]  " onClick={handleNavClick}>
             <img src="../../images/Home.svg" className="mr-2" />
             <NavLink className="block" to="/">
               Home
             </NavLink>
           </div>
-          <div className="flex items-center py-1 my-6 rounded hover:bg-light-indigo" onClick={handleNavClick}>
+          <div className="flex items-center py-1 my-6 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
             <img src="../../images/Profile.svg" className="mr-2" />
             <NavLink className="block" to="/profile">
               Profile
@@ -91,7 +91,7 @@ export default function Navbar() {
                   {groups.map((group) => (
                     <li
                       key={group.id}
-                      className="flex items-center py-1 my-2 rounded hover:bg-light-indigo"
+                      className="flex items-center py-1 my-2 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]"
                     >
                       <img
                         src="../../images/profilePlaceHolder.png"
@@ -120,7 +120,7 @@ export default function Navbar() {
                   {friends.map((friend) => (
                     <li
                       key={friend.id}
-                      className="flex items-center py-1 my-2 rounded hover:bg-light-indigo"
+                      className="flex items-center py-1 my-2 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]"
                     >
                       <img
                         src="../../images/profilePlaceHolder.png"
