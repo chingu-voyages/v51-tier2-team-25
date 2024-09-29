@@ -4,6 +4,7 @@ import { AppContext } from "../App";
 import EditGroupForm from "../components/EditGroupForm";
 import AddExpense from "../components/AddExpense";
 import EditAddFriendModal from "../components/EditAddFriendModal";
+import RemainingBudget from "../helpers/remainingBudget";
 
 const getNavLinkClass = ({ isActive })=> isActive ? "px-2 py-1 text-sm bg-gray-200 rounded-t-md" : "px-2 py-1 text-sm"
 
@@ -12,8 +13,7 @@ export default function Groups() {
   const { groups } = useContext(AppContext); // Get all groups from context
   const navigate = useNavigate()  
 
-  const [isEditGroupFormModalOpen, setIsEditGroupFormModalOpen] =
-    useState(false);
+  const [isEditGroupFormModalOpen, setIsEditGroupFormModalOpen] = useState(false);
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
   const { addExpenseToList } = useContext(AppContext);
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
@@ -48,6 +48,7 @@ export default function Groups() {
   function openAddFriendModal() {
     setIsAddFriendModalOpen(true);
   }
+
 
   return (
     <>
@@ -105,7 +106,7 @@ export default function Groups() {
 
               <div className="flex flex-col">
                 <p className="text-xs text-gray-500">Remaining</p>
-                <p className="text-sm, text-gray-950">$ placeholder</p>
+                <p className="text-sm, text-gray-950">${RemainingBudget()}</p>
               </div>
 
               <button

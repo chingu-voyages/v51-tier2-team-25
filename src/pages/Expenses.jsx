@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../App";
 import EditExpense from "../components/EditExpense";
+import GetOwePaid from "../helpers/GetOwePaid";
 
 export default function Expenses() {
   const { expenses } = useContext(AppContext);
@@ -38,7 +39,7 @@ export default function Expenses() {
             </div>
             <div className='flex gap-4 text-sm'>
               <div className='flex flex-col gap-2'>
-                <p>Placeholder Get/Owe/paid</p>              
+                <GetOwePaid />             
                 <p>Placeholder people remaining</p>
               </div>
               <div className="flex gap-2">
