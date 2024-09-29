@@ -2,6 +2,21 @@ import Select from "react-select"
 import PropTypes from 'prop-types'
 import {useState, useEffect, useMemo } from 'react'
 
+const customStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isFocused ? "#D1D5DB" : "white",
+    color: state.isActive ? "black" : "",
+    "&:active": {
+      backgroundColor: "#D1D5DB",
+    },
+    fontSize:'12px'   
+  }),
+  control:(provided)=>({
+    ...provided,
+    fontSize:'12px'
+  })
+};
 
 const ExpenseCategorySelection = ({ handleChange, category }) => {
 
@@ -17,21 +32,6 @@ const ExpenseCategorySelection = ({ handleChange, category }) => {
     { value: "transportation",label:"Transportation 🚗"},
   ], [])
 
-  const customStyles = {
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isFocused ? "#D1D5DB" : "white",
-      color: state.isActive ? "black" : "",
-      "&:active": {
-        backgroundColor: "#D1D5DB",
-      },
-      fontSize:'12px'   
-    }),
-    control:(provided)=>({
-      ...provided,
-      fontSize:'12px'
-    })
-  };
 
   //update local state when parent sends new category
   useEffect(()=>{

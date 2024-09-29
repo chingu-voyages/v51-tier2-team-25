@@ -36,6 +36,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
 
   //Temp state to hold participant
   const [selectedParticipant, setSelectedParticipant] = useState(null)
+  const [resetSearchBar, setResetSearchBar]=useState(false)
 
   // Handle input changes and updates form data state
   const handleChange = (event, selectOptionName) => {
@@ -82,6 +83,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     })
 
     setSelectedParticipant(null)
+    setResetSearchBar(prev => !prev)
   };
 
   const addParticipant = () =>{
@@ -178,6 +180,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
                   handleParticipantAdded={(participant)=>setSelectedParticipant(participant)}
                   purpose="participant" //specifies purpose of search bar is participant
                   groupMembers={currentGroup?.members || []}
+                  resetSearchBar={resetSearchBar}
                 />
                 <button
                   onClick={addParticipant}
