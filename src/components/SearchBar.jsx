@@ -20,7 +20,7 @@ export default function SearchBar({
   handleParticipantAdded, 
   purpose="member", //sets default purpose of search bar to add member to group
   groupMembers=[],
-  
+  resetSearchBar
 }) {  
   //using react select library for component
   const { friends } = useContext(AppContext);
@@ -49,6 +49,13 @@ export default function SearchBar({
   const [isLoading] = useState(false);
   const [isRtl] = useState(false);
 
+  const [selectedValue, setSelectedValue]=useState(null)
+
+  //reset selected value when resetsearchbar changes
+  useEffect(()=>{
+    setSelectedValue(null)
+  }, [resetSearchBar])
+
   //update isDisabled state when change groupMember or friends
   useEffect(()=>{
     setIsDisabled(isListEmpty)
@@ -56,13 +63,13 @@ export default function SearchBar({
 
   function addSelectionToForm(optionSelected) {
     if (!optionSelected) {
+      setSelectedValue(null)
       return;
     }
 
     const selectedPerson = (purpose==='participant'? groupMembers: friends).find(
       (person)=> person.userName === optionSelected.value
-    )
-    
+    )    
     
     //call appropriate handler based on purpose of prop
     if(purpose==="member" && handleMemberSelected){
@@ -70,6 +77,8 @@ export default function SearchBar({
     } else if(purpose==="participant" && handleParticipantAdded){
       handleParticipantAdded(selectedPerson)
     }
+
+    setSelectedValue(optionSelected)
     
   }
 
@@ -90,6 +99,7 @@ export default function SearchBar({
         filterOption={filterOptions}
         onChange={addSelectionToForm}
         maxMenuHeight={150}
+        value={selectedValue}
       />
     </div>
   );
