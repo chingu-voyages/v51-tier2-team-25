@@ -5,6 +5,8 @@ import EditGroupForm from "../components/EditGroupForm";
 import AddExpense from "../components/AddExpense";
 import EditAddFriendModal from "../components/EditAddFriendModal";
 
+const getNavLinkClass = ({ isActive })=> isActive ? "px-2 py-1 text-sm bg-gray-200 rounded-t-md" : "px-2 py-1 text-sm"
+
 export default function Groups() {
   const { groupId } = useParams(); // Get the groupId from the URL
   const { groups } = useContext(AppContext); // Get all groups from context
@@ -135,20 +137,15 @@ export default function Groups() {
               />
             )}
           </div>
-        </div>
-        <div className="flex gap-1">
-          <div className="bg-gray-200 rounded-t-md">
-            <NavLink className="px-2 py-1 text-sm" to={`expenses`}>
-              Expenses
-            </NavLink>
-          </div>
-
-          <div className="bg-gray-200 rounded-t-md">
-            <NavLink className="px-2 py-1 text-sm" to={`statistics`}>
-              Statistics
-            </NavLink>
-          </div>
-        </div>
+        </div>        
+        <div className=" rounded-t-md">
+          <NavLink className={getNavLinkClass} to={`expenses`}>
+            Expenses
+          </NavLink>   
+          <NavLink className={getNavLinkClass} to={`statistics`}>
+            Statistics
+          </NavLink>
+        </div>       
 
         <Outlet />
       </div>
