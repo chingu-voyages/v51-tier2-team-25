@@ -1,106 +1,132 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../App";
 import toast from "react-hot-toast";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 import SearchBar from "./SearchBar";
-import ExpenseCategorySelection from './ExpenseCategorySelection'
+import ExpenseCategorySelection from "./ExpenseCategorySelection";
 import { v4 as uuidv4 } from "uuid";
-
-
-// eslint-disable-next-line react/prop-types
+import ExpenseMembers from "./ExpenseParticipant";
 
 export default function AddExpense({ closeAddExpense, currentGroup }) {
+  const temporaryExpensesData = JSON.parse(
+    localStorage.getItem("temporaryExpensesData")
+  );
 
-  //I'm using context but we can use props
   const { addExpenseToList } = useContext(AppContext);
-  
-  //Generate today's date  
-  const generateDate = () =>{
-    const date = new Date()
+
+  //Generate today's date
+  const generateDate = () => {
+    const date = new Date();
     // console.log(date)
-    const formatDate = date.toLocaleDateString()
-    return formatDate
-  }
-  
+    const formatDate = date.toLocaleDateString();
+    return formatDate;
+  };
+
   // Initialize state for groupsData
-  const [expensesData, setExpensesData] = useState({
-    name: "",
-    amount:"",
-    date:generateDate(),
-    category:"",
-    description:'',
-    id:uuidv4(),
-    groupId:currentGroup.id,
-    participants:[]
-  });
+  const [expensesData, setExpensesData] = useState(
+    temporaryExpensesData
+      ? temporaryExpensesData
+      : {
+          name: "",
+          amount: "",
+          date: generateDate(),
+          category: "",
+          description: "",
+          id: uuidv4(),
+          groupId: currentGroup.id,
+          participants: [],
+        }
+  );
 
   //Temp state to hold participant
-  const [selectedParticipant, setSelectedParticipant] = useState(null)
+  const [selectedParticipant, setSelectedParticipant] = useState(null);
 
   // Handle input changes and updates form data state
   const handleChange = (event, selectOptionName) => {
-    
-    if(selectOptionName){
-      setExpensesData(prevExpensesData =>({
+    if (selectOptionName) {
+      setExpensesData((prevExpensesData) => ({
         ...prevExpensesData,
-        [selectOptionName]:event.value,
-      }))
+        [selectOptionName]: event.value,
+      }));
     } else {
-        const { name, value } = event.target;
-        setExpensesData((prevExpensesData) => ({
-          ...prevExpensesData,
-          [name]: value,
-        }));
-    }    
+      const { name, value } = event.target;
+      setExpensesData((prevExpensesData) => ({
+        ...prevExpensesData,
+        [name]: value,
+      }));
+    }
   };
-
 
   const addNewExpense = (event) => {
     event.preventDefault();
 
     //get stored data from local storage or initialize array
-    let storedExpenseData = JSON.parse(localStorage.getItem("expensesData")) || [];
-    
+    let storedExpenseData =
+      JSON.parse(localStorage.getItem("expensesData")) || [];
+
     //append new form data to array
     storedExpenseData.push(expensesData);
-    
+
     //save updated array to local storage
     localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
     addExpenseToList(expensesData);
     closeAddExpense();
-    toast("New expense added");    
+    localStorage.removeItem("temporaryExpensesData");
+    toast("New expense added");
   };
 
-  const addParticipant = () =>{
-    if(selectedParticipant){
+  const addParticipant = () => {
+    if (selectedParticipant) {
+      const isSelectedParticipantIncluded =
+        expensesData.participants.includes(selectedParticipant);
+      if (isSelectedParticipantIncluded) {
+        toast("Friend is already included");
+        return;
+      }
       setExpensesData((prevData) => ({
         ...prevData,
         participants: [...prevData.participants, selectedParticipant],
-      }))
-      setSelectedParticipant(null)
+      }));
+      setSelectedParticipant(null);
     }
-  } 
- 
+  };
+
+  function deleteParticipant(memberToDelete) {
+    setExpensesData((prevData) => ({
+      ...prevData,
+      participants: prevData.participants.filter(
+        (member) => member.id !== memberToDelete.id
+      ),
+    }));
+  }
+
+  // function createTemporaryExpensesData() {
+  //   localStorage.setItem(
+  //     "temporaryExpensesData",
+  //     JSON.stringify({
+  //       ...expensesData,
+  //       participants: expensesData.participants,
+  //     })
+  //   );
+  // }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
       <div className="relative border w-[535px] h-[625px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica">
-        
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-border">
           <h1 className="p-0 text-md">New Expense</h1>
           <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
         </div>
-        
+
         <form
           onSubmit={addNewExpense}
           className="flex flex-col flex-1 gap-6 border border-none"
         >
           <div className="flex flex-col">
-            <div className='flex items-start'>
-              
-              <div className='relative flex flex-col w-full'>
+            <div className="flex items-start">
+              <div className="relative flex flex-col w-full">
                 <label className="text-sm">
-                Expense name*
+                  Expense name*
                   <input
                     className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
                     type="text"
@@ -110,42 +136,42 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
                     maxLength={30}
                     required
                   />
-                </label>                
-              </div>            
+                </label>
+              </div>
 
-              <label className='ml-2 text-sm'>
+              <label className="ml-2 text-sm">
                 Amount*
-                <input 
-                  className='w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9'
-                  type='number'
+                <input
+                  className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                  type="number"
                   step={0.01}
                   min={0.01}
-                  name='amount'
+                  name="amount"
                   value={expensesData.amount}
                   onChange={handleChange}
                   required
                 />
               </label>
             </div>
-            <div className='flex items-start pt-4 '>
-              <div className='flex flex-col w-full'>
-                <p className='text-sm'>Date*</p>
-                <p className='pl-2 mt-4 text-sm text-input-text'>{generateDate()}</p>
+            <div className="flex items-start pt-4 ">
+              <div className="flex flex-col w-full">
+                <p className="text-sm">Date*</p>
+                <p className="pl-2 mt-4 text-sm text-input-text">
+                  {generateDate()}
+                </p>
               </div>
 
-              <div className='flex flex-col w-full'>
-                <p className='w-full pb-1 text-sm'>Category*</p>
-                <ExpenseCategorySelection 
-                  handleChange={handleChange}
-                />  
-              </div>                          
-            </div>            
-            
-            <label className='flex flex-col pt-4 text-sm '>
+              <div className="flex flex-col w-full">
+                <p className="w-full pb-1 text-sm">Category*</p>
+                <ExpenseCategorySelection handleChange={handleChange} />
+              </div>
+            </div>
+
+            <label className="flex flex-col pt-4 text-sm ">
               Expense description*
-              <textarea 
-                className='border border-gray-300 rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500'              
-                name='description'
+              <textarea
+                className="border border-gray-300 rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500"
+                name="description"
                 value={expensesData.description}
                 onChange={handleChange}
                 required
@@ -153,34 +179,45 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
             </label>
 
             {/* TODO PLACEHOLDER */}
-            <div className='pt-4 mb-auto'>
-              <p className='border border-gray-300 border-dashed rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500'>placeholder to add receipt</p>
+            <div className="pt-4 mb-auto">
+              <p className="border border-gray-300 border-dashed rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500">
+                placeholder to add receipt
+              </p>
             </div>
-
-            <div className='pt-4 mb-auto'>
-              <p >Add participants</p>
+            <div className="pt-4 pb-2 mb-auto">
+              <p>Add participants</p>
               <div className="flex items-center">
-                <SearchBar 
-                  handleParticipantAdded={(participant)=>setSelectedParticipant(participant)}
+                <SearchBar
+                  handleParticipantAdded={(participant) =>
+                    setSelectedParticipant(participant)
+                  }
                   purpose="participant" //specifies purpose of search bar is participant
                   groupMembers={currentGroup?.members || []}
                 />
                 <button
                   onClick={addParticipant}
                   type="button"
-                  className="px-3 py-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo"
-                >Add</button>
+                  className="ml-2 px-3 py-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo"
+                >
+                  Add
+                </button>
               </div>
-              {/* DISPLAY PARTICIPANTS     */}
-              <ul>{expensesData.participants.map(participant =>(
-                <li key={participant.id}>{participant.name}</li>))}
-              </ul>
+
+              <div className="overflow-y-auto max-h-14">
+                <ExpenseMembers
+                  expenseParticipants={expensesData.participants}
+                  deleteParticipant={deleteParticipant}
+                />
+              </div>
             </div>
-            
+
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">
               <button
                 type={"button"}
-                onClick={closeAddExpense}
+                onClick={() => {
+                  localStorage.removeItem("temporaryExpensesData");
+                  closeAddExpense();
+                }}
                 className="mr-2 text-sm"
               >
                 Close
@@ -195,12 +232,11 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
           </div>
         </form>
       </div>
-    </div>     
-
+    </div>
   );
 }
 //Add proptypes validation for eslint
 AddExpense.propTypes = {
   closeAddExpense: PropTypes.func.isRequired,
-  currentGroup: PropTypes.object.isRequired
-}
+  currentGroup: PropTypes.object.isRequired,
+};
