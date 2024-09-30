@@ -108,14 +108,17 @@ export default function Groups() {
             <div className="flex items-center w-full gap-6 place-content-end">
               <div className="flex flex-col">
                 <p className="text-xs text-gray-500">Allotted budget</p>
-                <p className="text-sm, text-gray-950">
+                <p className="text-sm text-gray-950">
                   $ {currentGroup?.allottedBudget}
                 </p>
               </div>
 
               <div className="flex flex-col">
                 <p className="text-xs text-gray-500">Remaining</p>
-                <RemainingBudget groupId={Number(groupId)} />
+                <p className="text-sm text-gray-950">
+                  $ <RemainingBudget groupId={Number(groupId)} />
+                </p>
+                
               </div>
 
               <button
