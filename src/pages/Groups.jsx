@@ -4,7 +4,7 @@ import { AppContext } from "../App";
 import EditGroupForm from "../components/EditGroupForm";
 import AddExpense from "../components/AddExpense";
 import EditAddFriendModal from "../components/EditAddFriendModal";
-import RemainingBudget from "../helpers/remainingBudget";
+import RemainingBudget from "../helpers/RemainingBudget";
 
 const getNavLinkClass = ({ isActive })=> isActive ? "px-2 py-1 text-sm bg-gray-200 rounded-t-md" : "px-2 py-1 text-sm"
 
