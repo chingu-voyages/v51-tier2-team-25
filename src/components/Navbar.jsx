@@ -53,7 +53,7 @@ useEffect(() => {
   function handleScreenResize(event) {
     if (event.matches) {
       // Check if user is on the MobileGroupsPage
-      if (location.pathname === "/mobile-groups" || location.pathname === "/mobile") {
+      if (location.pathname === "/mobile-groups" || location.pathname === "/mobile-friends") {
         navigate("/"); // Redirect to Home if screen is larger
       }
     }
