@@ -1,5 +1,5 @@
-import { NavLink } from "react-router-dom";
-import { useState, useContext } from "react";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { useState, useContext, useEffect } from "react";
 import AddGroup from "./AddGroup.jsx";
 import { AppContext } from "../App";
 import AddFriend from "./AddFriend.jsx";
@@ -14,6 +14,8 @@ export default function Navbar() {
   const [isLinkAddFriendModalOpen, setIsLinkAddFriendModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { groups, friends } = useContext(AppContext);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   function openAddGroupModal() {
     setIsAddGroupModalOpen(true);
@@ -43,6 +45,27 @@ export default function Navbar() {
   function handleNavClick() {
     setIsMenuOpen()
   }
+
+// Screen size change effect
+useEffect(() => {
+  const mediaQuery = window.matchMedia("(min-width: 768px)");
+
+  function handleScreenResize(event) {
+    if (event.matches) {
+      // Check if user is on the MobileGroupsPage
+      if (location.pathname === "/mobile-groups" || location.pathname === "/mobile") {
+        navigate("/"); // Redirect to Home if screen is larger
+      }
+    }
+  }
+
+  mediaQuery.addEventListener("change", handleScreenResize);
+
+  return () => {
+    mediaQuery.removeEventListener("change", handleScreenResize);
+  };
+}, [location.pathname, navigate]);
+
 
   return (
     <aside className="flex flex-col md:h-screen md:p-12 font-geologica md:py-12 md:px-8">

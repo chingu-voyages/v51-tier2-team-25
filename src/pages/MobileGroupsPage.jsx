@@ -13,7 +13,6 @@ export default function MobileGroupsPage() {
   const [isLinkAddFriendModalOpen, setIsLinkAddFriendModalOpen] = useState(false);
 
   useEffect(() => {
-    // Check if location.state exists before trying to access its properties
     if (location.state) {
       if (location.state.openAddGroupModal) {
         setIsAddGroupModalOpen(true);
