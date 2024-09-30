@@ -5,13 +5,9 @@ import PropTypes from "prop-types";
 import SearchBar from "./SearchBar";
 import ExpenseCategorySelection from "./ExpenseCategorySelection";
 import { v4 as uuidv4 } from "uuid";
-import ExpenseMembers from "./ExpenseParticipant";
+import ExpenseParticipant from "./ExpenseParticipant";
 
 export default function AddExpense({ closeAddExpense, currentGroup }) {
-  const temporaryExpensesData = JSON.parse(
-    localStorage.getItem("temporaryExpensesData")
-  );
-
   const { addExpenseToList } = useContext(AppContext);
 
   //Generate today's date
@@ -23,20 +19,16 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
   };
 
   // Initialize state for groupsData
-  const [expensesData, setExpensesData] = useState(
-    temporaryExpensesData
-      ? temporaryExpensesData
-      : {
-          name: "",
-          amount: "",
-          date: generateDate(),
-          category: "",
-          description: "",
-          id: uuidv4(),
-          groupId: currentGroup.id,
-          participants: [],
-        }
-  );
+  const [expensesData, setExpensesData] = useState({
+    name: "",
+    amount: "",
+    date: generateDate(),
+    category: "",
+    description: "",
+    id: uuidv4(),
+    groupId: currentGroup.id,
+    participants: [],
+  });
 
   //Temp state to hold participant
   const [selectedParticipant, setSelectedParticipant] = useState(null);
@@ -71,8 +63,8 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
     addExpenseToList(expensesData);
     closeAddExpense();
-    localStorage.removeItem("temporaryExpensesData");
     toast("New expense added");
+    console.log(expensesData);
   };
 
   const addParticipant = () => {
@@ -100,15 +92,22 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     }));
   }
 
-  // function createTemporaryExpensesData() {
-  //   localStorage.setItem(
-  //     "temporaryExpensesData",
-  //     JSON.stringify({
-  //       ...expensesData,
-  //       participants: expensesData.participants,
-  //     })
-  //   );
-  // }
+  function addOrUpdateParticipants(updatedParticipant) {
+    setExpensesData((prevData) => {
+      const isParticipantOnExpense = prevData.participants.some(
+        (participant) => participant.id === updatedParticipant.id
+      );
+
+      const updatedParticipants = isParticipantOnExpense
+        ? prevData.participants.map((participant) =>
+            participant.id === updatedParticipant.id
+              ? updatedParticipant
+              : participant
+          )
+        : [...prevData.participants, updatedParticipants];
+      return { ...prevData, participants: updatedParticipants };
+    });
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
@@ -204,9 +203,10 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
               </div>
 
               <div className="overflow-y-auto max-h-14">
-                <ExpenseMembers
-                  expenseParticipants={expensesData.participants}
+                <ExpenseParticipant
+                  expensesData={expensesData}
                   deleteParticipant={deleteParticipant}
+                  addOrUpdateParticipants={addOrUpdateParticipants}
                 />
               </div>
             </div>
@@ -214,10 +214,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">
               <button
                 type={"button"}
-                onClick={() => {
-                  localStorage.removeItem("temporaryExpensesData");
-                  closeAddExpense();
-                }}
+                onClick={closeAddExpense}
                 className="mr-2 text-sm"
               >
                 Close
