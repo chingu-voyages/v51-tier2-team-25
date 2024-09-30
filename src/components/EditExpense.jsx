@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import SearchBar from "./SearchBar";
 import ExpenseCategorySelection from "./ExpenseCategorySelection";
 import DeleteExpenseModal from "./DeleteExpenseModal";
+import ConfirmationModal from "./ConfirmationModal";
 
 export default function EditExpense({ closeEditExpense, expense }) {
   const { updateExpenseInList, deleteExpenseInList } = useContext(AppContext);
@@ -19,6 +20,8 @@ export default function EditExpense({ closeEditExpense, expense }) {
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmCloseOpen, setIsConfirmCloseOpen] = useState(false); //confirmation modal
+  const [changesMade, setChangesMade] = useState(false); // Track if changes were made
 
   useEffect(() => {
     if (expense) {
@@ -32,6 +35,7 @@ export default function EditExpense({ closeEditExpense, expense }) {
       ...prevData,
       [name]: value,
     }));
+    setChangesMade(true);
   };
 
   const saveChanges = (event) => {
@@ -56,6 +60,23 @@ export default function EditExpense({ closeEditExpense, expense }) {
     closeEditExpense(); // Close the form after deletion
     setIsModalOpen(false); // This closes the modal
     toast(`Expense ${expenseName} was deleted`);
+  };
+
+  const handleClose = () => {
+    if (changesMade) {
+      setIsConfirmCloseOpen(true); // Open confirmation modal
+    } else {
+      closeEditExpense();
+    }
+  };
+
+  const confirmClose = () => {
+    setIsConfirmCloseOpen(false);
+    closeEditExpense();
+  };
+
+  const cancelClose = () => {
+    setIsConfirmCloseOpen(false);
   };
 
   return (
@@ -110,7 +131,8 @@ export default function EditExpense({ closeEditExpense, expense }) {
               </div>
               <div className="flex flex-col w-full">
                 <p className="w-full pb-1 text-sm">Category*</p>
-                <ExpenseCategorySelection handleChange={handleChange} />
+                <ExpenseCategorySelection handleChange={handleChange} 
+                category={expenseData.category}/>
               </div>
             </div>
 
@@ -140,7 +162,7 @@ export default function EditExpense({ closeEditExpense, expense }) {
             <div className="absolute bottom-0 left-0 right-0 flex items-center w-full gap-2 p-4 bg-light-indigo place-content-end">
               <button
                 type="button"
-                onClick={closeEditExpense}
+                onClick={handleClose}
                 className="text-sm"
               >
                 Close
@@ -168,6 +190,12 @@ export default function EditExpense({ closeEditExpense, expense }) {
         onConfirm={confirmDelete}
         onCancel={() => setIsModalOpen(false)}
         expenseName={expenseData.name}
+      />
+
+<ConfirmationModal
+        isOpen={isConfirmCloseOpen}
+        onConfirm={confirmClose}
+        onCancel={cancelClose}
       />
     </div>
   );
