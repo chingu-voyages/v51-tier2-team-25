@@ -14,7 +14,7 @@ export default {
         'title':'#292929',
         'input-text':'#989898',
         'input-border':'#DCDCDC',
-        'modal-text': '#464646'
+        'modal-text': '#464646',         
 
       },
       fontFamily: {
@@ -34,7 +34,6 @@ export default {
         bold:700,
       }
     },
-    
   },
   plugins: [],
 };
