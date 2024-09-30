@@ -1,11 +1,12 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createContext, useState } from "react";
+import MobileGroupsPage from "./pages/MobileGroupsPage.jsx";
 import RootLayout from "./pages/Root.jsx";
 import ErrorPage from "./pages/Error.jsx";
 import Profile from "./pages/Profile.jsx";
 import Groups from "./pages/Groups.jsx";
 import Friends from "./pages/Friends.jsx";
 import Home from "./pages/Home.jsx";
-import { createContext, useState } from "react";
 import Expenses from "./pages/Expenses.jsx";
 import Statistics from "./pages/Statistics.jsx"
 export const AppContext = createContext([]);
@@ -155,6 +156,10 @@ function App() {
         {
           path: "profile",
           element: <Profile />,
+        },
+        {
+          path: "mobile-groups",
+          element: <MobileGroupsPage />,
         },
         {
           path: "group/:groupId",

@@ -2,7 +2,6 @@ import { NavLink } from "react-router-dom";
 import { useState, useContext } from "react";
 import AddGroup from "./AddGroup.jsx";
 import { AppContext } from "../App";
-
 import AddFriend from "./AddFriend.jsx";
 import LinkAddFriendModal from "./LinkAddFriendModal.jsx";
 
@@ -17,11 +16,9 @@ export default function Navbar() {
   const { groups, friends } = useContext(AppContext);
 
   function openAddGroupModal() {
-    console.log("open group modal");
     setIsAddGroupModalOpen(true);
   }
   function closeAddGroupModal() {
-    console.log("close group modal");
     setIsAddGroupModalOpen(false);
   }
   function openAddFriendModal() {
@@ -33,6 +30,7 @@ export default function Navbar() {
   function openLinkAddFriendModal() {
     setIsLinkAddFriendModalOpen(true);
   }
+
   function closeLinkAddFriendModal() {
     setIsLinkAddFriendModalOpen(false);
     setIsAddGroupModalOpen(true);
@@ -74,8 +72,20 @@ export default function Navbar() {
               Profile
             </NavLink>
           </div>
+          <div className="md:hidden flex items-center py-1 my-6 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
+            <img src="../../images/Groups.svg" className="mr-2" />
+            <NavLink className="block" to={{pathname: "/mobile-groups"}}>
+              Groups
+            </NavLink>
+          </div>
+          <div className="md:hidden flex items-center py-1 my-6 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
+            <img src="../../images/Profile.svg" className="mr-2" />
+            <NavLink className="block" to="/">
+              Friends
+            </NavLink>
+          </div>
 
-          <ul>
+          <ul className="hidden md:block" >
             <li className="pt-6" onClick={handleNavClick}>
               <div className="flex items-center md:justify-between py-2">
                 <span className="text-gray-400 mr-4">Groups</span>
@@ -86,7 +96,7 @@ export default function Navbar() {
                   +
                 </button>
               </div>
-              {groups.length > 0 && (
+              {groups.length > 0 ? (
                 <ul>
                   {groups.map((group) => (
                     <li
@@ -103,7 +113,7 @@ export default function Navbar() {
                     </li>
                   ))}
                 </ul>
-              )}
+              ) : null}
             </li>
             <li className="pt-6" onClick={handleNavClick}>
               <div className="flex items-center md:justify-between py-2">
