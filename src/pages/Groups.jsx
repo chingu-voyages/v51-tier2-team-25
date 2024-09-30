@@ -11,7 +11,7 @@ const getNavLinkClass = ({ isActive })=> isActive ? "px-2 py-1 text-sm bg-gray-2
 export default function Groups() {
   const { groupId } = useParams(); // Get the groupId from the URL
   const { groups } = useContext(AppContext); // Get all groups from context
-  const navigate = useNavigate()  
+  const navigate = useNavigate();
 
   const [isEditGroupFormModalOpen, setIsEditGroupFormModalOpen] = useState(false);
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
@@ -21,13 +21,13 @@ export default function Groups() {
   // Find the current group based on the groupId
   const currentGroup = groups.find((group) => group.id === Number(groupId));
 
-  //console.log('current group expenses:',currentGroup?.expenses)  
+  //console.log('current group expenses:',currentGroup?.expenses)
 
-  useEffect(()=>{
-    if(currentGroup){
-      navigate(`expenses`) //auto navigate to expense page when group loads
+  useEffect(() => {
+    if (currentGroup) {
+      navigate(`expenses`); //auto navigate to expense page when group loads
     }
-  },[currentGroup, navigate])
+  }, [currentGroup, navigate]);
 
   function openEditGroupFormModal() {
     setIsEditGroupFormModalOpen(true);
@@ -61,9 +61,7 @@ export default function Groups() {
                 src="../../images/placeholder.jpg"
               />
               <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-1/2 top-24 rounded-xl">
-
                 {currentGroup?.groupType}
-
               </div>
             </div>
             <div className="w-full pl-3">
