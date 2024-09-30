@@ -55,11 +55,11 @@ export default function Navbar() {
             />
             <p className="block text-lg">Brand Name</p>
           </div>
-          <img src="../../images/Menu.svg" className="w-7 md:hidden" onClick={toggleMenu}/>
+          <img src="../../images/Menu.svg" className="w-7 md:hidden cursor-pointer" onClick={toggleMenu}/>
         </div>
 
 
-        <div className={`md:block absolute z-10 w-full p-3 md:bg-white bg-[#F0F1F5] ${isMenuOpen ? 'block' : 'hidden'}`}>
+        <div className={`md:block absolute z-10 w-full p-3 cursor-pointer md:bg-white bg-[#F0F1F5] ${isMenuOpen ? 'block' : 'hidden'}`}>
           <div className="flex items-center py-1 my-2 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]  " onClick={handleNavClick}>
             <img src="../../images/Home.svg" className="mr-2" />
             <NavLink className="block" to="/">

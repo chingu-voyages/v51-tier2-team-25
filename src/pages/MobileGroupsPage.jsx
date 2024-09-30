@@ -53,20 +53,36 @@ export default function MobileGroupsPage() {
   }
 
   return (
-    <div className="p-4">
-      <h2 className="text-lg font-bold mb-4">Your Groups</h2>
+    <div className="p-4 max-w-[500px] w-full tracking-wide">
+
+      {/* Group search bar comes here */}
+      <div className="border-2 border-dashed p-2 mb-3">
+        <p>search bar placeholder</p>
+      </div>
+
+      <h2 className="text-gray-500 mb-1">Groups</h2>
       <button
         onClick={openAddGroupModal}  
-        className="w-full p-2 bg-blue-500 text-white rounded mb-4"
+        className="w-full p-2 bg-gray-200 text-black rounded-md font-medium hover:bg-gray-300"
       >
-        + Add Group
+        + New group
       </button>
       {groups.length > 0 ? (
         <ul>
           {groups.map((group) => (
-            <li key={group.id} className="my-2">
-              <NavLink to={`/group/${group.id}`} className="text-blue-600">
-                {group.name}
+            <li 
+              key={group.id} 
+              className="border-2 border-gray-200 rounded-md mt-1 hover:bg-gray-200 bg-white"
+            >
+              <NavLink to={`/group/${group.id}`} className="flex items-center p-3">
+                <img
+                  src="../../images/profilePlaceHolder.png"
+                  className="w-8 mr-2 border border-gray-200 rounded-full"
+                />
+                <div>
+                  <h3 className="font-medium">{group.name}</h3>
+                  <p className="text-xs text-gray-600">{group.members.length} people</p>
+                </div>
               </NavLink>
             </li>
           ))}
