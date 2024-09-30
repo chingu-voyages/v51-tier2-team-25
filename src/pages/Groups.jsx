@@ -10,24 +10,35 @@ const getNavLinkClass = ({ isActive })=> isActive ? "px-2 py-1 text-sm bg-gray-2
 
 export default function Groups() {
   const { groupId } = useParams(); // Get the groupId from the URL
-  const { groups } = useContext(AppContext); // Get all groups from context
+  const { groups, addExpenseToList } = useContext(AppContext); // Get all groups from context
   const navigate = useNavigate();
 
   const [isEditGroupFormModalOpen, setIsEditGroupFormModalOpen] = useState(false);
-  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
-  const { addExpenseToList } = useContext(AppContext);
+  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);  
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
 
-  // Find the current group based on the groupId
   const currentGroup = groups.find((group) => group.id === Number(groupId));
-
-  //console.log('current group expenses:',currentGroup?.expenses)
 
   useEffect(() => {
     if (currentGroup) {
       navigate(`expenses`); //auto navigate to expense page when group loads
     }
   }, [currentGroup, navigate]);
+  
+  // Find the current group based on the groupId
+  if(!groupId){
+    console.error("groupId undefined")
+    return
+  }
+
+  if(!currentGroup){
+    console.error("Group not found")
+    return
+  }
+
+  //console.log('current group expenses:',currentGroup?.expenses)
+
+  
 
   function openEditGroupFormModal() {
     setIsEditGroupFormModalOpen(true);
@@ -104,7 +115,7 @@ export default function Groups() {
 
               <div className="flex flex-col">
                 <p className="text-xs text-gray-500">Remaining</p>
-                <p className="text-sm, text-gray-950">${RemainingBudget()}</p>
+                <RemainingBudget groupId={Number(groupId)} />
               </div>
 
               <button
