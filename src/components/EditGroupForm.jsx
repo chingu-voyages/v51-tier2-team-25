@@ -27,8 +27,9 @@ export default function EditGroupForm({
     id: group.id,
     description: group.description || "",
     allottedBudget: group.allottedBudget || "",
-    category: group.category || "",
-    members: group.members || [],
+    groupType: group.groupType || "",
+    members: group.members || []
+
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,8 +42,9 @@ export default function EditGroupForm({
         id: group.id,
         description: group.description,
         allottedBudget: group.allottedBudget,
-        category: group.category,
-        members: group.members,
+        groupType: group.groupType,
+        members: group.members
+
       });
     }
   }, [group]);
@@ -137,7 +139,7 @@ export default function EditGroupForm({
             <div className="flex flex-col">
               <div className="flex items-start">
                 <img
-                  src="../images/placeholder.jpg"
+                  src="../../images/placeholder.jpg"
                   className="border border-none rounded-full w-[80px] h-[80px] mr-4"
                 />
                 <div className="relative flex flex-col">
@@ -203,13 +205,13 @@ export default function EditGroupForm({
                 addMemberToGroup={addMemberToGroup}
                 groupMembers={tempGroupData.members}
               />
-              <div className="flex items-center justify-between pb-4 mb-4 border-b border-border mt-4">
+              <div className="flex items-center justify-between pb-4 mt-4 mb-4 border-b border-border">
                 <Link
                   onClick={() => {
                     closeEditGroupFormModal();
                     openAddFriendModal();
                   }}
-                  className="p-0 text-sm text-gray-400 underline  hover:text-black"
+                  className="p-0 text-sm text-gray-400 underline hover:text-black"
                 >
                   Add new friends to your friend list
                 </Link>

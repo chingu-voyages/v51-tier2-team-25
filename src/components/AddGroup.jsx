@@ -24,15 +24,24 @@ export default function AddGroup({
   const blockInvalidChar = (e) =>
     ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
 
+  const temporaryGroupData = JSON.parse(
+    localStorage.getItem("temporaryGroupData")
+  );
+
   // Initialize state for groupsData
-  const [groupsData, setGroupsData] = useState({
-    name: "",
-    id: generateGroupId(),
-    description: "",
-    allottedBudget: "",
-    members: JSON.parse(localStorage.getItem("temporaryMembers")) || [],
-    category: "",
-  });
+  const [groupsData, setGroupsData] = useState(
+    temporaryGroupData
+      ? temporaryGroupData
+      : {
+          name: "",
+          id: generateGroupId(),
+          description: "",
+          allottedBudget: "",
+          members: [],
+          groupType: "",
+          expenses: [],
+        }
+  );
 
   //render groupID to be visible on form
   const renderGroupId = () => {
@@ -49,7 +58,7 @@ export default function AddGroup({
 
     //check if value is empty or contains only spaces
     if (value.trim() === "" && value.length > 0) {
-      toast("Input cannot be empty or contain only spaces");
+      toast.error("Input cannot be empty or contain only spaces");
       return;
     }
 
@@ -58,7 +67,7 @@ export default function AddGroup({
       const newValue = parseFloat(value);
 
       if (!isNaN(newValue) && newValue > 1000000) {
-        toast("Alloted budget cannot exceed $1,000,000");
+        toast.error("Alloted budget cannot exceed $1,000,000");
         return;
       }
     }
@@ -75,12 +84,12 @@ export default function AddGroup({
     const budgetRegex = /^(0|[1-9]\d*)(\.\d+)?$/;
 
     if (!budgetRegex.test(groupsData.allottedBudget)) {
-      toast("Allotted budget must be a valid number");
+      toast.error("Allotted budget must be a valid number");
       return;
     }
 
-    if (groupsData.category === "") {
-      toast("Please select a Group type");
+    if (groupsData.groupType === "") {
+      toast.error("Please select a Group type");
       return;
     }
 
@@ -92,12 +101,11 @@ export default function AddGroup({
     localStorage.setItem("groupsData", JSON.stringify(storedGroupData));
     addGroupToList(groupsData);
     closeAddGroupModal();
-    toast("New group added");
-    //reset temporary members
-    localStorage.setItem("temporaryMembers", JSON.stringify([]));
+    toast.success("New group added");
+    localStorage.removeItem("temporaryGroupData");
   };
 
-  //to ensure member has id
+  //update groupsData by adding new member to members array
   function addMemberToGroup(newMember) {
     // const updatedMembers = [...groupsData.members, newMember];
     setGroupsData((prevData) => ({
@@ -115,9 +123,19 @@ export default function AddGroup({
     }));
   }
 
+  function createTemporaryGroupData() {
+    localStorage.setItem(
+      "temporaryGroupData",
+      JSON.stringify({
+        ...groupsData,
+        members: groupsData.members,
+      })
+    );
+  }
+
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-gray-800 bg-opacity-75">
-      <div className="relative  w-[535px] h-[625px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
+      <div className="relative  w-[535px] h-[625px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica  ">
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-border">
           <h1 className="p-0 text-md">New Group</h1>
           <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
@@ -130,7 +148,7 @@ export default function AddGroup({
           <div className="flex flex-col">
             <div className="flex items-start">
               <img
-                src="../images/placeholder.jpg"
+                src="../../images/placeholder.jpg"
                 className="border border-none rounded-full w-[80px] h-[80px] mr-4"
               />
               <div className="relative flex flex-col">
@@ -193,14 +211,11 @@ export default function AddGroup({
               addMemberToGroup={addMemberToGroup}
               groupMembers={groupsData.members}
             />
-            <div className="flex items-center justify-between pb-4 mb-4 border-b border-border mt-4">
+            <div className="flex items-center justify-between pb-4 mt-4 mb-4 border-b border-border">
               <Link
                 to="/"
                 onClick={() => {
-                  localStorage.setItem(
-                    "temporaryMembers",
-                    JSON.stringify(groupsData.members)
-                  );
+                  createTemporaryGroupData();
                   closeAddGroupModal();
                   openLinkAddFriendModal();
                 }}
@@ -217,12 +232,12 @@ export default function AddGroup({
               />
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end">
+            <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end rounded-b-md">
               <button
                 type={"button"}
                 onClick={() => {
                   closeAddGroupModal();
-                  localStorage.setItem("temporaryMembers", JSON.stringify([]));
+                  localStorage.removeItem("temporaryGroupData");
                 }}
                 className="mr-2 text-sm"
               >

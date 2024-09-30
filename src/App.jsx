@@ -20,7 +20,12 @@ function App() {
   const [expenses, setExpenses] = useState(
     JSON.parse(localStorage.getItem("expensesData")) || []
   );
+
   const [memberData, setMemberData] = useState({ name: "", share: "", id: "" });
+
+  //members added from group to expense
+  const [participantData, setParticipantData] = useState({name:"", share:"", id:""}
+  )
 
   function addFriendToList(newFriend) {
     console.log("addNewFriend-app", newFriend);
@@ -38,9 +43,25 @@ function App() {
 
   function addExpenseToList(newExpense) {
     console.log("addNewExpense-app", newExpense);
-    setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
+    //update expenses state
+    const updatedExpenses =[...expenses, newExpense]    
+    setExpenses(updatedExpenses);
+    localStorage.setItem("expensesData", JSON.stringify(updatedExpenses))
+
+    //update specific group w/ new expense
+    setGroups(prevGroups =>{
+      const updatedGroups = prevGroups.map(group =>{
+        if(group.id === newExpense.groupId){
+          return{...group, expenses: [...group.expenses, newExpense]}
+        }
+        return group
+      })
+      //save updated groups to local storage
+      localStorage.setItem("groupsData", JSON.stringify(updatedGroups))
+      return updatedGroups
+    })
   }
-  console.log("expenses from app", expenses);
+  console.log("expenses from app", expenses);  
 
   function updateGroup(updatedGroup) {
     setGroups((prevGroups) => {
@@ -70,6 +91,47 @@ function App() {
     });
   }
 
+  //updates expenses states @ global
+  function addParticipantToExpense(expenseId, newParticipant){
+    setExpenses(prevExpense =>{
+      const updatedExpenses = prevExpense.map(expense=>{
+        if(expense.id === expenseId){
+          return{
+            ...expense,
+            participants:[...expense.participants, newParticipant ]
+          }
+        }
+        return expense;
+      })
+      //update local storage w/ participants
+      localStorage.setItem("expensesData", JSON.stringify(updatedExpenses))
+      return updatedExpenses
+    })
+    //Update group w/updated expense
+    setGroups(prevGroups =>{
+      const updatedGroups = prevGroups.map(group => {
+        if(group.id === newParticipant.groupId){
+          return{
+            ...group,
+            expenses: group.expenses.map((expense) =>
+              expense.id === expenseId
+              ?{
+                ...expense,
+                participants: [...expense.participants, newParticipant]
+              }
+              :expense
+            )
+          }
+        }
+        return group
+      })
+      localStorage.setItem("groupsData", JSON.stringify(updatedGroups))
+      return updatedGroups
+    })
+
+  }
+
+
   function deleteExpenseInList(expenseId) {
     setExpenses((prevExpenses) => {
       const updatedExpenses = prevExpenses.filter((expense) => expense.id !== expenseId)
@@ -78,6 +140,7 @@ function App() {
     })
   }
   
+
 
   const router = createBrowserRouter([
     {
@@ -129,6 +192,9 @@ function App() {
         expenses,
         addExpenseToList,
         updateExpenseInList,
+        participantData,
+        setParticipantData,
+        addParticipantToExpense,
         deleteExpenseInList
       }}
     >

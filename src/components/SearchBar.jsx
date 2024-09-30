@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import Select from "react-select";
-import { useContext, useImperativeHandle, useState } from "react";
+import { useContext, useImperativeHandle, useState, useEffect } from "react";
 import { AppContext } from "../App";
 
 const customStyles = {
@@ -15,39 +15,71 @@ const customStyles = {
   }),
 };
 
-export default function SearchBar({ handleMemberSelected, ref }) {
+export default function SearchBar({ 
+  handleMemberSelected, 
+  handleParticipantAdded, 
+  purpose="member", //sets default purpose of search bar to add member to group
+  groupMembers=[],
+  resetSearchBar
+}) {  
   //using react select library for component
   const { friends } = useContext(AppContext);
-  const options = friends.map((friend) => {
-    return {
-      value: friend.userName,
-      label: friend.userName,
-    };
-  });
+  
+  //options based on purpose of SearchBar
+  const options = (purpose === 'participant' ? groupMembers : friends).map(person =>({
+    value: person.userName,
+    label: person.userName,
+    id:person.id,
+  }))
+
   const placeHolderMessage =
-    friends.length === 0
-      ? "Please add a friend first"
+    options.length === 0
+      ? (purpose ==="participant" ? "No members in this group": "Please add a friend first")
       : "Search on your list of friends";
-  const isFriendListEmpty = friends.length === 0;
+
+  //if no options to choose
+  const isListEmpty = options.length === 0;
 
   const filterOptions = (option, inputValue) =>
     option.value.toLowerCase().includes(inputValue);
 
-  const [isClearable, setIsClearable] = useState(true);
-  const [isSearchable, setIsSearchable] = useState(true);
-  const [isDisabled, setIsDisabled] = useState(isFriendListEmpty);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRtl, setIsRtl] = useState(false);
+  const [isClearable] = useState(true);
+  const [isSearchable] = useState(true);
+  const [isDisabled, setIsDisabled] = useState(isListEmpty);
+  const [isLoading] = useState(false);
+  const [isRtl] = useState(false);
 
-  function addSelectionToForm(optionselected) {
-    if (!optionselected) {
+  const [selectedValue, setSelectedValue]=useState(null)
+
+  //reset selected value when resetsearchbar changes
+  useEffect(()=>{
+    setSelectedValue(null)
+  }, [resetSearchBar])
+
+  //update isDisabled state when change groupMember or friends
+  useEffect(()=>{
+    setIsDisabled(isListEmpty)
+  },[groupMembers, friends, isListEmpty])
+
+  function addSelectionToForm(optionSelected) {
+    if (!optionSelected) {
+      setSelectedValue(null)
       return;
     }
-    const selectedFriend = friends.filter(
-      (friend) => friend.userName === optionselected.value
-    );
-    const newMember = selectedFriend[0];
-    handleMemberSelected(newMember);
+
+    const selectedPerson = (purpose==='participant'? groupMembers: friends).find(
+      (person)=> person.userName === optionSelected.value
+    )    
+    
+    //call appropriate handler based on purpose of prop
+    if(purpose==="member" && handleMemberSelected){
+      handleMemberSelected(selectedPerson);
+    } else if(purpose==="participant" && handleParticipantAdded){
+      handleParticipantAdded(selectedPerson)
+    }
+
+    setSelectedValue(optionSelected)
+    
   }
 
   return (
@@ -67,6 +99,7 @@ export default function SearchBar({ handleMemberSelected, ref }) {
         filterOption={filterOptions}
         onChange={addSelectionToForm}
         maxMenuHeight={150}
+        value={selectedValue}
       />
     </div>
   );
