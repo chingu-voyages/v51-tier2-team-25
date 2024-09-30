@@ -39,7 +39,14 @@ export default function AddFriend({ closeAddFriendModal }) {
     addFriendToList(newFriendData);
     closeAddFriendModal();
     toast("New friend added");
-    navigate(`friend/${newFriendData.id}`);
+    // Check screen size to conditionally navigate
+    if (window.innerWidth < 768) {
+      // If small screen, navigate to mobile-friends page
+      navigate("/mobile-friends");
+    } else {
+      // If not small screen, navigate to the friend's detail page
+      navigate(`friend/${newFriendData.id}`);
+    }
   };
 
   return (

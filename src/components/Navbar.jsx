@@ -45,50 +45,52 @@ export default function Navbar() {
   }
 
   return (
-    <aside className="flex flex-col md:h-screen md:p-12 font-geologica">
+    <aside className="flex flex-col md:h-screen md:p-12 font-geologica md:py-12 md:px-8">
       <nav className="md:w-48 relative">
         <div className="flex justify-between my-3 mx-4 md:m-0">
-          <div className="flex items-center md:pb-12">
-            <img
-              src="../../images/placeholder.jpg"
-              className="w-8 h-8 mr-2 border border-none rounded-full"
-            />
-            <p className="block text-lg">Brand Name</p>
-          </div>
+          <NavLink className="block" to="/">
+              <div className="flex items-center md:pb-12 px-3">
+                  <img
+                    src="../../images/placeholder.jpg"
+                    className="w-8 h-8 mr-2 border border-none rounded-full"
+                  />
+                  <p className="block text-lg">Brand Name</p>
+              </div>
+            </NavLink>
           <img src="../../images/Menu.svg" className="w-7 md:hidden cursor-pointer" onClick={toggleMenu}/>
         </div>
 
 
-        <div className={`md:block absolute z-10 w-full p-3 cursor-pointer md:bg-white bg-[#F0F1F5] ${isMenuOpen ? 'block' : 'hidden'}`}>
-          <div className="flex items-center py-1 my-2 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]  " onClick={handleNavClick}>
-            <img src="../../images/Home.svg" className="mr-2" />
-            <NavLink className="block" to="/">
-              Home
-            </NavLink>
+        <div className={`md:block absolute z-10 w-full cursor-pointer md:bg-white bg-[#F0F1F5] ${isMenuOpen ? 'block' : 'hidden'}`}>
+          <NavLink className="block" to="/">
+            <div className="flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
+              <img src="../../images/Home.svg" className="mr-2" />
+              <p className="font-extralight">Home</p>
+            </div>
+          </NavLink>
+          <NavLink className="block" to="/profile">
+            <div className="flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
+              <img src="../../images/Profile.svg" className="mr-2" />
+              <p className="font-extralight">Profile</p>
+            </div>
+          </NavLink>
+          <NavLink className="block" to={{pathname: "/mobile-groups"}}>
+            <div className="md:hidden flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
+              <img src="../../images/Groups.svg" className="mr-2" />
+              <p className="font-extralight">Groups</p>
+            </div>
+          </NavLink>
+          <NavLink className="block" to={{pathname: "/mobile-friends"}}>
+          <div className="md:hidden flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
+            <img src="../../images/Friends.svg" className="mr-2" />
+            <p className="font-extralight">Friends</p>
           </div>
-          <div className="flex items-center py-1 my-6 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
-            <img src="../../images/Profile.svg" className="mr-2" />
-            <NavLink className="block" to="/profile">
-              Profile
-            </NavLink>
-          </div>
-          <div className="md:hidden flex items-center py-1 my-6 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
-            <img src="../../images/Groups.svg" className="mr-2" />
-            <NavLink className="block" to={{pathname: "/mobile-groups"}}>
-              Groups
-            </NavLink>
-          </div>
-          <div className="md:hidden flex items-center py-1 my-6 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
-            <img src="../../images/Profile.svg" className="mr-2" />
-            <NavLink className="block" to="/">
-              Friends
-            </NavLink>
-          </div>
+          </NavLink>
 
           <ul className="hidden md:block" >
             <li className="pt-6" onClick={handleNavClick}>
               <div className="flex items-center md:justify-between py-2">
-                <span className="text-gray-400 mr-4">Groups</span>
+                <span className="text-gray-400 mr-4 p-3">Groups</span>
                 <button
                   onClick={openAddGroupModal}
                   className="w-6 h-6 text-center rounded-md text-light-indigo bg-button hover:bg-hover"
@@ -101,13 +103,13 @@ export default function Navbar() {
                   {groups.map((group) => (
                     <li
                       key={group.id}
-                      className="flex items-center py-1 my-2 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]"
+                      className="flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]"
                     >
                       <img
                         src="../../images/profilePlaceHolder.png"
                         className="w-6 h-6 mr-2 border border-none rounded-full"
                       />
-                      <NavLink className="block " to={`/group/${group.id}`}>
+                      <NavLink className="block md:font-extralight" to={`/group/${group.id}`}>
                         {group.name}
                       </NavLink>
                     </li>
@@ -117,7 +119,7 @@ export default function Navbar() {
             </li>
             <li className="pt-6" onClick={handleNavClick}>
               <div className="flex items-center md:justify-between py-2">
-                <span className="text-gray-400 mr-4">Friends</span>
+                <span className="text-gray-400 mr-4 p-3">Friends</span>
                 <button
                   onClick={openAddFriendModal}
                   className="w-6 h-6 text-center rounded-md text-light-indigo bg-button hover:bg-hover"
@@ -130,14 +132,14 @@ export default function Navbar() {
                   {friends.map((friend) => (
                     <li
                       key={friend.id}
-                      className="flex items-center py-1 my-2 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]"
+                      className="flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]"
                     >
                       <img
                         src="../../images/profilePlaceHolder.png"
                         className="w-6 h-6 mr-2 border border-none rounded-full"
                       />
 
-                      <NavLink className="block" to={`/friend/${friend.id}`}>
+                      <NavLink className="block md:font-extralight" to={`/friend/${friend.id}`}>
                         {friend.userName}
                       </NavLink>
                     </li>

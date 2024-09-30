@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { createContext, useState } from "react";
 import MobileGroupsPage from "./pages/MobileGroupsPage.jsx";
+import MobileFriendsPage from "./pages/MobileFriendsPage.jsx";
 import RootLayout from "./pages/Root.jsx";
 import ErrorPage from "./pages/Error.jsx";
 import Profile from "./pages/Profile.jsx";
@@ -160,6 +161,10 @@ function App() {
         {
           path: "mobile-groups",
           element: <MobileGroupsPage />,
+        },
+        {
+          path: "mobile-friends",
+          element: <MobileFriendsPage />,
         },
         {
           path: "group/:groupId",
