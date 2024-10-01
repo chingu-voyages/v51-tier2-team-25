@@ -200,13 +200,15 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
                 placeholder to add receipt
               </p>
             </div>
+            
             <div className="pt-4 pb-2 mb-auto">
               <p>Add participants</p>
               <div className="flex items-center">
                 <SearchBar
-                  handleParticipantAdded={(participant) =>
+                  handleParticipantAdded={(participant) =>{
+                    // console.log('participant selected from searchbar in addexpesne:', participant)
                     setSelectedParticipant(participant)
-                  }
+                  }}
                   purpose="participant" //specifies purpose of search bar is participant
                   groupMembers={currentGroup?.members || []}
                   resetSearchBar={resetSearchBar}

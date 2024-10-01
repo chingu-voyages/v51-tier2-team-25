@@ -6,9 +6,11 @@ import GetOwePaid from "../helpers/GetOwePaid";
 
 export default function Expenses() {
   const { groupId } = useParams()
-  const { expenses } = useContext(AppContext);
+  const { expenses, groups } = useContext(AppContext);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
+
+  const currentGroup = groups.find(group=> group.id === Number(groupId))
 
   const filteredExpenses = expenses.filter(expense => expense.groupId === Number(groupId))
 
@@ -54,8 +56,12 @@ export default function Expenses() {
         </div>
         ))
       )}
-         {isEditing && selectedExpense && (
-        <EditExpense expense={selectedExpense} closeEditExpense={closeEditExpense} />
+         {isEditing && selectedExpense && currentGroup &&(
+        <EditExpense 
+          expense={selectedExpense} 
+          closeEditExpense={closeEditExpense}
+          currentGroup={currentGroup}
+          />
       )}
       </div>
   );

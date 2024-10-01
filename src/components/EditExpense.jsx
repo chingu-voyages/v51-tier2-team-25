@@ -7,16 +7,20 @@ import ExpenseCategorySelection from "./ExpenseCategorySelection";
 import DeleteExpenseModal from "./DeleteExpenseModal";
 import ConfirmationModal from "./ConfirmationModal";
 
-export default function EditExpense({ closeEditExpense, expense }) {
+export default function EditExpense({ closeEditExpense, expense, currentGroup }) {
   const { updateExpenseInList, deleteExpenseInList } = useContext(AppContext);
 
-  const [expenseData, setExpenseData] = useState({
+  //Participant handling
+  const [selectedParticipant, setSelectedParticipant] = useState(null)
+
+  const [expensesData, setExpensesData] = useState({
     name: "",
     amount: "",
     date: "", // Keep the date unchanged
     category: "",
     description: "",
     id: "",
+    participants:[]
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,13 +29,13 @@ export default function EditExpense({ closeEditExpense, expense }) {
 
   useEffect(() => {
     if (expense) {
-      setExpenseData(expense);
+      setExpensesData(expense);
     }
   }, [expense]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setExpenseData((prevData) => ({
+    setExpensesData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -40,7 +44,7 @@ export default function EditExpense({ closeEditExpense, expense }) {
 
   const saveChanges = (event) => {
     event.preventDefault();
-    updateExpenseInList(expenseData);
+    updateExpenseInList(expensesData);
     closeEditExpense();
     toast("Expense updated successfully");
   };
@@ -55,7 +59,7 @@ export default function EditExpense({ closeEditExpense, expense }) {
   };
 
   const confirmDelete = () => {
-    const expenseName = expenseData.name;
+    const expenseName = expensesData.name;
     deleteExpenseInList(expense.id); // Call deleteGroup with the group's ID
     closeEditExpense(); // Close the form after deletion
     setIsModalOpen(false); // This closes the modal
@@ -79,6 +83,36 @@ export default function EditExpense({ closeEditExpense, expense }) {
     setIsConfirmCloseOpen(false);
   };
 
+  
+
+  const addParticipant = () =>{
+
+    if (selectedParticipant){
+      const isSelectedParticipantIncluded = expensesData.participants.some(
+        (participant) => participant.id === selectedParticipant.id
+      )
+      if (isSelectedParticipantIncluded){
+        toast('Participant is already included')
+        return
+      }
+      setExpensesData(prevData =>({
+        ...prevData,
+        participants: [...prevData.participants, selectedParticipant],
+      }))
+      setSelectedParticipant(null)
+    
+    }
+  }
+
+  const deleteParticipant = (participantToDelete)=>{
+    setExpensesData(prevData =>({
+      ...prevData,
+      participants: prevData.participants.filter(
+        (participant)=> participant.id !== participantToDelete.id
+      )
+    }))
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
       <div className="relative w-[535px] h-auto rounded-md px-6 pt-6  bg-zinc-50 flex flex-col m-8 font-geologica">
@@ -100,7 +134,7 @@ export default function EditExpense({ closeEditExpense, expense }) {
                     className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
                     type="text"
                     name="name"
-                    value={expenseData.name}
+                    value={expensesData.name}
                     onChange={handleChange}
                     maxLength={30}
                     required
@@ -116,7 +150,7 @@ export default function EditExpense({ closeEditExpense, expense }) {
                   step={0.01}
                   min={0.01}
                   name="amount"
-                  value={expenseData.amount}
+                  value={expensesData.amount}
                   onChange={handleChange}
                   required
                 />
@@ -131,8 +165,9 @@ export default function EditExpense({ closeEditExpense, expense }) {
               </div>
               <div className="flex flex-col w-full">
                 <p className="w-full pb-1 text-sm">Category*</p>
-                <ExpenseCategorySelection handleChange={handleChange} 
-                category={expenseData.category}/>
+                <ExpenseCategorySelection 
+                  handleChange={handleChange} 
+                  category={expensesData.category}/>
               </div>
             </div>
 
@@ -141,7 +176,7 @@ export default function EditExpense({ closeEditExpense, expense }) {
               <textarea
                 className="w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border"
                 name="description"
-                value={expenseData.description}
+                value={expensesData.description}
                 onChange={handleChange}
                 required
               />
@@ -157,12 +192,39 @@ export default function EditExpense({ closeEditExpense, expense }) {
             <div className="pt-4 mb-auto">
               <p>Add participants</p>
               <div className="flex items-center">
-                <SearchBar />
+                <SearchBar 
+                  handleParticipantAdded={(participant)=>{
+                    console.log("Part selcted from search bar in editexpnse:", participant)
+                    setSelectedParticipant(participant)
+                  }}
+                  purpose="participant" //specifies purpose of search bar is participant
+                  groupMembers={currentGroup.members}
+                />
+                <button
+                  onClick={addParticipant}
+                  type="button"
+                  className="px-3 py-2 ml-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo"
+                >
+                  Add
+                </button>
               </div>
             </div>
 
             <div className="pb-12 mt-2 overflow-y-auto">
- {/* **TODO placeholder for participant names to be edited*/}
+              <ul>
+                {expensesData.participants.map(participant =>(
+                  <li key={participant.id} className="flex items-center justify-between mb-2">
+                    <span>{participant.name}</span>
+                    <button
+                      type="button"
+                      onClick={()=> deleteParticipant(participant)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <div className="flex items-center w-[calc(100%+48px)] -ml-6 p-4 mt-auto bg-light-indigo place-content-end rounded-b-md">
@@ -195,10 +257,10 @@ export default function EditExpense({ closeEditExpense, expense }) {
         isOpen={isModalOpen}
         onConfirm={confirmDelete}
         onCancel={() => setIsModalOpen(false)}
-        expenseName={expenseData.name}
+        expenseName={expensesData.name}
       />
 
-<ConfirmationModal
+      <ConfirmationModal
         isOpen={isConfirmCloseOpen}
         onConfirm={confirmClose}
         onCancel={cancelClose}
@@ -210,4 +272,5 @@ export default function EditExpense({ closeEditExpense, expense }) {
 EditExpense.propTypes = {
   expense: PropTypes.object.isRequired,
   closeEditExpense: PropTypes.func.isRequired,
+  currentGroup: PropTypes.object.isRequired,
 };
