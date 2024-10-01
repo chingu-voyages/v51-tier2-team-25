@@ -63,7 +63,7 @@ export default function Groups() {
 
   return (
     <>
-      <div className="flex flex-col w-[785px] gap-6 font-geologica">
+      <div className="flex flex-col max-w-[785px] w-full gap-6 font-geologica">
         <div className="p-6 mt-12 border rounded-md border-border bg-zinc-50">
           <div className="relative flex justify-between w-full">
             <div className="relative min-w-max">

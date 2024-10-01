@@ -214,7 +214,8 @@ export default function AddGroup({
             <div className="flex items-center justify-between pb-4 mt-4 mb-4 border-b border-border">
               <Link
                 to="/"
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   createTemporaryGroupData();
                   closeAddGroupModal();
                   openLinkAddFriendModal();
