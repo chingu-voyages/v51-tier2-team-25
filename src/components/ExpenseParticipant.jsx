@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
+import toast from "react-hot-toast";
 
 /* eslint-disable react/prop-types */
 export default function ExpenseParticipant({
@@ -10,6 +11,26 @@ export default function ExpenseParticipant({
   const { participants } = expensesData;
   const [currentlyActiveMember, setCurrentlyActiveMember] = useState(null);
   const [participantsShares, setParticipantsShares] = useState({});
+  const [totalSharePercent, setTotalSharePercent]= useState(0)
+
+  useEffect(()=>{
+    //initialize participantShares w/ existing data from participants
+    const initialShares = participants.reduce((acc,participant)=>{
+      acc[participant.id]= {
+        ...participant,
+        sharePercentage: participant.sharePercentage || 0,
+        amountToPay: participant.amountToPay || 0
+      }
+      return acc
+    }, {})
+    setParticipantsShares(initialShares)
+
+    //calc initial total share percentage
+    const initialTotalShare = participants.reduce((total, participant)=> total + (participant.sharePercentage || 0), 0)
+    console.log("initial total share:", initialTotalShare)
+    setTotalSharePercent(initialTotalShare)
+    
+  }, [participants])
 
   const noParticipantsMessage = (
     <div className="flex items-center m-2">
@@ -22,7 +43,7 @@ export default function ExpenseParticipant({
   );
 
   function handleSharedValue(event, member) {
-    const enteredSharePercentage = event.target.value;
+    const enteredSharePercentage = parseInt(event.target.value);
     if (
       enteredSharePercentage > 100 ||
       enteredSharePercentage < 0 ||
@@ -31,11 +52,22 @@ export default function ExpenseParticipant({
     ) {
       return;
     }
+
+    //calc new total share include entered value
+    const currentParticipantShare = participantsShares[member.id]?.sharePercentage || 0
+    const newTotalShare = totalSharePercent - currentParticipantShare + enteredSharePercentage
+
+    if(newTotalShare >100){
+      toast.error("Total share percentage cannot exceed 100%")
+      return
+    }
+
     const amountToPay = (expensesData.amount * enteredSharePercentage) / 100;
+
     const updatedParticipant = {
       ...member,
       amountToPay: amountToPay,
-      share: enteredSharePercentage,
+      sharePercentage: enteredSharePercentage,
     };
 
     setParticipantsShares((prev) => ({
@@ -56,6 +88,8 @@ export default function ExpenseParticipant({
       event.preventDefault();
     }
   }
+
+  
 
   return participants.length < 1 ? (
     noParticipantsMessage
@@ -79,7 +113,7 @@ export default function ExpenseParticipant({
             onMouseEnter={() => setCurrentlyActiveMember(member.id)}
             onMouseLeave={() => setCurrentlyActiveMember(null)}
           >
-            <div className="w-4/12 flex justify-evenly items-center truncate'">
+            <div className="flex items-center w-4/12 truncate justify-evenly">
               <button
                 type="button"
                 className={`w-6 h-6 flex items-center justify-center rounded-md  text-black  ${
@@ -91,19 +125,20 @@ export default function ExpenseParticipant({
               >
                 <IoMdClose />
               </button>
-              <div className="rounded-full h-7 w-7 border">
+              <div className="border rounded-full h-7 w-7">
                 <img src="/public/images/Profile.svg" />
               </div>
               <p>{member.userName}</p>
             </div>
 
-            <div className="w-2/12 flex justify-center">
+            <div className="flex justify-center w-2/12">
               <input
                 onKeyDown={handleInvalidCharacters}
                 value={participantsShares[member.id]?.sharePercentage || ""}
                 type="number"
-                placeholder="0"
-                className="h-7 w-8/12"
+                placeholder={0}
+                step={10}
+                className="w-8/12 text-center h-7"
                 onChange={(event) => handleSharedValue(event, member)}
               />
             </div>

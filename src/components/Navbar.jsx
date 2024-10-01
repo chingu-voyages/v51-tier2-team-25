@@ -69,10 +69,10 @@ useEffect(() => {
 
   return (
     <aside className="flex flex-col md:h-screen md:p-12 font-geologica md:py-12 md:px-8">
-      <nav className="md:w-48 relative">
-        <div className="flex justify-between my-3 mx-4 md:m-0">
+      <nav className="relative md:w-48">
+        <div className="flex justify-between mx-4 my-3 md:m-0">
           <NavLink className="block" to="/">
-              <div className="flex items-center md:pb-12 px-3">
+              <div className="flex items-center px-3 md:pb-12">
                   <img
                     src="../../images/placeholder.jpg"
                     className="w-8 h-8 mr-2 border border-none rounded-full"
@@ -80,7 +80,7 @@ useEffect(() => {
                   <p className="block text-lg">Brand Name</p>
               </div>
             </NavLink>
-          <img src="../../images/Menu.svg" className="w-7 md:hidden cursor-pointer" onClick={toggleMenu}/>
+          <img src="../../images/Menu.svg" className="cursor-pointer w-7 md:hidden" onClick={toggleMenu}/>
         </div>
 
 
@@ -112,8 +112,8 @@ useEffect(() => {
 
           <ul className="hidden md:block" >
             <li className="pt-6" onClick={handleNavClick}>
-              <div className="flex items-center md:justify-between py-2">
-                <span className="text-gray-400 mr-4 p-3">Groups</span>
+              <div className="flex items-center py-2 md:justify-between">
+                <span className="p-3 mr-4 text-gray-400">Groups</span>
                 <button
                   onClick={openAddGroupModal}
                   className="w-6 h-6 text-center rounded-md text-light-indigo bg-button hover:bg-hover"
@@ -141,8 +141,8 @@ useEffect(() => {
               ) : null}
             </li>
             <li className="pt-6" onClick={handleNavClick}>
-              <div className="flex items-center md:justify-between py-2">
-                <span className="text-gray-400 mr-4 p-3">Friends</span>
+              <div className="flex items-center py-2 md:justify-between">
+                <span className="p-3 mr-4 text-gray-400">Friends</span>
                 <button
                   onClick={openAddFriendModal}
                   className="w-6 h-6 text-center rounded-md text-light-indigo bg-button hover:bg-hover"

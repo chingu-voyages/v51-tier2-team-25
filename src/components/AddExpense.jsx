@@ -39,7 +39,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     if (selectOptionName) {
       setExpensesData((prevExpensesData) => ({
         ...prevExpensesData,
-        [selectOptionName]: event.value,
+        [selectOptionName]: event.value || event,
       }));
     } else {
       const { name, value } = event.target;
@@ -63,14 +63,14 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     //save updated array to local storage
     localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
     addExpenseToList(expensesData);
-    // closeAddExpense();
+    closeAddExpense();
     toast.success("New expense added");
 
     setExpensesData({
       name: "",
       amount: "",
       date: generateDate(),
-      category: null,
+      category: "",
       description: "",
       id: uuidv4(),
       groupId: currentGroup.id,
@@ -124,8 +124,8 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
-      <div className="relative border w-[535px] h-[625px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
+      <div className="relative w-[535px] h-auto rounded-md px-6 pt-6  bg-zinc-50 flex flex-col m-8 font-geologica">
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-border">
           <h1 className="p-0 text-md">New Expense</h1>
           <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
@@ -133,7 +133,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
 
         <form
           onSubmit={addNewExpense}
-          className="flex flex-col flex-1 gap-6 border border-none"
+          className="flex flex-col flex-1 gap-6 border-none"
         >
           <div className="flex flex-col">
             <div className="flex items-start">
@@ -186,7 +186,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
             <label className="flex flex-col pt-4 text-sm ">
               Expense description*
               <textarea
-                className="border border-gray-300 rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500"
+                className="w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border"
                 name="description"
                 value={expensesData.description}
                 onChange={handleChange}
@@ -200,13 +200,15 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
                 placeholder to add receipt
               </p>
             </div>
+            
             <div className="pt-4 pb-2 mb-auto">
               <p>Add participants</p>
               <div className="flex items-center">
                 <SearchBar
-                  handleParticipantAdded={(participant) =>
+                  handleParticipantAdded={(participant) =>{
+                    // console.log('participant selected from searchbar in addexpesne:', participant)
                     setSelectedParticipant(participant)
-                  }
+                  }}
                   purpose="participant" //specifies purpose of search bar is participant
                   groupMembers={currentGroup?.members || []}
                   resetSearchBar={resetSearchBar}
@@ -214,13 +216,13 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
                 <button
                   onClick={addParticipant}
                   type="button"
-                  className="ml-2 px-3 py-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo"
+                  className="px-3 py-2 ml-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo"
                 >
                   Add
                 </button>
               </div>
 
-              <div className="overflow-y-auto max-h-14">
+              <div className="pb-12 mt-2 overflow-y-auto">
                 <ExpenseParticipant
                   expensesData={expensesData}
                   deleteParticipant={deleteParticipant}
@@ -229,7 +231,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
               </div>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end rounded-b-md">
+            <div className="flex items-center w-[calc(100%+48px)] -ml-6 p-4 mt-auto bg-light-indigo place-content-end rounded-b-md">
               <button
                 type={"button"}
                 onClick={closeAddExpense}
