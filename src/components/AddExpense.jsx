@@ -63,7 +63,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     //save updated array to local storage
     localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
     addExpenseToList(expensesData);
-    // closeAddExpense();
+    closeAddExpense();
     toast.success("New expense added");
 
     setExpensesData({
@@ -214,7 +214,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
                 <button
                   onClick={addParticipant}
                   type="button"
-                  className="ml-2 px-3 py-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo"
+                  className="px-3 py-2 ml-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo"
                 >
                   Add
                 </button>

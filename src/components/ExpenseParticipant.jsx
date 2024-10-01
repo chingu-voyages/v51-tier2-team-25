@@ -79,7 +79,7 @@ export default function ExpenseParticipant({
             onMouseEnter={() => setCurrentlyActiveMember(member.id)}
             onMouseLeave={() => setCurrentlyActiveMember(null)}
           >
-            <div className="w-4/12 flex justify-evenly items-center truncate'">
+            <div className="flex items-center w-4/12 truncate justify-evenly'">
               <button
                 type="button"
                 className={`w-6 h-6 flex items-center justify-center rounded-md  text-black  ${
@@ -91,19 +91,20 @@ export default function ExpenseParticipant({
               >
                 <IoMdClose />
               </button>
-              <div className="rounded-full h-7 w-7 border">
+              <div className="border rounded-full h-7 w-7">
                 <img src="/public/images/Profile.svg" />
               </div>
               <p>{member.userName}</p>
             </div>
 
-            <div className="w-2/12 flex justify-center">
+            <div className="flex justify-center w-2/12">
               <input
                 onKeyDown={handleInvalidCharacters}
                 value={participantsShares[member.id]?.sharePercentage || ""}
                 type="number"
-                placeholder="0"
-                className="h-7 w-8/12"
+                placeholder={0}
+                step={10}
+                className="w-8/12 h-7"
                 onChange={(event) => handleSharedValue(event, member)}
               />
             </div>
