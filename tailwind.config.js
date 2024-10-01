@@ -14,7 +14,9 @@ export default {
         'title':'#292929',
         'input-text':'#989898',
         'input-border':'#DCDCDC',
-        'modal-text': '#464646',         
+        'modal-text': '#464646', 
+        'green':'#247A51',     
+        'blue-background':'#E9EAF0'   
 
       },
       fontFamily: {
@@ -24,7 +26,9 @@ export default {
       fontSize:{
         xs: ['0.625rem', '0.75rem'],
         sm: ['0.75rem', '0.875rem'],
-        md: ['0.875rem', '1rem']
+        md: ['0.875rem', '1rem'],
+        lg: ['1rem','1.5rem'],
+        xl: ['1.125rem','1.25rem']
       },
       fontWeight:{
         light:300,

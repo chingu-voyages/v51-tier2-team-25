@@ -35,7 +35,7 @@ export default function Expenses() {
         <p>No expenses found.</p>
       ) : (
         filteredExpenses.map((expense)=>(
-          <div key={expense.id} className="flex items-center justify-between p-4 my-2 border border-gray-300 rounded-md">
+          <div key={expense.id} className="flex items-center justify-between p-4 my-2 border border-gray-300 rounded-md bg-zinc-50">
             <div className='flex flex-col gap-2'>
               <div className="flex gap-2 bg-zinc-50">
                 <p className="text-sm font-bold">{expense.name}</p>
@@ -49,8 +49,8 @@ export default function Expenses() {
                 <p>Placeholder people remaining</p>
               </div>
               <div className="flex gap-2">
-                <button type="button" className="hover:bg-gray-200" onClick={() => openReceipt}><img src="../../images/Ticket.svg" alt="Ticket" /></button>
-                <button type="button" className="hover:bg-gray-200" onClick={() => openEditExpense(expense)}><img src="../../images/Edit.svg" alt="Edit" /></button>
+                <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openReceipt}><img src="../../images/Ticket.svg" alt="Ticket" /></button>
+                <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openEditExpense(expense)}><img src="../../images/Edit.svg" alt="Edit" /></button>
               </div>   
             </div>
         </div>
