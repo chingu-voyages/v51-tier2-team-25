@@ -79,7 +79,7 @@ export default function ExpenseParticipant({
             onMouseEnter={() => setCurrentlyActiveMember(member.id)}
             onMouseLeave={() => setCurrentlyActiveMember(null)}
           >
-            <div className="flex items-center w-4/12 truncate justify-evenly'">
+            <div className="flex items-center w-4/12 truncate justify-evenly">
               <button
                 type="button"
                 className={`w-6 h-6 flex items-center justify-center rounded-md  text-black  ${
@@ -104,7 +104,7 @@ export default function ExpenseParticipant({
                 type="number"
                 placeholder={0}
                 step={10}
-                className="w-8/12 h-7"
+                className="w-8/12 text-center h-7"
                 onChange={(event) => handleSharedValue(event, member)}
               />
             </div>

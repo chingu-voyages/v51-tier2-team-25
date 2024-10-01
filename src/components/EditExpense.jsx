@@ -6,12 +6,10 @@ import SearchBar from "./SearchBar";
 import ExpenseCategorySelection from "./ExpenseCategorySelection";
 import DeleteExpenseModal from "./DeleteExpenseModal";
 import ConfirmationModal from "./ConfirmationModal";
+import ExpenseParticipant from "./ExpenseParticipant";
 
 export default function EditExpense({ closeEditExpense, expense, currentGroup }) {
   const { updateExpenseInList, deleteExpenseInList } = useContext(AppContext);
-
-  //Participant handling
-  const [selectedParticipant, setSelectedParticipant] = useState(null)
 
   const [expensesData, setExpensesData] = useState({
     name: "",
@@ -42,16 +40,19 @@ export default function EditExpense({ closeEditExpense, expense, currentGroup })
     setChangesMade(true);
   };
 
+  const handleCategoryChange =(selectedCategory)=>{
+    setExpensesData(prevData =>({
+      ...prevData,
+      category: selectedCategory
+    }))
+    setChangesMade(true)
+  }
+
   const saveChanges = (event) => {
     event.preventDefault();
     updateExpenseInList(expensesData);
     closeEditExpense();
     toast("Expense updated successfully");
-  };
-
-  const generateDate = () => {
-    const date = new Date();
-    return date.toLocaleDateString();
   };
 
   const handleDelete = () => {
@@ -81,28 +82,7 @@ export default function EditExpense({ closeEditExpense, expense, currentGroup })
 
   const cancelClose = () => {
     setIsConfirmCloseOpen(false);
-  };
-
-  
-
-  const addParticipant = () =>{
-
-    if (selectedParticipant){
-      const isSelectedParticipantIncluded = expensesData.participants.some(
-        (participant) => participant.id === selectedParticipant.id
-      )
-      if (isSelectedParticipantIncluded){
-        toast('Participant is already included')
-        return
-      }
-      setExpensesData(prevData =>({
-        ...prevData,
-        participants: [...prevData.participants, selectedParticipant],
-      }))
-      setSelectedParticipant(null)
-    
-    }
-  }
+  }; 
 
   const deleteParticipant = (participantToDelete)=>{
     setExpensesData(prevData =>({
@@ -112,6 +92,32 @@ export default function EditExpense({ closeEditExpense, expense, currentGroup })
       )
     }))
   }
+  const addOrUpdateParticipant = (newParticipant) => {
+    if (newParticipant) {
+      const isParticipantIncluded = expensesData.participants.some(
+        (participant) => participant.id === newParticipant.id
+      );
+  
+      setExpensesData((prevData) => {
+        const updatedParticipants = isParticipantIncluded
+          ? prevData.participants.map((participant) =>
+              participant.id === newParticipant.id
+                ? newParticipant // Update the existing participant
+                : participant // Keep other participants unchanged
+            )
+          : [...prevData.participants, newParticipant]; // Add the new participant
+  
+        return { ...prevData, participants: updatedParticipants };
+      });
+  
+      // Display appropriate toast message based on the action
+      toast(
+        isParticipantIncluded
+          ? "Participant updated successfully"
+          : "Participant added successfully"
+      );
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
@@ -160,13 +166,13 @@ export default function EditExpense({ closeEditExpense, expense, currentGroup })
               <div className="flex flex-col w-full">
                 <p className="text-sm">Date*</p>
                 <p className="pl-2 mt-4 text-sm text-input-text">
-                  {generateDate()}
+                  {expensesData.date}
                 </p>
               </div>
               <div className="flex flex-col w-full">
                 <p className="w-full pb-1 text-sm">Category*</p>
                 <ExpenseCategorySelection 
-                  handleChange={handleChange} 
+                  handleChange={handleCategoryChange} 
                   category={expensesData.category}/>
               </div>
             </div>
@@ -195,36 +201,20 @@ export default function EditExpense({ closeEditExpense, expense, currentGroup })
                 <SearchBar 
                   handleParticipantAdded={(participant)=>{
                     console.log("Part selcted from search bar in editexpnse:", participant)
-                    setSelectedParticipant(participant)
+                    addOrUpdateParticipant(participant);
                   }}
                   purpose="participant" //specifies purpose of search bar is participant
                   groupMembers={currentGroup.members}
-                />
-                <button
-                  onClick={addParticipant}
-                  type="button"
-                  className="px-3 py-2 ml-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo"
-                >
-                  Add
-                </button>
+                />                
               </div>
             </div>
 
             <div className="pb-12 mt-2 overflow-y-auto">
-              <ul>
-                {expensesData.participants.map(participant =>(
-                  <li key={participant.id} className="flex items-center justify-between mb-2">
-                    <span>{participant.name}</span>
-                    <button
-                      type="button"
-                      onClick={()=> deleteParticipant(participant)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-              </ul>
+              <ExpenseParticipant
+                expensesData={expensesData}
+                deleteParticipant={deleteParticipant}
+                addOrUpdateParticipants={addOrUpdateParticipant}
+              />
             </div>
 
             <div className="flex items-center w-[calc(100%+48px)] -ml-6 p-4 mt-auto bg-light-indigo place-content-end rounded-b-md">
@@ -240,13 +230,13 @@ export default function EditExpense({ closeEditExpense, expense, currentGroup })
                 onClick={handleDelete}
                 className="px-3 py-2 mr-2 text-sm text-white bg-red-500 border-none rounded-lg hover:bg-red-600"
               >
-                Delete expense
+                Delete
               </button>
               <button
                 type="submit"
                 className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
               >
-                Edit expense
+                Save
               </button>
             </div>
           </div>

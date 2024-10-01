@@ -16,6 +16,7 @@ export default function EditGroupForm({
 }) {
   const { updateGroup, deleteGroup } = useContext(AppContext);
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Do not allow none numeric keys
   const blockInvalidChar = (e) =>
@@ -30,9 +31,7 @@ export default function EditGroupForm({
     groupType: group.groupType || "",
     members: group.members || []
 
-  });
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  });  
 
   useEffect(() => {
     // This ensures the form is pre-filled with the group data when opened

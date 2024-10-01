@@ -46,7 +46,7 @@ const ExpenseCategorySelection = ({ handleChange, category }) => {
   const handleCategoryChange =(selectedOption) =>{
     setSelectedCategory(selectedOption)   
 
-    handleChange(selectedOption,'category')
+    handleChange(selectedOption.value,'category')
   }
 
   return(

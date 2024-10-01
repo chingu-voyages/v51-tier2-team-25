@@ -20,12 +20,12 @@ export default function MembersOnGroup({
   return groupMembers.length < 1 ? (
     noMembersMessage
   ) : (
-    <>
-      <h3 className="w-full text-center">Member</h3>
+    <div className="flex flex-col items-center">
+      <h3 className="">Member</h3>
       <ul className="flex flex-col">
         {groupMembers.map((member) => (
           <li
-            className={`flex justify-center w-full p-1 text-sm transition duration-500 ease-in-out transform ${
+            className={`flex p-1 text-sm transition duration-500 ease-in-out transform ${
               activeMember === member.id
                 ? "bg-gray-300 scale-105"
                 : "hover:bg-gray-300 hover:scale-105"
@@ -34,7 +34,7 @@ export default function MembersOnGroup({
             onMouseEnter={() => setActiveMember(member.id)}
             onMouseLeave={() => setActiveMember(null)}
           >
-            <div className="flex gap-3 w-6/12 items-center justify-start">
+            <div className="flex items-center w-auto gap-3">
               <button
                 className={`w-6 h-6 flex items-center justify-center rounded-md  text-black  ${
                   activeMember === member.id ? "bg-red-600 text-white" : ""
@@ -43,7 +43,7 @@ export default function MembersOnGroup({
               >
                 <IoMdClose />
               </button>
-              <div className="rounded-full h-7 w-7 border">
+              <div className="border rounded-full h-7 w-7">
                 <img src="/public/images/Profile.svg" />
               </div>
               <p className="truncate">{member.userName}</p>
@@ -51,6 +51,6 @@ export default function MembersOnGroup({
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 }
