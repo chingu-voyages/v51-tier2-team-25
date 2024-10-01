@@ -1,12 +1,16 @@
 import { useContext, useState } from "react";
+import { useParams } from "react-router-dom"
 import { AppContext } from "../App";
 import EditExpense from "../components/EditExpense";
 import GetOwePaid from "../helpers/GetOwePaid";
 
 export default function Expenses() {
+  const { groupId } = useParams()
   const { expenses } = useContext(AppContext);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
+
+  const filteredExpenses = expenses.filter(expense => expense.groupId === Number(groupId))
 
   const openEditExpense = (expense) => {
     setSelectedExpense(expense);
@@ -28,7 +32,7 @@ export default function Expenses() {
       {expenses.length === 0 ? (
         <p>No expenses found.</p>
       ) : (
-        expenses.map((expense)=>(
+        filteredExpenses.map((expense)=>(
           <div key={expense.id} className="flex items-center justify-between p-4 my-2 border border-gray-300 rounded-md">
             <div className='flex flex-col gap-2'>
               <div className="flex gap-2 bg-zinc-50">

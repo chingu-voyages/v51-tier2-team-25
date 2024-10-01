@@ -90,7 +90,7 @@ function App() {
       );
       localStorage.setItem("expensesData", JSON.stringify(updatedExpenses));
       return updatedExpenses;
-    });
+    });    
   }
 
   //updates expenses states @ global
@@ -133,12 +133,23 @@ function App() {
 
   }
 
-
   function deleteExpenseInList(expenseId) {
     setExpenses((prevExpenses) => {
       const updatedExpenses = prevExpenses.filter((expense) => expense.id !== expenseId)
       localStorage.setItem("expensesData", JSON.stringify(updatedExpenses)); // Update local storage
       return updatedExpenses
+    })
+
+    //update group
+    setGroups(prevGroups => {
+      const updatedGroups = prevGroups.map(group => {
+        return{
+          ...group,
+          expenses: group.expenses.filter(expense => expense.id !==  expenseId)
+        }
+      })
+      localStorage.setItem("groupsData", JSON.stringify(updatedGroups))
+      return updatedGroups
     })
   }
   
