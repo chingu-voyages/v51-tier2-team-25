@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 
 /* eslint-disable react/prop-types */
@@ -10,6 +10,19 @@ export default function ExpenseParticipant({
   const { participants } = expensesData;
   const [currentlyActiveMember, setCurrentlyActiveMember] = useState(null);
   const [participantsShares, setParticipantsShares] = useState({});
+
+  useEffect(()=>{
+    //initialize participantShares w/ existing data from participants
+    const initialShares = participants.reduce((acc,participant)=>{
+      acc[participant.id]= {
+        ...participant,
+        sharePercentage: participant.share || 0,
+        amountToPay: participant.amountToPay || 0
+      }
+      return acc
+    }, {})
+    setParticipantsShares(initialShares)
+  }, [participants])
 
   const noParticipantsMessage = (
     <div className="flex items-center m-2">
@@ -48,6 +61,8 @@ export default function ExpenseParticipant({
     }));
 
     addOrUpdateParticipants(updatedParticipant);
+
+    console.log("Participants Shares form expenseparticipant:",participantsShares)
   }
 
   function handleInvalidCharacters(event) {
@@ -56,6 +71,8 @@ export default function ExpenseParticipant({
       event.preventDefault();
     }
   }
+
+  
 
   return participants.length < 1 ? (
     noParticipantsMessage
