@@ -35,9 +35,7 @@ const ExpenseCategorySelection = ({ handleChange, category }) => {
 
   //update local state when parent sends new category
   useEffect(()=>{
-    if(!category){
-      setSelectedCategory(null)
-    }else{
+    if(category){
       const foundCategory = options.find(option => option.value === category)
       setSelectedCategory(foundCategory || null)
     }
@@ -45,7 +43,6 @@ const ExpenseCategorySelection = ({ handleChange, category }) => {
 
   const handleCategoryChange =(selectedOption) =>{
     setSelectedCategory(selectedOption)   
-
     handleChange(selectedOption,'category')
   }
 

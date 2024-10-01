@@ -23,14 +23,14 @@ function App() {
     JSON.parse(localStorage.getItem("expensesData")) || []
   );
 
-  const [memberData, setMemberData] = useState({ name: "", share: "", id: "" });
+  const [memberData, setMemberData] = useState({ name: "", id: "" });
 
   //members added from group to expense
-  const [participantData, setParticipantData] = useState({name:"", share:"", id:""}
+  const [participantData, setParticipantData] = useState({name:"", id:""}
   )
 
   function addFriendToList(newFriend) {
-    console.log("addNewFriend-app", newFriend);
+    // console.log("addNewFriend-app", newFriend);
     const updatedFriends = [...friends, newFriend];
     setFriends(updatedFriends);
     localStorage.setItem("friendsData", JSON.stringify(updatedFriends));
@@ -54,7 +54,10 @@ function App() {
     setGroups(prevGroups =>{
       const updatedGroups = prevGroups.map(group =>{
         if(group.id === newExpense.groupId){
-          return{...group, expenses: [...group.expenses, newExpense]}
+          return{
+            ...group, 
+            expenses: group.expenses ? [...group.expenses, newExpense]: [newExpense],            
+          }
         }
         return group
       })
@@ -130,7 +133,7 @@ function App() {
       localStorage.setItem("groupsData", JSON.stringify(updatedGroups))
       return updatedGroups
     })
-
+    // console.log("Add update participants in app.jsx",groups)
   }
 
   function deleteExpenseInList(expenseId) {
