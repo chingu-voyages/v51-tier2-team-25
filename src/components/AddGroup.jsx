@@ -135,7 +135,7 @@ export default function AddGroup({
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
-      <div className="relative  w-[535px] h-auto rounded-md px-6 pt-6  bg-zinc-50 flex flex-col m-8 font-geologica  ">
+      <div className="relative w-[535px] h-auto rounded-md px-6 pt-6  bg-zinc-50 flex flex-col m-8 font-geologica">
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-border">
           <h1 className="p-0 text-md">New Group</h1>
           <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>

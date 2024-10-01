@@ -125,8 +125,8 @@ export default function EditGroupForm({
 
   return (
     <div>
-      <div className="fixed inset-0 z-50 flex items-start justify-center bg-gray-800 bg-opacity-75">
-        <div className="relative  w-[535px] h-[625px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
+        <div className="relative  w-[535px] h-auto rounded-md px-6 pt-6  bg-zinc-50 flex flex-col m-8 font-geologica">
           <div className="flex items-center justify-between pb-4 mb-5 border-b border-border">
             <h1 className="p-0 text-md">Edit Group</h1>
             <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
@@ -216,14 +216,14 @@ export default function EditGroupForm({
                   Add new friends to your friend list
                 </Link>
               </div>
-              <div className="pb-12 mt-2 overflow-y-auto max-h-32">
+              <div className="pb-12 mt-2 overflow-y-auto">
                 <MembersOnGroup
                   groupMembers={tempGroupData.members}
                   deleteMemberFromGroup={deleteMemberFromGroup}
                 />
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">
+              <div className="flex items-center w-[calc(100%+48px)] -ml-6 p-4 mt-auto bg-light-indigo place-content-end rounded-b-md">
                 <button
                   type="button"
                   onClick={closeEditGroupFormModal}
@@ -234,7 +234,7 @@ export default function EditGroupForm({
                 <button
                   type="button"
                   onClick={handleDelete}
-                  className="px-3 py-2 mr-2 text-sm border-none rounded-lg hover:bg-red-600 bg-red-500 text-white"
+                  className="px-3 py-2 mr-2 text-sm text-white bg-red-500 border-none rounded-lg hover:bg-red-600"
                 >
                   Delete group
                 </button>
