@@ -94,7 +94,7 @@ export default function EditGroupForm({
   };
 
   // In the render method
-  console.log("Current isModalOpen state:", isModalOpen);
+  // console.log("Current isModalOpen state:", isModalOpen);
 
   const confirmDelete = () => {
     const groupName = tempGroupData.name;

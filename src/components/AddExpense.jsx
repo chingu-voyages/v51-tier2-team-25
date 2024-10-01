@@ -39,7 +39,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     if (selectOptionName) {
       setExpensesData((prevExpensesData) => ({
         ...prevExpensesData,
-        [selectOptionName]: event.value,
+        [selectOptionName]: event.value || event,
       }));
     } else {
       const { name, value } = event.target;
@@ -70,7 +70,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
       name: "",
       amount: "",
       date: generateDate(),
-      category: null,
+      category: "",
       description: "",
       id: uuidv4(),
       groupId: currentGroup.id,

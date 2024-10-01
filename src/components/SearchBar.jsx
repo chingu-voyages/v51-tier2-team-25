@@ -62,7 +62,7 @@ export default function SearchBar({
   },[groupMembers, friends, isListEmpty])
 
   function addSelectionToForm(optionSelected) {
-    console.log("Option selected in SearchBar", optionSelected)
+    // console.log("Option selected in SearchBar", optionSelected)
     if (!optionSelected) {
       setSelectedValue(null)
       return;
@@ -72,7 +72,7 @@ export default function SearchBar({
       (person)=> person.userName === optionSelected.value
     )    
 
-    console.log("Selected person found in list", selectedPerson)
+    // console.log("Selected person found in list", selectedPerson)
     
     //call appropriate handler based on purpose of prop
     if(purpose==="member" && handleMemberSelected){

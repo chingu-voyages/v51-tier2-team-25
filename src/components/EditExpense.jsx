@@ -43,7 +43,7 @@ export default function EditExpense({ closeEditExpense, expense, currentGroup })
   const handleCategoryChange =(selectedCategory)=>{
     setExpensesData(prevData =>({
       ...prevData,
-      category: selectedCategory
+      category: selectedCategory ? selectedCategory.value : "",
     }))
     setChangesMade(true)
   }
@@ -200,7 +200,7 @@ export default function EditExpense({ closeEditExpense, expense, currentGroup })
               <div className="flex items-center">
                 <SearchBar 
                   handleParticipantAdded={(participant)=>{
-                    console.log("Part selcted from search bar in editexpnse:", participant)
+                    // console.log("Part selcted from search bar in editexpnse:", participant)
                     addOrUpdateParticipant(participant);
                   }}
                   purpose="participant" //specifies purpose of search bar is participant

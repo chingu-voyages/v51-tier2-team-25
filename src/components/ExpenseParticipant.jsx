@@ -62,7 +62,7 @@ export default function ExpenseParticipant({
 
     addOrUpdateParticipants(updatedParticipant);
 
-    console.log("Participants Shares form expenseparticipant:",participantsShares)
+    // console.log("Participants Shares form expenseparticipant:",participantsShares)
   }
 
   function handleInvalidCharacters(event) {
