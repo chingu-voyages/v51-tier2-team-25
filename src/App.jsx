@@ -23,10 +23,10 @@ function App() {
     JSON.parse(localStorage.getItem("expensesData")) || []
   );
 
-  const [memberData, setMemberData] = useState({ name: "", share: "", id: "" });
+  const [memberData, setMemberData] = useState({ name: "", id: "" });
 
   //members added from group to expense
-  const [participantData, setParticipantData] = useState({name:"", share:"", id:""}
+  const [participantData, setParticipantData] = useState({name:"", id:""}
   )
 
   function addFriendToList(newFriend) {

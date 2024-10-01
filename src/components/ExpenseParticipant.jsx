@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
+import toast from "react-hot-toast";
 
 /* eslint-disable react/prop-types */
 export default function ExpenseParticipant({
@@ -10,18 +11,25 @@ export default function ExpenseParticipant({
   const { participants } = expensesData;
   const [currentlyActiveMember, setCurrentlyActiveMember] = useState(null);
   const [participantsShares, setParticipantsShares] = useState({});
+  const [totalSharePercent, setTotalSharePercent]= useState(0)
 
   useEffect(()=>{
     //initialize participantShares w/ existing data from participants
     const initialShares = participants.reduce((acc,participant)=>{
       acc[participant.id]= {
         ...participant,
-        sharePercentage: participant.share || 0,
+        sharePercentage: participant.sharePercentage || 0,
         amountToPay: participant.amountToPay || 0
       }
       return acc
     }, {})
     setParticipantsShares(initialShares)
+
+    //calc initial total share percentage
+    const initialTotalShare = participants.reduce((total, participant)=> total + (participant.sharePercentage || 0), 0)
+    console.log("initial total share:", initialTotalShare)
+    setTotalSharePercent(initialTotalShare)
+    
   }, [participants])
 
   const noParticipantsMessage = (
@@ -35,7 +43,7 @@ export default function ExpenseParticipant({
   );
 
   function handleSharedValue(event, member) {
-    const enteredSharePercentage = event.target.value;
+    const enteredSharePercentage = parseInt(event.target.value);
     if (
       enteredSharePercentage > 100 ||
       enteredSharePercentage < 0 ||
@@ -44,11 +52,22 @@ export default function ExpenseParticipant({
     ) {
       return;
     }
+
+    //calc new total share include entered value
+    const currentParticipantShare = participantsShares[member.id]?.sharePercentage || 0
+    const newTotalShare = totalSharePercent - currentParticipantShare + enteredSharePercentage
+
+    if(newTotalShare >100){
+      toast.error("Total share percentage cannot exceed 100%")
+      return
+    }
+
     const amountToPay = (expensesData.amount * enteredSharePercentage) / 100;
+
     const updatedParticipant = {
       ...member,
       amountToPay: amountToPay,
-      share: enteredSharePercentage,
+      sharePercentage: enteredSharePercentage,
     };
 
     setParticipantsShares((prev) => ({
@@ -61,8 +80,6 @@ export default function ExpenseParticipant({
     }));
 
     addOrUpdateParticipants(updatedParticipant);
-
-    // console.log("Participants Shares form expenseparticipant:",participantsShares)
   }
 
   function handleInvalidCharacters(event) {
