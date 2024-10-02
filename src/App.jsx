@@ -9,7 +9,9 @@ import Groups from "./pages/Groups.jsx";
 import Friends from "./pages/Friends.jsx";
 import Home from "./pages/Home.jsx";
 import Expenses from "./pages/Expenses.jsx";
-import Statistics from "./pages/Statistics.jsx"
+import Statistics from "./pages/Statistics.jsx";
+import ExpensesUser from './pages/ExpensesUser.jsx';
+
 export const AppContext = createContext([]);
 
 function App() {
@@ -167,10 +169,21 @@ function App() {
         {
           path: "",
           element: <Home />,
+          children: [
+            {
+              path:"expenses-user",
+              element:<ExpensesUser />
+            },
+            {
+              path:"statistics",
+              element:<Statistics />
+            }
+          ]
         },
         {
           path: "profile",
           element: <Profile />,
+
         },
         {
           path: "mobile-groups",
