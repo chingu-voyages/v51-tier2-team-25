@@ -9,6 +9,10 @@ const customStyles = {
     ...provided,
     backgroundColor: state.isFocused ? "#D1D5DB" : "white",
     color: state.isActive ? "black" : "",
+    fontSize: '0.875rem', // Default font size (14px)
+    '@media (max-width: 768px)': {
+      fontSize: '0.75rem', // Change font size for smaller screens
+    },
     "&:active": {
       backgroundColor: "#D1D5DB",
     },
@@ -16,6 +20,9 @@ const customStyles = {
   placeholder: (provided) => ({
     ...provided,
     fontSize: '0.875rem',
+    '@media (max-width: 768px)': {
+      fontSize: '0.75rem', // Change font size for smaller screens
+    },
   }),
 };
 
