@@ -111,11 +111,11 @@ export default function EditExpense({ closeEditExpense, expense, currentGroup })
       });
   
       // Display appropriate toast message based on the action
-      toast(
-        isParticipantIncluded
-          ? "Participant updated successfully"
-          : "Participant added successfully"
-      );
+      // toast(
+      //   isParticipantIncluded
+      //     ? "Participant updated successfully"
+      //     : "Participant added successfully"
+      // );
     }
   };
 

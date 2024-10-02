@@ -43,12 +43,12 @@ export default function ExpenseParticipant({
   );
 
   function handleSharedValue(event, member) {
-    const enteredSharePercentage = parseInt(event.target.value);
+    const enteredSharePercentage = parseInt(event.target.value) || 0;
     if (
       enteredSharePercentage > 100 ||
       enteredSharePercentage < 0 ||
-      isNaN(enteredSharePercentage) ||
-      enteredSharePercentage === "e"
+      isNaN(enteredSharePercentage) 
+      // enteredSharePercentage === "e"
     ) {
       return;
     }
@@ -137,7 +137,7 @@ export default function ExpenseParticipant({
                 value={participantsShares[member.id]?.sharePercentage || ""}
                 type="number"
                 placeholder={0}
-                step={10}
+                step={5}
                 className="w-8/12 text-center h-7"
                 onChange={(event) => handleSharedValue(event, member)}
               />
