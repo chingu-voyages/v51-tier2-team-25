@@ -9,15 +9,9 @@ const customStyles = {
     ...provided,
     backgroundColor: state.isFocused ? "#D1D5DB" : "white",
     color: state.isActive ? "black" : "",
-    fontSize: "12px",
     "&:active": {
       backgroundColor: "#D1D5DB",
     },
-  }),
-  placeholder: (provided) => ({
-    ...provided,
-    fontSize: '12px', // Change this value to your desired font size
-    color: '#999', // Optional: Change color of placeholder
   }),
 };
 
