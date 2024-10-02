@@ -43,12 +43,12 @@ export default function ExpenseParticipant({
   );
 
   function handleSharedValue(event, member) {
-    const enteredSharePercentage = parseInt(event.target.value);
+    const enteredSharePercentage = parseInt(event.target.value) || 0;
     if (
       enteredSharePercentage > 100 ||
       enteredSharePercentage < 0 ||
-      isNaN(enteredSharePercentage) ||
-      enteredSharePercentage === "e"
+      isNaN(enteredSharePercentage) 
+      // enteredSharePercentage === "e"
     ) {
       return;
     }
@@ -97,9 +97,9 @@ export default function ExpenseParticipant({
     <>
       <ul className="flex flex-col items-start">
         <div className="flex w-full my-1">
-          <h3 className="w-4/12 text-center">Member</h3>
-          <h3 className="w-2/12 text-center">Share</h3>
-          <h3 className="w-6/12 text-center">How much will you pay</h3>
+          <h3 className="w-4/12 text-center text-sm">Member</h3>
+          <h3 className="w-2/12 text-center text-sm">Share</h3>
+          <h3 className="w-6/12 text-center text-sm">How much will you pay</h3>
         </div>
 
         {participants.map((member) => (
@@ -137,7 +137,7 @@ export default function ExpenseParticipant({
                 value={participantsShares[member.id]?.sharePercentage || ""}
                 type="number"
                 placeholder={0}
-                step={10}
+                step={5}
                 className="w-8/12 text-center h-7"
                 onChange={(event) => handleSharedValue(event, member)}
               />
