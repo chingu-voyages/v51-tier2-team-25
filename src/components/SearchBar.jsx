@@ -13,6 +13,10 @@ const customStyles = {
       backgroundColor: "#D1D5DB",
     },
   }),
+  placeholder: (provided) => ({
+    ...provided,
+    fontSize: '0.875rem',
+  }),
 };
 
 export default function SearchBar({ 

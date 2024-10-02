@@ -97,9 +97,9 @@ export default function ExpenseParticipant({
     <>
       <ul className="flex flex-col items-start">
         <div className="flex w-full my-1">
-          <h3 className="w-4/12 text-center">Member</h3>
-          <h3 className="w-2/12 text-center">Share</h3>
-          <h3 className="w-6/12 text-center">How much will you pay</h3>
+          <h3 className="w-4/12 text-center text-sm">Member</h3>
+          <h3 className="w-2/12 text-center text-sm">Share</h3>
+          <h3 className="w-6/12 text-center text-sm">How much will you pay</h3>
         </div>
 
         {participants.map((member) => (

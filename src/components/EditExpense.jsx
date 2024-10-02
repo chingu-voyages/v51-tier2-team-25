@@ -8,7 +8,11 @@ import DeleteExpenseModal from "./DeleteExpenseModal";
 import ConfirmationModal from "./ConfirmationModal";
 import ExpenseParticipant from "./ExpenseParticipant";
 
-export default function EditExpense({ closeEditExpense, expense, currentGroup }) {
+export default function EditExpense({
+  closeEditExpense,
+  expense,
+  currentGroup,
+}) {
   const { updateExpenseInList, deleteExpenseInList } = useContext(AppContext);
 
   const [expensesData, setExpensesData] = useState({
@@ -18,7 +22,7 @@ export default function EditExpense({ closeEditExpense, expense, currentGroup })
     category: "",
     description: "",
     id: "",
-    participants:[]
+    participants: [],
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,19 +44,19 @@ export default function EditExpense({ closeEditExpense, expense, currentGroup })
     setChangesMade(true);
   };
 
-  const handleCategoryChange =(selectedCategory)=>{
-    setExpensesData(prevData =>({
+  const handleCategoryChange = (selectedCategory) => {
+    setExpensesData((prevData) => ({
       ...prevData,
       category: selectedCategory ? selectedCategory.value : "",
-    }))
-    setChangesMade(true)
-  }
+    }));
+    setChangesMade(true);
+  };
 
   const saveChanges = (event) => {
     event.preventDefault();
     updateExpenseInList(expensesData);
     closeEditExpense();
-    toast("Expense updated successfully");
+    toast(`Expense ${expensesData.name} was updated successfully`);
   };
 
   const handleDelete = () => {
@@ -82,34 +86,35 @@ export default function EditExpense({ closeEditExpense, expense, currentGroup })
 
   const cancelClose = () => {
     setIsConfirmCloseOpen(false);
-  }; 
+  };
 
-  const deleteParticipant = (participantToDelete)=>{
-    setExpensesData(prevData =>({
+  const deleteParticipant = (participantToDelete) => {
+    setExpensesData((prevData) => ({
       ...prevData,
       participants: prevData.participants.filter(
-        (participant)=> participant.id !== participantToDelete.id
-      )
-    }))
-  }
+        (participant) => participant.id !== participantToDelete.id
+      ),
+    }));
+  };
   const addOrUpdateParticipant = (newParticipant) => {
     if (newParticipant) {
       const isParticipantIncluded = expensesData.participants.some(
         (participant) => participant.id === newParticipant.id
       );
-  
+
       setExpensesData((prevData) => {
         const updatedParticipants = isParticipantIncluded
-          ? prevData.participants.map((participant) =>
-              participant.id === newParticipant.id
-                ? newParticipant // Update the existing participant
-                : participant // Keep other participants unchanged
+          ? prevData.participants.map(
+              (participant) =>
+                participant.id === newParticipant.id
+                  ? newParticipant // Update the existing participant
+                  : participant // Keep other participants unchanged
             )
           : [...prevData.participants, newParticipant]; // Add the new participant
-  
+
         return { ...prevData, participants: updatedParticipants };
       });
-  
+
       // Display appropriate toast message based on the action
       // toast(
       //   isParticipantIncluded
@@ -171,9 +176,10 @@ export default function EditExpense({ closeEditExpense, expense, currentGroup })
               </div>
               <div className="flex flex-col w-full">
                 <p className="w-full pb-1 text-sm">Category*</p>
-                <ExpenseCategorySelection 
-                  handleChange={handleCategoryChange} 
-                  category={expensesData.category}/>
+                <ExpenseCategorySelection
+                  handleChange={handleCategoryChange}
+                  category={expensesData.category}
+                />
               </div>
             </div>
 
@@ -188,25 +194,36 @@ export default function EditExpense({ closeEditExpense, expense, currentGroup })
               />
             </label>
 
-            {/* Placeholder for receipt */}
             <div className="pt-4 mb-auto">
-              <p className="border border-gray-300 border-dashed rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500">
+              <p className="flex flex-col pt-4 text-sm">Attachments</p>
+              <p className="border border-gray-300 border-dashed rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500 text-sm">
                 Placeholder to add receipt
               </p>
             </div>
 
-            <div className="pt-4 mb-auto">
-              <p>Add participants</p>
-              <div className="flex items-center">
-                <SearchBar 
-                  handleParticipantAdded={(participant)=>{
+            <div className="pt-4 mb-auto border-b border-border">
+              <p className="flex flex-col pt-4 text-sm mb-1">
+                Add participants
+              </p>
+              <div className="flex items-center mb-4">
+                <SearchBar
+                  handleParticipantAdded={(participant) => {
                     // console.log("Part selcted from search bar in editexpnse:", participant)
                     addOrUpdateParticipant(participant);
                   }}
                   purpose="participant" //specifies purpose of search bar is participant
                   groupMembers={currentGroup.members}
-                />                
+                />
               </div>
+            </div>
+
+            <div className="flex items-start">
+              <div></div>
+              <p className="text-xs mt-4 text-button">
+                A value of 0 means an equal share, while any other number sets
+                the member&apos;s contribution at x%, with the rest split among the
+                others unless specified otherwise.
+              </p>
             </div>
 
             <div className="pb-12 mt-2 overflow-y-auto">
