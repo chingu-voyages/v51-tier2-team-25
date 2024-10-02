@@ -47,7 +47,7 @@ export default function MobileFriendsPage() {
             <h2 className="text-gray-500 mb-1">Friends</h2>
             <button
             onClick={openAddFriendModal}  
-            className="w-full p-2 bg-gray-200 text-black rounded-md font-medium hover:bg-gray-300"
+            className="w-full p-2 bg-gray-300 text-black rounded-md font-medium hover:bg-gray-400"
             >
             + New friend
             </button>
@@ -57,7 +57,7 @@ export default function MobileFriendsPage() {
                     {(searchedFriends.length > 0 ? searchedFriends : friends).map((friend) => (
                         <li 
                             key={friend.id}
-                            className="border-2 border-gray-200 rounded-md mt-1 hover:bg-gray-200 bg-white"
+                            className="border-2 border-gray-300 rounded-md mt-1 hover:bg-gray-300 bg-white"
                         >
                             <NavLink to={`/friend/${friend.id}`} className="flex items-center p-3">
                             <img

@@ -71,7 +71,7 @@ export default function MobileGroupsPage() {
       <h2 className="text-gray-500 mb-1">Groups</h2>
       <button
         onClick={openAddGroupModal}  
-        className="w-full p-2 bg-gray-200 text-black rounded-md font-medium hover:bg-gray-300"
+        className="w-full p-2 bg-gray-300 text-black rounded-md font-medium hover:bg-gray-400"
       >
         + New group
       </button>
@@ -81,7 +81,7 @@ export default function MobileGroupsPage() {
             {(searchedGroups.length > 0 ? searchedGroups : groups).map((group) => (
                 <li 
                     key={group.id} 
-                    className="border-2 border-gray-200 rounded-md mt-1 hover:bg-gray-200 bg-white"
+                    className="border-2 border-gray-300 rounded-md mt-1 hover:bg-gray-300 bg-white"
                 >
                     <NavLink to={`/group/${group.id}`} className="flex items-center p-3">
                         <img
