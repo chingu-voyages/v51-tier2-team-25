@@ -125,7 +125,7 @@ export default function EditGroupForm({
   return (
     <div>
       <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
-        <div className="relative  w-[535px] h-auto rounded-md px-6 pt-6  bg-zinc-50 flex flex-col m-8 font-geologica">
+        <div className="relative w-full max-w-[535px] sm:w-11/12 md:w-10/12 lg:w-3/4 xl:w-[535px] h-auto rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-4 font-geologica">
           <div className="flex items-center justify-between pb-4 mb-5 border-b border-border">
             <h1 className="p-0 text-md">Edit Group</h1>
             <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
@@ -136,16 +136,16 @@ export default function EditGroupForm({
             onSubmit={handleSubmit}
           >
             <div className="flex flex-col">
-              <div className="flex items-start">
+              <div className="flex md:items-start flex-col md:flex-row">
                 <img
                   src="../../images/placeholder.jpg"
-                  className="border border-none rounded-full w-[80px] h-[80px] mr-4"
+                  className="border border-none rounded-full w-[80px] h-[80px] mr-4 mb-4 md:mb-0 self-center "
                 />
                 <div className="relative flex flex-col">
                   <label className="text-sm">
                     Group name*
                     <input
-                      className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                      className="w-full p-2 md:mt-1 text-left border rounded-md text-input-text border-input-border h-9"
                       type="text"
                       name="name"
                       value={tempGroupData.name}
@@ -154,17 +154,17 @@ export default function EditGroupForm({
                       required
                     />
                   </label>
-                  <p className="text-xs text-gray-400">30 character max.</p>
-                  <p className="absolute top-0 p-0 m-0 text-xs text-gray-400 right-8">
+                  <p className="text-xs text-gray-400 mb-4 md:mb-0">30 character max.</p>
+                  <p className="absolute top-0 p-0 m-0 text-xs text-gray-400 md:right-8 right-1">
                     #{tempGroupData.id}
                   </p>
                 </div>
 
                 <div className="relative flex flex-col">
-                  <label className="ml-2 text-sm">
+                  <label className="md:ml-2 text-sm">
                     Allotted budget
                     <input
-                      className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                      className="w-full p-2 md:mt-1 text-left border rounded-md text-input-text border-input-border h-9"
                       type="number"
                       step={0.01}
                       min={0.01}
@@ -177,11 +177,11 @@ export default function EditGroupForm({
                       required
                     />
                   </label>
-                  <p className="ml-2 text-xs text-gray-400">$1,000,000 max.</p>
+                  <p className="md:ml-2 text-xs text-gray-400 mb-4 md:mb-0">$1,000,000 max.</p>
                 </div>
               </div>
 
-              <label className="flex flex-col pt-4 text-sm ">
+              <label className="flex flex-col md:pt-4 text-sm">
                 Group description*
                 <textarea
                   className="w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border"
@@ -215,7 +215,7 @@ export default function EditGroupForm({
                   Add new friends to your friend list
                 </Link>
               </div>
-              <div className="pb-12 mt-2 overflow-y-auto">
+              <div className="md:pb-12 pb-6 mt-2 overflow-y-auto">
                 <MembersOnGroup
                   groupMembers={tempGroupData.members}
                   deleteMemberFromGroup={deleteMemberFromGroup}
@@ -233,13 +233,20 @@ export default function EditGroupForm({
                 <button
                   type="button"
                   onClick={handleDelete}
-                  className="px-3 py-2 mr-2 text-sm text-white bg-red-500 border-none rounded-lg hover:bg-red-600"
+                  className="hidden md:block px-3 py-2 mr-2 text-sm text-white bg-red-500 border-none rounded-lg hover:bg-red-600"
                 >
                   Delete group
                 </button>
                 <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="block md:hidden p-2 mr-2 text-white bg-red-500 border-none rounded-lg hover:bg-red-600 text-white"
+                >
+                  <img src="../../images/Delete.svg" className="w-4 h-4" />
+                </button>
+                <button
                   type="submit"
-                  className="px-3 py-2 text-sm rounded-lg hover:bg-hover bg-button text-light-indigo"
+                  className="px-3 py-2 text-sm rounded-lg hover:bg-hover border-none bg-button text-light-indigo"
                 >
                   Save
                 </button>
