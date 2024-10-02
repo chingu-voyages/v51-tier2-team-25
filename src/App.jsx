@@ -9,8 +9,9 @@ import Groups from "./pages/Groups.jsx";
 import Friends from "./pages/Friends.jsx";
 import Home from "./pages/Home.jsx";
 import Expenses from "./pages/Expenses.jsx";
-import Statistics from "./pages/Statistics.jsx"
-import ExpensesUser from './pages/ExpensesUser.jsx'
+import Statistics from "./pages/Statistics.jsx";
+import ExpensesUser from './pages/ExpensesUser.jsx';
+
 export const AppContext = createContext([]);
 
 function App() {

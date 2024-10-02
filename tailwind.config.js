@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        'button': '#74779c',
+        'button': '#74779C',
         'hover': '#585875',
         'light-indigo': '#F0F1F5',
         'border': '#D8DBE5',
@@ -16,7 +16,8 @@ export default {
         'input-border':'#DCDCDC',
         'modal-text': '#464646', 
         'green':'#247A51',     
-        'blue-background':'#E9EAF0'   
+        'blue-background':'#E9EAF0',
+        'tab-text':'#2F2F3C'        
 
       },
       fontFamily: {
