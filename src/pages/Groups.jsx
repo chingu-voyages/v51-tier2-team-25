@@ -6,7 +6,7 @@ import AddExpense from "../components/AddExpense";
 import EditAddFriendModal from "../components/EditAddFriendModal";
 import RemainingBudget from "../helpers/RemainingBudget";
 
-const getNavLinkClass = ({ isActive })=> isActive ? "px-2 py-1 text-sm bg-gray-200 rounded-t-md" : "px-2 py-1 text-sm"
+const getNavLinkClass = ({ isActive })=> isActive ? "px-2 py-1 text-sm bg-button rounded-t-md" : "px-2 py-1 text-sm"
 
 export default function Groups() {
   const { groupId } = useParams(); // Get the groupId from the URL
