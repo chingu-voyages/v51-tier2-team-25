@@ -9,7 +9,7 @@ export default function Navbar() {
   // TESTING ONLY to clear local storage -REMOVE
   // localStorage.clear()
 
-  const [isAddGroupModalOpen, setIsAddGroupModalOpen] = useState(false);
+  const [isAddGroupModalOpen, setIsAddGroupModalOpen] = useState(true);
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
   const [isLinkAddFriendModalOpen, setIsLinkAddFriendModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -21,7 +21,7 @@ export default function Navbar() {
     setIsAddGroupModalOpen(true);
   }
   function closeAddGroupModal() {
-    setIsAddGroupModalOpen(false);
+    setIsAddGroupModalOpen(true);
   }
   function openAddFriendModal() {
     setIsAddFriendModalOpen(true);

@@ -8,7 +8,7 @@ export default function MembersOnGroup({
 }) {
   const [activeMember, setActiveMember] = useState(null);
   const noMembersMessage = (
-    <div className="flex items-center m-2">
+    <div className="flex items-center md:m-2 ">
       <img src="../../images/Profile.svg" className="m-2" />
       <p className="text-xs text-gray-500">
         There is no one added to expense yet. Try searching and adding from your
