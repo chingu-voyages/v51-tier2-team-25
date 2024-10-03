@@ -272,7 +272,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
                 </button>
               </div>
 
-              <div className="md:pb-12 mt-2 overflow-y-auto">
+              <div className="md:pb-12 pb-6 mt-2 overflow-y-auto">
                 <ExpenseParticipant
                   expensesData={expensesData}
                   deleteParticipant={deleteParticipant}

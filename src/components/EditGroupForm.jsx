@@ -240,7 +240,7 @@ export default function EditGroupForm({
                 <button
                   type="button"
                   onClick={handleDelete}
-                  className="block md:hidden p-2 mr-2 text-white bg-red-500 border-none rounded-lg hover:bg-red-600 text-white"
+                  className="block md:hidden p-2 mr-2 text-white bg-red-500 border-none rounded-lg hover:bg-red-600"
                 >
                   <img src="../../images/Delete.svg" className="w-4 h-4" />
                 </button>
