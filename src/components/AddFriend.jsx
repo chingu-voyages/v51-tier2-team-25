@@ -1,0 +1,112 @@
+import { useContext, useState } from "react";
+import { AppContext } from "../App";
+import toast from "react-hot-toast";
+import { v4 as uuidv4 } from "uuid";
+import { useNavigate } from "react-router-dom";
+
+// eslint-disable-next-line react/prop-types
+export default function AddFriend({ closeAddFriendModal }) {
+  const { addFriendToList, friends } = useContext(AppContext);
+  const navigate = useNavigate();
+  // Initialize state for newFriendData
+  const [newFriendData, setNewFriendData] = useState({
+    name: "",
+    userName: "",
+    id: uuidv4(),
+  });
+
+  // Handle input changes and updates form data state
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setNewFriendData((prevnewFriendData) => ({
+      ...prevnewFriendData,
+      [name]: value,
+    }));
+  };
+
+  const addNewFriend = (event) => {
+    event.preventDefault();
+    //validate userName
+    const isUserNameTaken = friends.some(
+      (friend) =>
+        friend.userName.toLowerCase() === newFriendData.userName.toLowerCase()
+    );
+    if (isUserNameTaken) {
+      toast("User name is taken choose another user name");
+      return;
+    }
+
+    addFriendToList(newFriendData);
+    closeAddFriendModal();
+    toast("New friend added");
+    // Check screen size to conditionally navigate
+    if (window.innerWidth < 768) {
+      // If small screen, navigate to mobile-friends page
+      navigate("/mobile-friends");
+    } else {
+      // If not small screen, navigate to the friend's detail page
+      navigate(`friend/${newFriendData.id}`);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-gray-800 bg-opacity-75">
+      <div className="relative m-10 flex flex-col p-6 border rounded-md border-black-100 bg-zinc-50 font-geologica md:min-h-64 ">
+        <div className="flex items-center justify-between pb-4 mb-4 border-b border-black-200">
+          <h1 className="p-0 text-md">Add Friend</h1>
+        </div>
+
+        <form
+          onSubmit={addNewFriend}
+          className="flex flex-col flex-1 gap-6 overflow-auto border border-none"
+        >
+          <div className="flex flex-col">
+            <div className="flex flex-col md:flex-row">
+              <label className="flex flex-col md:pr-2 text-sm mb-4 md:mb-0">
+                Friend name
+                <input
+                  className="w-[194px] p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
+                  type="text"
+                  name="name"
+                  value={newFriendData.name}
+                  onChange={handleChange}
+                  maxLength="30"
+                  required
+                />
+              </label>
+
+              <label className="flex flex-col md:pr-2 text-sm w-full mb-4 md:mb-0">
+                Friend UserName
+                <input
+                  className="w-[194px] p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
+                  type="text"
+                  name="userName"
+                  value={newFriendData.userName}
+                  onChange={handleChange}
+                  maxLength="30"
+                  required
+                />
+              </label>
+              <button
+                type={"submit"}
+                className="px-3 py-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo mb-10 md:mb-0 self-start md:self-end md:w-full"
+              >
+                Add Friend
+              </button>
+            </div>
+
+            <div className="absolute bottom-0 left-0 right-0 flex items-center w-full h-12 p-4 bg-light-indigo place-content-end">
+              <button
+                type={"button"}
+                onClick={closeAddFriendModal}
+                className="px-4 py-2 m-2 text-sm text-black rounded-xl"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
