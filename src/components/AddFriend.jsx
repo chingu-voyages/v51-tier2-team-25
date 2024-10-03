@@ -60,7 +60,7 @@ export default function AddFriend({ closeAddFriendModal }) {
           onSubmit={addNewFriend}
           className="flex flex-col flex-1 gap-6 overflow-auto border border-none"
         >
-          <div className="flex flex-col ">
+          <div className="flex flex-col">
             <div className="flex flex-col md:flex-row">
               <label className="flex flex-col md:pr-2 text-sm mb-4 md:mb-0">
                 Friend name
@@ -95,7 +95,7 @@ export default function AddFriend({ closeAddFriendModal }) {
               </button>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 flex items-center w-full h-12 p-4 bg-light-indigo place-content-end ">
+            <div className="absolute bottom-0 left-0 right-0 flex items-center w-full h-12 p-4 bg-light-indigo place-content-end">
               <button
                 type={"button"}
                 onClick={closeAddFriendModal}

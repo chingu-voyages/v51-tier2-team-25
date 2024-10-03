@@ -46,9 +46,9 @@ export default function EditAddFriendModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
-      <div className="relative flex flex-col p-6 m-8 border rounded-md border-black-100 bg-zinc-50 font-geologica min-h-64">
-        <div className="flex items-center justify-between pb-4 mb-5 border-b border-black-200">
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-gray-800 bg-opacity-75">
+      <div className="relative m-10 flex flex-col p-6 border rounded-md border-black-100 bg-zinc-50 font-geologica min-h-64">
+        <div className="flex items-center justify-between pb-4 mb-4 border-b border-black-200">
           <h1 className="p-0 text-md">Add Friend</h1>
         </div>
 
@@ -57,8 +57,8 @@ export default function EditAddFriendModal({
           className="flex flex-col flex-1 gap-6 overflow-auto border border-none"
         >
           <div className="flex flex-col ">
-            <div className="flex items-end">
-              <label className="flex flex-col pr-2 text-sm">
+            <div className="flex flex-col md:flex-row">
+              <label className="flex flex-col md:pr-2 text-sm mb-4 md:mb-0">
                 Friend name
                 <input
                   className="w-[194px] p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
@@ -71,10 +71,10 @@ export default function EditAddFriendModal({
                 />
               </label>
 
-              <label className="flex flex-col pr-2 text-sm">
+              <label className="flex flex-col md:pr-2 text-sm w-full mb-4 md:mb-0">
                 Friend UserName
                 <input
-                  className="p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
+                  className="w-[194px] p-2 mt-1 text-left text-gray-500 border border-gray-300 rounded-md h-9"
                   type="text"
                   name="userName"
                   value={newFriendData.userName}
@@ -85,13 +85,13 @@ export default function EditAddFriendModal({
               </label>
               <button
                 type={"submit"}
-                className="px-3 py-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo "
+                className="px-3 py-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo mb-10 md:mb-0 self-start md:self-end md:w-full"
               >
                 Add Friend
               </button>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 flex items-center w-full h-12 p-4 bg-light-indigo place-content-end ">
+            <div className="absolute bottom-0 left-0 right-0 flex items-center w-full h-12 p-4 bg-light-indigo place-content-end">
               <button
                 type={"button"}
                 onClick={() => {
