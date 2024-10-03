@@ -9,8 +9,19 @@ const customStyles = {
     ...provided,
     backgroundColor: state.isFocused ? "#D1D5DB" : "white",
     color: state.isActive ? "black" : "",
+    fontSize: '0.875rem', // Default font size (14px)
+    '@media (max-width: 768px)': {
+      fontSize: '0.75rem', // Change font size for smaller screens
+    },
     "&:active": {
       backgroundColor: "#D1D5DB",
+    },
+  }),
+  placeholder: (provided) => ({
+    ...provided,
+    fontSize: '0.875rem',
+    '@media (max-width: 768px)': {
+      fontSize: '0.75rem', // Change font size for smaller screens
     },
   }),
 };
@@ -20,7 +31,8 @@ export default function SearchBar({
   handleParticipantAdded, 
   purpose="member", //sets default purpose of search bar to add member to group
   groupMembers=[],
-  resetSearchBar
+  resetSearchBar,
+  customPlaceholder
 }) {  
   //using react select library for component
   const { friends } = useContext(AppContext);
@@ -35,7 +47,7 @@ export default function SearchBar({
   const placeHolderMessage =
     options.length === 0
       ? (purpose ==="participant" ? "No members in this group": "Please add a friend first")
-      : "Search on your list of friends";
+      : customPlaceholder || (purpose === "participant" ? "Search for members in the group" : "Search in your list of friends");
 
   //if no options to choose
   const isListEmpty = options.length === 0;
@@ -62,6 +74,7 @@ export default function SearchBar({
   },[groupMembers, friends, isListEmpty])
 
   function addSelectionToForm(optionSelected) {
+    // console.log("Option selected in SearchBar", optionSelected)
     if (!optionSelected) {
       setSelectedValue(null)
       return;
@@ -70,6 +83,8 @@ export default function SearchBar({
     const selectedPerson = (purpose==='participant'? groupMembers: friends).find(
       (person)=> person.userName === optionSelected.value
     )    
+
+    // console.log("Selected person found in list", selectedPerson)
     
     //call appropriate handler based on purpose of prop
     if(purpose==="member" && handleMemberSelected){

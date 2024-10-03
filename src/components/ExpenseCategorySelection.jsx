@@ -24,20 +24,31 @@ const ExpenseCategorySelection = ({ handleChange, category }) => {
 
   //useMemo to ensure options is stable and not recreated @ each render
   const options= useMemo(()=> [
-    { value: "rentMortgage",label:"Rent/Mortgage 🏠" },
+    { value: "rent_mortgage",label:"Rent/Mortgage 🏠" },
     { value: "utilities",label:"Utilities 💡" },
     { value: "groceries",label:"Groceries 🛒" },
-    { value: "fastFood",label:"Fast Food 🍔" },
-    { value: "diningOut",label:"Dining Out 🍽️"},
+    { value: "fast_food",label:"Fast Food 🍔" },
+    { value: "dining_out",label:"Dining Out 🍽️"},
     { value: "transportation",label:"Transportation 🚗"},
+    { value: "travel_trips", label: "Travel & Trips ✈️" },
+    { value: "shared_apps_software", label: "Shared Apps & Software 💻" },
+    { value: "garden_outdoor", label: "Garden & Outdoor 🌳" },
+    { value: "childcare", label: "Childcare 👶" },
+    { value: "insurance", label: "Insurance 🛡️" },
+    { value: "household_items", label: "Household Items 🧹" },
+    { value: "subscriptions", label: "Subscriptions 📱" },
+    { value: "pet_expenses", label: "Pet Expenses 🐾" },
+    { value: "health_wellness", label: "Health & Wellness 🏋️" },
+    { value: "entertainment", label: "Entertainment 🎬" },
+    { value: "miscellaneous", label: "Miscellaneous 🧾" },
+    
+
   ], [])
 
 
   //update local state when parent sends new category
   useEffect(()=>{
-    if(!category){
-      setSelectedCategory(null)
-    }else{
+    if(category){
       const foundCategory = options.find(option => option.value === category)
       setSelectedCategory(foundCategory || null)
     }
@@ -45,7 +56,6 @@ const ExpenseCategorySelection = ({ handleChange, category }) => {
 
   const handleCategoryChange =(selectedOption) =>{
     setSelectedCategory(selectedOption)   
-
     handleChange(selectedOption,'category')
   }
 
