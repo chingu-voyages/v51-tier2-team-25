@@ -137,8 +137,57 @@ export default function EditExpense({
           className="flex flex-col flex-1 gap-6 border border-none"
         >
           <div className="flex flex-col">
-            <div className="flex items-start">
-              <div className="relative flex flex-col w-full">
+            {/* Wider screen version */}
+            <div className="hidden md:block">
+              <div className="flex items-start">
+                <div className="relative flex flex-col w-full">
+                  <label className="text-sm">
+                    Expense name*
+                    <input
+                      className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                      type="text"
+                      name="name"
+                      value={expensesData.name}
+                      onChange={handleChange}
+                      maxLength={30}
+                      required
+                    />
+                  </label>
+                </div>
+
+                <label className="ml-2 text-sm">
+                  Amount*
+                  <input
+                    className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                    type="number"
+                    step={0.01}
+                    min={0.01}
+                    name="amount"
+                    value={expensesData.amount}
+                    onChange={handleChange}
+                    required
+                  />
+                </label>
+              </div>
+              <div className="flex items-start pt-4">
+                <div className="flex flex-col w-full">
+                  <p className="text-sm">Date*</p>
+                  <p className="pl-2 mt-4 text-sm text-input-text">
+                    {expensesData.date}
+                  </p>
+                </div>
+                <div className="flex flex-col w-full">
+                  <p className="w-full pb-1 text-sm">Category*</p>
+                  <ExpenseCategorySelection
+                    handleChange={handleCategoryChange}
+                    category={expensesData.category}
+                  />
+                </div>
+              </div>
+            </div>
+            {/* Mobile screen version */}
+            <div className="block md:hidden">
+              <div className="relative flex flex-col w-full mb-4">
                 <label className="text-sm">
                   Expense name*
                   <input
@@ -153,28 +202,29 @@ export default function EditExpense({
                 </label>
               </div>
 
-              <label className="ml-2 text-sm">
-                Amount*
-                <input
-                  className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
-                  type="number"
-                  step={0.01}
-                  min={0.01}
-                  name="amount"
-                  value={expensesData.amount}
-                  onChange={handleChange}
-                  required
-                />
-              </label>
-            </div>
-            <div className="flex items-start pt-4">
-              <div className="flex flex-col w-full">
-                <p className="text-sm">Date*</p>
-                <p className="pl-2 mt-4 text-sm text-input-text">
-                  {expensesData.date}
-                </p>
+              <div className="flex mb-4">
+                <label className="text-sm w-full">
+                  Amount*
+                  <input
+                    className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                    type="number"
+                    step={0.01}
+                    min={0.01}
+                    name="amount"
+                    value={expensesData.amount}
+                    onChange={handleChange}
+                    required
+                  />
+                </label>
+                <div className="flex flex-col w-full ml-2">
+                  <p className="text-sm">Date*</p>
+                  <p className="mt-4 text-sm text-input-text">
+                    {expensesData.date}
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-col w-full">
+
+              <div className="flex flex-col w-full mb-4">
                 <p className="w-full pb-1 text-sm">Category*</p>
                 <ExpenseCategorySelection
                   handleChange={handleCategoryChange}
@@ -183,7 +233,7 @@ export default function EditExpense({
               </div>
             </div>
 
-            <label className="flex flex-col pt-4 text-sm">
+            <label className="flex flex-col text-sm mb-4">
               Expense Description*
               <textarea
                 className="w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border"
@@ -194,15 +244,15 @@ export default function EditExpense({
               />
             </label>
 
-            <div className="pt-4 mb-auto">
-              <p className="flex flex-col pt-4 text-sm">Attachments</p>
+            <div className="mb-4">
+              <p className="flex flex-col md:pt-4 text-sm">Attachments</p>
               <p className="border border-gray-300 border-dashed rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500 text-sm">
                 Placeholder to add receipt
               </p>
             </div>
 
-            <div className="pt-4 mb-auto border-b border-border">
-              <p className="flex flex-col pt-4 text-sm mb-1">
+            <div className="md:pt-4 md:mb-auto mb-4 border-b border-border">
+              <p className="flex flex-col md:pt-4 text-sm mb-1">
                 Add participants
               </p>
               <div className="flex items-center mb-4">
@@ -219,14 +269,14 @@ export default function EditExpense({
 
             <div className="flex items-start">
               <div></div>
-              <p className="text-xs mt-4 text-button">
+              <p className="text-xs md:mt-4 text-button">
                 A value of 0 means an equal share, while any other number sets
                 the member&apos;s contribution at x%, with the rest split among the
                 others unless specified otherwise.
               </p>
             </div>
 
-            <div className="pb-12 mt-2 overflow-y-auto">
+            <div className="md:pb-12 pb-6 mt-2 overflow-y-auto">
               <ExpenseParticipant
                 expensesData={expensesData}
                 deleteParticipant={deleteParticipant}
@@ -245,9 +295,16 @@ export default function EditExpense({
               <button
                 type="button"
                 onClick={handleDelete}
-                className="px-3 py-2 mr-2 text-sm text-white bg-red-500 border-none rounded-lg hover:bg-red-600"
+                className="hidden md:block px-3 py-2 mr-2 text-sm text-white bg-red-500 border-none rounded-lg hover:bg-red-600"
               >
                 Delete
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="block md:hidden p-2 mr-2 text-white bg-red-500 border-none rounded-lg hover:bg-red-600"
+              >
+                <img src="../../images/Delete.svg" className="w-4 h-4" />
               </button>
               <button
                 type="submit"

@@ -5,7 +5,7 @@ const ConfirmationModal = ({ isOpen, onConfirm, onCancel }) => {
 
   return (
 <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75 ">
-<div className="relative bg-white pt-6 pl-6 pr-6 pb-16 rounded-[8px] shadow-xl w-[535px] h-[183px]">
+<div className="relative bg-white pt-6 pl-6 pr-6 pb-16 rounded-[8px] shadow-xl max-w-[535px]">
   <h2 className="text-[14px] mb-3 font-medium text-title">Close Overlay?</h2>
   <div className="border-t bg-border h-[1px]"/>
   <p className="text-[12px] text-gray-600 mt-4 leading-[16.5px] text-modal-text">

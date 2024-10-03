@@ -63,15 +63,15 @@ export default function Groups() {
 
   return (
     <>
-      <div className="flex flex-col max-w-[785px] w-full gap-6 font-geologica">
-        <div className="p-6 mt-12 border rounded-md border-border bg-zinc-50">
-          <div className="relative flex justify-between w-full">
-            <div className="relative min-w-max">
+      <div className="flex flex-col max-w-[785px] w-full gap-6 font-geologica mx-3 mt-6">
+        <div className="p-6 md:mt-12 border rounded-md border-border bg-zinc-50">
+          <div className="relative flex justify-between w-full flex-col md:flex-row">
+            <div className="relative min-w-max self-center">
               <img
-                className="w-32 h-32 p-3 rounded-full"
+                className="w-24 h-24 rounded-full mb-5 border-border"
                 src="../../images/placeholder.jpg"
               />
-              <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-1/2 top-24 rounded-xl">
+              <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-1/2 bottom-3 rounded-xl">
                 {currentGroup?.groupType}
               </div>
             </div>
@@ -88,13 +88,13 @@ export default function Groups() {
             </div>
 
             <img
-              className="h-4"
+              className="h-4 w-4 absolute md:relative md:top-0 top-[120px] right-0"
               src="../../images/Setting.svg"
               onClick={openEditGroupFormModal}
             />
           </div>
 
-          <div className="flex items-end pt-6">
+          <div className="flex items-end pt-4">
             <div className="flex items-center w-1/2">
               <img
                 className="w-8 h-8 rounded-full"
@@ -122,7 +122,7 @@ export default function Groups() {
               </div>
 
               <button
-                className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
+                className="hidden md:block px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
                 onClick={openAddExpense}
               >
                 New expense
@@ -150,6 +150,12 @@ export default function Groups() {
               />
             )}
           </div>
+          <button
+            className="md:hidden px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo w-full mt-4"
+            onClick={openAddExpense}
+          >
+            New expense
+          </button>
         </div>        
         <div className="border rounded-t-md border-b-border">
           <NavLink className={getNavLinkClass} to={`expenses`}>
