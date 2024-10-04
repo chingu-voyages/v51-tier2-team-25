@@ -23,6 +23,7 @@ export default function Navbar() {
   function closeAddGroupModal() {
     setIsAddGroupModalOpen(false);
   }
+
   function openAddFriendModal() {
     setIsAddFriendModalOpen(true);
   }
@@ -32,7 +33,6 @@ export default function Navbar() {
   function openLinkAddFriendModal() {
     setIsLinkAddFriendModalOpen(true);
   }
-
   function closeLinkAddFriendModal() {
     setIsLinkAddFriendModalOpen(false);
     setIsAddGroupModalOpen(true);
