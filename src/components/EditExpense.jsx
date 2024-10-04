@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 import PropTypes from "prop-types";
 import SearchBar from "./SearchBar";
 import ExpenseCategorySelection from "./ExpenseCategorySelection";
-import DeleteExpenseModal from "./DeleteExpenseModal";
 import ConfirmationModal from "./ConfirmationModal";
 import ExpenseParticipant from "./ExpenseParticipant";
 
@@ -317,17 +316,27 @@ export default function EditExpense({
         </form>
       </div>
 
-      <DeleteExpenseModal
+      <ConfirmationModal
         isOpen={isModalOpen}
         onConfirm={confirmDelete}
         onCancel={() => setIsModalOpen(false)}
-        expenseName={expensesData.name}
+        title="Delete Expense?"
+        message={(
+          <>
+            Are you sure you want to delete the expense <span className="font-bold">{expensesData.name}</span>?
+            Any money accumulated so far will be refunded to the respective members.
+          </>
+        )}
+        confirmButtonText="Delete Expense"
       />
 
       <ConfirmationModal
         isOpen={isConfirmCloseOpen}
         onConfirm={confirmClose}
         onCancel={cancelClose}
+        title="Close Overlay?"
+        message="Are you sure you want to close this overlay? All entered information will be lost."
+        confirmButtonText="Close Without Saving"
       />
     </div>
   );
