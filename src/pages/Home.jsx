@@ -2,7 +2,7 @@ import { NavLink, Outlet, useNavigate, useLocation} from "react-router-dom";
 import { useEffect } from 'react'
 
 const getNavLinkClass = ({ isActive }) => 
-  isActive ? "px-2 py-1 text-sm bg-border rounded-t-md text-tab-text" : "px-2 py-1 text-sm text-button"
+  `${isActive ? "px-2 py-1 text-sm bg-border rounded-t-md text-tab-text" : "px-2 py-1 text-sm text-button"} hover:text-tab-text`
 
 export default function Home() {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ export default function Home() {
               <p className='text-xs text-gray-600'>You&apos;re going to get</p>
               <p className='text-xl font-semibold text-green'>$AMOUNT</p>
             </div>            
-            <img src="../../public/images/VectorGreen.svg" className="w-[67px] mr-6 h-[43px]"></img>
+            <img src="../../images/VectorGreen.svg" className="w-[67px] mr-6 h-[43px]"></img>
           </div>
 
           <div className='flex items-center w-1/3 mt-12 border rounded-md border-border bg-zinc-50'>
@@ -39,10 +39,10 @@ export default function Home() {
               <p className='text-xs text-gray-600'>You owe</p>
               <p className='text-xl font-semibold text-red-700'>$AMOUNT</p>
             </div>            
-            <img src="../../public/images/VectorRed.svg" className="w-[67px] mr-6 h-[43px]"></img>
+            <img src="../../images/VectorRed.svg" className="w-[67px] mr-6 h-[43px]"></img>
           </div>
         </div>
-        <div className="border rounded-t-md border-b-border">
+        <div className="">
           <NavLink className={getNavLinkClass} to={`expenses-user`}>
             Your expenses
           </NavLink>   
