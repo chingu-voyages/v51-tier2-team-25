@@ -6,8 +6,8 @@ import toast from "react-hot-toast";
 import GroupTypeSelection from "./GroupTypeSelection";
 import AddMember from "./AddMember";
 import MembersOnGroup from "./MembersOnGroup";
-import DeleteGroupModal from "./DeleteGroupModal";
 import { Link } from "react-router-dom";
+import ConfirmationModal from "./ConfirmationModal";
 
 export default function EditGroupForm({
   group,
@@ -255,11 +255,18 @@ export default function EditGroupForm({
           </form>
         </div>
       </div>
-      <DeleteGroupModal
+      <ConfirmationModal
         isOpen={isModalOpen}
         onConfirm={confirmDelete}
         onCancel={() => setIsModalOpen(false)}
-        groupName={tempGroupData.name}
+        title="Delete Group?"
+        message={(
+          <>
+            Are you sure you want to delete the <span className="font-bold">{tempGroupData.name}</span> group? 
+            All open expenses will be removed, and any money accumulated so far will be refunded to the respective members.
+          </>
+        )}
+        confirmButtonText="Delete Group"
       />
     </div>
   );
