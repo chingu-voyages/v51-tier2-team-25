@@ -10,7 +10,8 @@ import { Link } from "react-router-dom";
 import ConfirmationModal from "./ConfirmationModal";
 
 export default function EditGroupForm({
-  group,
+  tempGroupData,
+  setTempGroupData,
   closeEditGroupFormModal,
   openAddFriendModal,
 }) {
@@ -22,31 +23,14 @@ export default function EditGroupForm({
   const blockInvalidChar = (e) =>
     ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
 
-  // Temporary state for handling input changes
-  const [tempGroupData, setTempGroupData] = useState({
-    name: group.name || "",
-    id: group.id,
-    description: group.description || "",
-    allottedBudget: group.allottedBudget || "",
-    groupType: group.groupType || "",
-    members: group.members || []
-
-  });  
-
   useEffect(() => {
     // This ensures the form is pre-filled with the group data when opened
-    if (group) {
+    if (tempGroupData) {
       setTempGroupData({
-        name: group.name,
-        id: group.id,
-        description: group.description,
-        allottedBudget: group.allottedBudget,
-        groupType: group.groupType,
-        members: group.members
-
+        ...tempGroupData,
       });
     }
-  }, [group]);
+  }, [tempGroupData]);
 
   // Handle input changes in the temporary state
   const handleChange = (e) => {
@@ -98,7 +82,7 @@ export default function EditGroupForm({
 
   const confirmDelete = () => {
     const groupName = tempGroupData.name;
-    deleteGroup(group.id); // Call deleteGroup with the group's ID
+    deleteGroup(tempGroupData.id); // Call deleteGroup with the group's ID
     closeEditGroupFormModal(); // Close the form after deletion
     setIsModalOpen(false); // This closes the modal
     navigate("/");
@@ -273,7 +257,8 @@ export default function EditGroupForm({
 }
 
 EditGroupForm.propTypes = {
-  group: PropTypes.object.isRequired,
+  tempGroupData: PropTypes.object.isRequired,
+  setTempGroupData: PropTypes.func.isRequired,
   closeEditGroupFormModal: PropTypes.func.isRequired,
   openAddFriendModal: PropTypes.func.isRequired,
 };

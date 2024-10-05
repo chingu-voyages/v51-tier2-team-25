@@ -19,9 +19,11 @@ export default function Groups() {
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
 
   const currentGroup = groups.find((group) => group.id === Number(groupId));
+  const [tempGroupData, setTempGroupData] = useState(currentGroup);
 
   useEffect(() => {
     if (currentGroup) {
+      setTempGroupData(currentGroup);
       navigate(`expenses`); //auto navigate to expense page when group loads
     }
   }, [currentGroup, navigate]);
@@ -139,7 +141,8 @@ export default function Groups() {
             )}
             {isEditGroupFormModalOpen && (
               <EditGroupForm
-                group={currentGroup} // Pass the current group's data as props
+                tempGroupData={tempGroupData} 
+                setTempGroupData={setTempGroupData}
                 closeEditGroupFormModal={closeEditGroupFormModal}
                 openAddFriendModal={openAddFriendModal}
               />
