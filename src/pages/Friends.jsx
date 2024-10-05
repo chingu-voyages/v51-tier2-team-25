@@ -34,11 +34,13 @@ export default function Friends() {
       console.log("Receipt Open")
     }
 
-    const generateTitle = (expense) =>{
-      const group= groups.find(group => group.id === expense.groupId)
-      return group ? group.name : 'Unknown Group'
-    }
+    
     const currentTitle = useMemo(()=>{
+      const generateTitle = (expense) =>{
+        const group= groups.find(group => group.id === expense.groupId)
+        return group ? group.name : 'Unknown Group'
+      }
+
       return friendExpenses.map(expense => generateTitle(expense))
     }, [friendExpenses, groups])
 
@@ -46,14 +48,14 @@ export default function Friends() {
       if(friendExpenses.length > 0){        
         setTitle(currentTitle)
       }
-    }, [currentTitle])
+    }, [currentTitle, friendExpenses.length])
   
   if(!friendId){
-    console.log('friendId undefined')
+    // console.log('friendId undefined')
     return
   }
   if(!currentFriend){
-    console.log('Friend not found')
+    // console.log('Friend not found')
   }
 
   return (
