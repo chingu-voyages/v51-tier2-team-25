@@ -202,7 +202,7 @@ export default function EditExpense({
               </div>
 
               <div className="flex mb-4">
-                <label className="text-sm w-full">
+                <label className="w-full text-sm">
                   Amount*
                   <input
                     className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
@@ -232,7 +232,7 @@ export default function EditExpense({
               </div>
             </div>
 
-            <label className="flex flex-col text-sm mb-4">
+            <label className="flex flex-col mb-4 text-sm">
               Expense Description*
               <textarea
                 className="w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border"
@@ -244,14 +244,14 @@ export default function EditExpense({
             </label>
 
             <div className="mb-4">
-              <p className="flex flex-col md:pt-4 text-sm">Attachments</p>
+              <p className="flex flex-col text-sm md:pt-4">Attachments</p>
               <p className="border border-gray-300 border-dashed rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500 text-sm">
                 Placeholder to add receipt
               </p>
             </div>
 
-            <div className="md:pt-4 md:mb-auto mb-4 border-b border-border">
-              <p className="flex flex-col md:pt-4 text-sm mb-1">
+            <div className="mb-4 border-b md:pt-4 md:mb-auto border-border">
+              <p className="flex flex-col mb-1 text-sm md:pt-4">
                 Add participants
               </p>
               <div className="flex items-center mb-4">
@@ -275,7 +275,7 @@ export default function EditExpense({
               </p>
             </div>
 
-            <div className="md:pb-12 pb-6 mt-2 overflow-y-auto">
+            <div className="pb-6 mt-2 overflow-y-auto md:pb-12">
               <ExpenseParticipant
                 expensesData={expensesData}
                 deleteParticipant={deleteParticipant}
@@ -294,14 +294,14 @@ export default function EditExpense({
               <button
                 type="button"
                 onClick={handleDelete}
-                className="hidden md:block px-3 py-2 mr-2 text-sm text-white bg-red-500 border-none rounded-lg hover:bg-red-600"
+                className="hidden px-3 py-2 mr-2 text-sm text-white bg-red-500 border-none rounded-lg md:block hover:bg-red-600"
               >
                 Delete
               </button>
               <button
                 type="button"
                 onClick={handleDelete}
-                className="block md:hidden p-2 mr-2 text-white bg-red-500 border-none rounded-lg hover:bg-red-600"
+                className="block p-2 mr-2 text-white bg-red-500 border-none rounded-lg md:hidden hover:bg-red-600"
               >
                 <img src="../../images/Delete.svg" className="w-4 h-4" />
               </button>

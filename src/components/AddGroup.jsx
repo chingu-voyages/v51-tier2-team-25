@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import AddMember from "./AddMember";
 import MembersOnGroup from "./MembersOnGroup";
 import GroupTypeSelection from "./GroupTypeSelection";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
 
@@ -15,7 +15,7 @@ export default function AddGroup({
 }) {
   const { addGroupToList } = useContext(AppContext);
   const modalRef = useRef()
-
+  const navigate = useNavigate()
   //Maybe move this to a helper function also maybe use uuid library?
   const generateGroupId = () => {
     return Math.floor(10000 + Math.random() * 900000);
@@ -114,7 +114,8 @@ export default function AddGroup({
     //save updated array to local storage
     localStorage.setItem("groupsData", JSON.stringify(storedGroupData));
     addGroupToList(groupsData);
-    closeAddGroupModal();
+    navigate(`/group/${groupsData.id}`)
+    closeAddGroupModal();    
     toast.success("New group added");
     localStorage.removeItem("temporaryGroupData");
   };
