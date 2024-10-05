@@ -1,106 +1,195 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../App";
 import toast from "react-hot-toast";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 import SearchBar from "./SearchBar";
-import ExpenseCategorySelection from './ExpenseCategorySelection'
+import ExpenseCategorySelection from "./ExpenseCategorySelection";
 import { v4 as uuidv4 } from "uuid";
-
-
-// eslint-disable-next-line react/prop-types
+import ExpenseParticipant from "./ExpenseParticipant";
 
 export default function AddExpense({ closeAddExpense, currentGroup }) {
-
-  //I'm using context but we can use props
   const { addExpenseToList } = useContext(AppContext);
-  
-  //Generate today's date  
-  const generateDate = () =>{
-    const date = new Date()
+
+  //Generate today's date
+  const generateDate = () => {
+    const date = new Date();
     // console.log(date)
-    const formatDate = date.toLocaleDateString()
-    return formatDate
-  }
-  
-  // Initialize state for groupsData
+    const formatDate = date.toLocaleDateString();
+    return formatDate;
+  };
+
+  // Initialize state for expensesData
   const [expensesData, setExpensesData] = useState({
     name: "",
-    amount:"",
-    date:generateDate(),
-    category:"",
-    description:'',
-    id:uuidv4(),
-    groupId:currentGroup.id,
-    participants:[]
+    amount: "",
+    date: generateDate(),
+    category: null,
+    description: "",
+    id: uuidv4(),
+    groupId: currentGroup.id,
+    participants: [],
   });
 
   //Temp state to hold participant
-  const [selectedParticipant, setSelectedParticipant] = useState(null)
+  const [selectedParticipant, setSelectedParticipant] = useState(null);
+  const [resetSearchBar, setResetSearchBar] = useState(false);
 
   // Handle input changes and updates form data state
   const handleChange = (event, selectOptionName) => {
-    
-    if(selectOptionName){
-      setExpensesData(prevExpensesData =>({
+    if (selectOptionName) {
+      setExpensesData((prevExpensesData) => ({
         ...prevExpensesData,
-        [selectOptionName]:event.value,
-      }))
+        [selectOptionName]: event.value || event,
+      }));
     } else {
-        const { name, value } = event.target;
-        setExpensesData((prevExpensesData) => ({
-          ...prevExpensesData,
-          [name]: value,
-        }));
-    }    
+      const { name, value } = event.target;
+      setExpensesData((prevExpensesData) => ({
+        ...prevExpensesData,
+        [name]: value,
+      }));
+    }
   };
-
 
   const addNewExpense = (event) => {
     event.preventDefault();
 
     //get stored data from local storage or initialize array
-    let storedExpenseData = JSON.parse(localStorage.getItem("expensesData")) || [];
-    
+    let storedExpenseData =
+      JSON.parse(localStorage.getItem("expensesData")) || [];
+
     //append new form data to array
     storedExpenseData.push(expensesData);
-    
+
     //save updated array to local storage
     localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
     addExpenseToList(expensesData);
     closeAddExpense();
-    toast("New expense added");    
+    toast.success("New expense added");
+
+    setExpensesData({
+      name: "",
+      amount: "",
+      date: generateDate(),
+      category: "",
+      description: "",
+      id: uuidv4(),
+      groupId: currentGroup.id,
+      participants: [],
+    });
+
+    setSelectedParticipant(null);
+    setResetSearchBar((prev) => !prev);
   };
 
-  const addParticipant = () =>{
-    if(selectedParticipant){
+  const addParticipant = () => {
+    if (selectedParticipant) {
+      const isSelectedParticipantIncluded =
+        expensesData.participants.includes(selectedParticipant);
+      if (isSelectedParticipantIncluded) {
+        toast("Friend is already included");
+        return;
+      }
       setExpensesData((prevData) => ({
         ...prevData,
         participants: [...prevData.participants, selectedParticipant],
-      }))
-      setSelectedParticipant(null)
+      }));
+      setSelectedParticipant(null);
     }
-  } 
- 
+  };
+
+  function deleteParticipant(memberToDelete) {
+    setExpensesData((prevData) => ({
+      ...prevData,
+      participants: prevData.participants.filter(
+        (member) => member.id !== memberToDelete.id
+      ),
+    }));
+  }
+
+  function addOrUpdateParticipants(updatedParticipant) {
+    setExpensesData((prevData) => {
+      const isParticipantOnExpense = prevData.participants.some(
+        (participant) => participant.id === updatedParticipant.id
+      );
+
+      const updatedParticipants = isParticipantOnExpense
+        ? prevData.participants.map((participant) =>
+            participant.id === updatedParticipant.id
+              ? updatedParticipant
+              : participant
+          )
+        : [...prevData.participants, updatedParticipants];
+      return { ...prevData, participants: updatedParticipants };
+    });
+  }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
-      <div className="relative border w-[535px] h-[625px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica">
-        
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
+      <div className="relative w-full max-w-[535px] sm:w-11/12 md:w-10/12 lg:w-3/4 xl:w-[535px] h-auto rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-4 font-geologica">
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-border">
           <h1 className="p-0 text-md">New Expense</h1>
           <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
         </div>
-        
+
         <form
           onSubmit={addNewExpense}
-          className="flex flex-col flex-1 gap-6 border border-none"
+          className="flex flex-col flex-1 gap-6 border-none"
         >
           <div className="flex flex-col">
-            <div className='flex items-start'>
-              
-              <div className='relative flex flex-col w-full'>
+            {/* Wider screen version */}
+            <div className="hidden md:block">
+              <div className="flex items-start">
+                <div className="relative flex flex-col w-full">
+                  <label className="text-sm">
+                    Expense name*
+                    <input
+                      className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                      type="text"
+                      name="name"
+                      value={expensesData.name}
+                      onChange={handleChange}
+                      maxLength={30}
+                      required
+                    />
+                  </label>
+                </div>
+
+                <label className="ml-2 text-sm">
+                  Amount*
+                  <input
+                    className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                    type="number"
+                    step={0.01}
+                    min={0.01}
+                    name="amount"
+                    value={expensesData.amount}
+                    onChange={handleChange}
+                    required
+                  />
+                </label>
+              </div>
+              <div className="flex items-start my-4 ">
+                <div className="flex flex-col w-full">
+                  <p className="text-sm">Date*</p>
+                  <p className="pl-2 mt-4 text-sm text-input-text">
+                    {generateDate()}
+                  </p>
+                </div>
+
+                <div className="flex flex-col w-full">
+                  <p className="w-full pb-1 text-sm">Category*</p>
+                  <ExpenseCategorySelection
+                    handleChange={handleChange}
+                    category={expensesData.category}
+                  />
+                </div>
+              </div>
+            </div>
+            {/* Mobile screen version */}
+            <div className="block md:hidden">
+              <div className="relative flex flex-col w-full mb-4">
                 <label className="text-sm">
-                Expense name*
+                  Expense name*
                   <input
                     className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
                     type="text"
@@ -110,42 +199,45 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
                     maxLength={30}
                     required
                   />
-                </label>                
-              </div>            
-
-              <label className='ml-2 text-sm'>
-                Amount*
-                <input 
-                  className='w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9'
-                  type='number'
-                  step={0.01}
-                  min={0.01}
-                  name='amount'
-                  value={expensesData.amount}
-                  onChange={handleChange}
-                  required
-                />
-              </label>
-            </div>
-            <div className='flex items-start pt-4 '>
-              <div className='flex flex-col w-full'>
-                <p className='text-sm'>Date*</p>
-                <p className='pl-2 mt-4 text-sm text-input-text'>{generateDate()}</p>
+                </label>
               </div>
 
-              <div className='flex flex-col w-full'>
-                <p className='w-full pb-1 text-sm'>Category*</p>
-                <ExpenseCategorySelection 
+              <div className="flex mb-4">
+                <label className="text-sm w-full">
+                  Amount*
+                  <input
+                    className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                    type="number"
+                    step={0.01}
+                    min={0.01}
+                    name="amount"
+                    value={expensesData.amount}
+                    onChange={handleChange}
+                    required
+                  />
+                </label>
+                <div className="flex flex-col w-full ml-2">
+                  <p className="text-sm">Date*</p>
+                  <p className="mt-4 text-sm text-input-text">
+                    {generateDate()}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col w-full mb-4">
+                <p className="w-full pb-1 text-sm">Category*</p>
+                <ExpenseCategorySelection
                   handleChange={handleChange}
-                />  
-              </div>                          
-            </div>            
-            
-            <label className='flex flex-col pt-4 text-sm '>
+                  category={expensesData.category}
+                />
+              </div>
+            </div>
+
+            <label className="flex flex-col text-sm mb-4">
               Expense description*
-              <textarea 
-                className='border border-gray-300 rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500'              
-                name='description'
+              <textarea
+                className="w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border"
+                name="description"
                 value={expensesData.description}
                 onChange={handleChange}
                 required
@@ -153,31 +245,43 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
             </label>
 
             {/* TODO PLACEHOLDER */}
-            <div className='pt-4 mb-auto'>
-              <p className='border border-gray-300 border-dashed rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500'>placeholder to add receipt</p>
+            <div className="mb-4">
+              <p className="border border-gray-300 border-dashed rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500">
+                placeholder to add receipt
+              </p>
             </div>
-
-            <div className='pt-4 mb-auto'>
-              <p >Add participants</p>
-              <div className="flex items-center">
-                <SearchBar 
-                  handleParticipantAdded={(participant)=>setSelectedParticipant(participant)}
+            
+            <div className="pb-2 mb-auto">
+              <p className="text-sm">Add participants</p>
+              <div className="flex items-center mt-1">
+                <SearchBar
+                  handleParticipantAdded={(participant) =>{
+                    // console.log('participant selected from searchbar in addexpesne:', participant)
+                    setSelectedParticipant(participant)
+                  }}
                   purpose="participant" //specifies purpose of search bar is participant
                   groupMembers={currentGroup?.members || []}
+                  resetSearchBar={resetSearchBar}
                 />
                 <button
                   onClick={addParticipant}
                   type="button"
-                  className="px-3 py-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo"
-                >Add</button>
+                  className="px-3 py-2 ml-2 text-sm border-none rounded-lg h-9 hover:bg-hover bg-button text-light-indigo"
+                >
+                  Add
+                </button>
               </div>
-              {/* DISPLAY PARTICIPANTS     */}
-              <ul>{expensesData.participants.map(participant =>(
-                <li key={participant.id}>{participant.name}</li>))}
-              </ul>
+
+              <div className="md:pb-12 pb-6 mt-2 overflow-y-auto">
+                <ExpenseParticipant
+                  expensesData={expensesData}
+                  deleteParticipant={deleteParticipant}
+                  addOrUpdateParticipants={addOrUpdateParticipants}
+                />
+              </div>
             </div>
-            
-            <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end ">
+
+            <div className="flex items-center w-[calc(100%+48px)] -ml-6 p-4 mt-auto bg-light-indigo place-content-end rounded-b-md">
               <button
                 type={"button"}
                 onClick={closeAddExpense}
@@ -195,12 +299,11 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
           </div>
         </form>
       </div>
-    </div>     
-
+    </div>
   );
 }
 //Add proptypes validation for eslint
 AddExpense.propTypes = {
   closeAddExpense: PropTypes.func.isRequired,
-  currentGroup: PropTypes.object.isRequired
-}
+  currentGroup: PropTypes.object.isRequired,
+};

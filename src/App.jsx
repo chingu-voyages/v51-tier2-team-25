@@ -1,13 +1,17 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createContext, useState } from "react";
+import MobileGroupsPage from "./pages/MobileGroupsPage.jsx";
+import MobileFriendsPage from "./pages/MobileFriendsPage.jsx";
 import RootLayout from "./pages/Root.jsx";
 import ErrorPage from "./pages/Error.jsx";
 import Profile from "./pages/Profile.jsx";
 import Groups from "./pages/Groups.jsx";
 import Friends from "./pages/Friends.jsx";
 import Home from "./pages/Home.jsx";
-import { createContext, useState } from "react";
 import Expenses from "./pages/Expenses.jsx";
-import Statistics from "./pages/Statistics.jsx"
+import Statistics from "./pages/Statistics.jsx";
+import ExpensesUser from './pages/ExpensesUser.jsx';
+
 export const AppContext = createContext([]);
 
 function App() {
@@ -21,14 +25,14 @@ function App() {
     JSON.parse(localStorage.getItem("expensesData")) || []
   );
 
-  const [memberData, setMemberData] = useState({ name: "", share: "", id: "" });
+  const [memberData, setMemberData] = useState({ name: "", id: "" });
 
   //members added from group to expense
-  const [participantData, setParticipantData] = useState({name:"", share:"", id:""}
+  const [participantData, setParticipantData] = useState({name:"", id:""}
   )
 
   function addFriendToList(newFriend) {
-    console.log("addNewFriend-app", newFriend);
+    // console.log("addNewFriend-app", newFriend);
     const updatedFriends = [...friends, newFriend];
     setFriends(updatedFriends);
     localStorage.setItem("friendsData", JSON.stringify(updatedFriends));
@@ -52,7 +56,10 @@ function App() {
     setGroups(prevGroups =>{
       const updatedGroups = prevGroups.map(group =>{
         if(group.id === newExpense.groupId){
-          return{...group, expenses: [...group.expenses, newExpense]}
+          return{
+            ...group, 
+            expenses: group.expenses ? [...group.expenses, newExpense]: [newExpense],            
+          }
         }
         return group
       })
@@ -88,7 +95,7 @@ function App() {
       );
       localStorage.setItem("expensesData", JSON.stringify(updatedExpenses));
       return updatedExpenses;
-    });
+    });    
   }
 
   //updates expenses states @ global
@@ -128,15 +135,26 @@ function App() {
       localStorage.setItem("groupsData", JSON.stringify(updatedGroups))
       return updatedGroups
     })
-
+    // console.log("Add update participants in app.jsx",groups)
   }
-
 
   function deleteExpenseInList(expenseId) {
     setExpenses((prevExpenses) => {
       const updatedExpenses = prevExpenses.filter((expense) => expense.id !== expenseId)
       localStorage.setItem("expensesData", JSON.stringify(updatedExpenses)); // Update local storage
       return updatedExpenses
+    })
+
+    //update group
+    setGroups(prevGroups => {
+      const updatedGroups = prevGroups.map(group => {
+        return{
+          ...group,
+          expenses: group.expenses.filter(expense => expense.id !==  expenseId)
+        }
+      })
+      localStorage.setItem("groupsData", JSON.stringify(updatedGroups))
+      return updatedGroups
     })
   }
   
@@ -151,10 +169,29 @@ function App() {
         {
           path: "",
           element: <Home />,
+          children: [
+            {
+              path:"expenses-user",
+              element:<ExpensesUser />
+            },
+            {
+              path:"statistics",
+              element:<Statistics />
+            }
+          ]
         },
         {
           path: "profile",
           element: <Profile />,
+
+        },
+        {
+          path: "mobile-groups",
+          element: <MobileGroupsPage />,
+        },
+        {
+          path: "mobile-friends",
+          element: <MobileFriendsPage />,
         },
         {
           path: "group/:groupId",

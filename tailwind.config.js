@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        'button': '#74779c',
+        'button': '#74779C',
         'hover': '#585875',
         'light-indigo': '#F0F1F5',
         'border': '#D8DBE5',
@@ -14,7 +14,10 @@ export default {
         'title':'#292929',
         'input-text':'#989898',
         'input-border':'#DCDCDC',
-        'modal-text': '#464646'
+        'modal-text': '#464646', 
+        'green':'#247A51',     
+        'blue-background':'#E9EAF0',
+        'tab-text':'#2F2F3C'        
 
       },
       fontFamily: {
@@ -24,7 +27,9 @@ export default {
       fontSize:{
         xs: ['0.625rem', '0.75rem'],
         sm: ['0.75rem', '0.875rem'],
-        md: ['0.875rem', '1rem']
+        md: ['0.875rem', '1rem'],
+        lg: ['1rem','1.5rem'],
+        xl: ['1.125rem','1.25rem']
       },
       fontWeight:{
         light:300,
@@ -34,7 +39,6 @@ export default {
         bold:700,
       }
     },
-    
   },
   plugins: [],
 };

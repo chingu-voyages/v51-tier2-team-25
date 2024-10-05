@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from "../App";
 import toast from "react-hot-toast";
 import PropTypes from "prop-types";
@@ -14,6 +14,7 @@ export default function AddGroup({
   openLinkAddFriendModal,
 }) {
   const { addGroupToList } = useContext(AppContext);
+  const modalRef = useRef()
 
   //Maybe move this to a helper function also maybe use uuid library?
   const generateGroupId = () => {
@@ -43,10 +44,23 @@ export default function AddGroup({
         }
   );
 
+  //Close modals when click outside of modal
+  useEffect(()=>{  
+    const handleClickOutside = (e) =>{      
+      if (modalRef.current && !modalRef.current.contains(e.target)){
+        closeAddGroupModal()
+      }    
+    }
+      document.body.addEventListener('mousedown',handleClickOutside)
+      return () => {
+        document.body.removeEventListener('mousedown',handleClickOutside)
+      }    
+  }, [closeAddGroupModal])
+
   //render groupID to be visible on form
   const renderGroupId = () => {
     return groupsData.id ? (
-      <p className="absolute top-0 p-0 m-0 text-xs text-gray-400 right-8">
+      <p className="absolute top-0 p-0 m-0 text-xs text-gray-400 md:right-8 right-1">
         #{groupsData.id}
       </p>
     ) : null;
@@ -58,7 +72,7 @@ export default function AddGroup({
 
     //check if value is empty or contains only spaces
     if (value.trim() === "" && value.length > 0) {
-      toast("Input cannot be empty or contain only spaces");
+      toast.error("Input cannot be empty or contain only spaces");
       return;
     }
 
@@ -67,7 +81,7 @@ export default function AddGroup({
       const newValue = parseFloat(value);
 
       if (!isNaN(newValue) && newValue > 1000000) {
-        toast("Alloted budget cannot exceed $1,000,000");
+        toast.error("Alloted budget cannot exceed $1,000,000");
         return;
       }
     }
@@ -84,12 +98,12 @@ export default function AddGroup({
     const budgetRegex = /^(0|[1-9]\d*)(\.\d+)?$/;
 
     if (!budgetRegex.test(groupsData.allottedBudget)) {
-      toast("Allotted budget must be a valid number");
+      toast.error("Allotted budget must be a valid number");
       return;
     }
 
     if (groupsData.groupType === "") {
-      toast("Please select a Group type");
+      toast.error("Please select a Group type");
       return;
     }
 
@@ -101,7 +115,7 @@ export default function AddGroup({
     localStorage.setItem("groupsData", JSON.stringify(storedGroupData));
     addGroupToList(groupsData);
     closeAddGroupModal();
-    toast("New group added");
+    toast.success("New group added");
     localStorage.removeItem("temporaryGroupData");
   };
 
@@ -134,8 +148,8 @@ export default function AddGroup({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-gray-800 bg-opacity-75">
-      <div className="relative  w-[535px] h-[625px] rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-8 font-geologica overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
+      <div ref={modalRef} className="relative w-full max-w-[535px] sm:w-11/12 md:w-10/12 lg:w-3/4 xl:w-[535px] h-auto rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-4 font-geologica">
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-border">
           <h1 className="p-0 text-md">New Group</h1>
           <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
@@ -146,16 +160,16 @@ export default function AddGroup({
           className="flex flex-col flex-1 gap-6 border-none "
         >
           <div className="flex flex-col">
-            <div className="flex items-start">
+            <div className="flex flex-col md:items-start md:flex-row">
               <img
                 src="../../images/placeholder.jpg"
-                className="border border-none rounded-full w-[80px] h-[80px] mr-4"
+                className="border border-none rounded-full w-[80px] h-[80px] mr-4 mb-4 md:mb-0 self-center "
               />
               <div className="relative flex flex-col">
                 <label className="text-sm">
                   Group name*
                   <input
-                    className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                    className="w-full p-2 text-left border rounded-md md:mt-1 text-input-text border-input-border h-9"
                     type="text"
                     name="name"
                     value={groupsData.name}
@@ -164,15 +178,15 @@ export default function AddGroup({
                     required
                   />
                 </label>
-                <p className="text-xs text-gray-400">30 character max.</p>
+                <p className="mb-4 text-xs text-gray-400 md:mb-0">30 character max.</p>
                 {renderGroupId()}
               </div>
 
               <div className="relative flex flex-col">
-                <label className="ml-2 text-sm">
+                <label className="text-sm md:ml-2">
                   Allotted budget
                   <input
-                    className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                    className="w-full p-2 text-left border rounded-md md:mt-1 text-input-text border-input-border h-9"
                     type="number"
                     step={0.01}
                     min={0.01}
@@ -185,11 +199,11 @@ export default function AddGroup({
                     required
                   />
                 </label>
-                <p className="ml-2 text-xs text-gray-400">$1,000,000 max.</p>
+                <p className="mb-4 text-xs text-gray-400 md:ml-2 md:mb-0">$1,000,000 max.</p>
               </div>
             </div>
 
-            <label className="flex flex-col pt-4 text-sm ">
+            <label className="flex flex-col text-sm md:pt-4">
               Group description*
               <textarea
                 className="w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border"
@@ -214,7 +228,8 @@ export default function AddGroup({
             <div className="flex items-center justify-between pb-4 mt-4 mb-4 border-b border-border">
               <Link
                 to="/"
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   createTemporaryGroupData();
                   closeAddGroupModal();
                   openLinkAddFriendModal();
@@ -225,14 +240,14 @@ export default function AddGroup({
               </Link>
             </div>
 
-            <div className="pb-12 mt-2 overflow-y-auto max-h-32">
+            <div className="pb-6 mt-2 overflow-y-auto md:pb-12">
               <MembersOnGroup
                 groupMembers={groupsData.members}
                 deleteMemberFromGroup={deleteMemberFromGroup}
               />
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 flex items-center w-full p-4 bg-light-indigo place-content-end">
+            <div className="flex items-center w-[calc(100%+48px)] -ml-6 p-4 mt-auto bg-light-indigo place-content-end rounded-b-md">
               <button
                 type={"button"}
                 onClick={() => {
@@ -245,7 +260,7 @@ export default function AddGroup({
               </button>
               <button
                 type={"submit"}
-                className="px-3 py-2 text-sm rounded-lg hover:bg-hover bg-button text-light-indigo"
+                className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
               >
                 Create group
               </button>

@@ -8,7 +8,7 @@ const GroupTypeSelection = ({ handleChange, groupsData }) => {
     <>
   
       <p className='mt-4 text-sm font-normal'>Group type*</p>
-      <div className="flex items-center gap-1 mt-2">
+      <div className="flex items-center gap-1 mt-2 overflow-x-auto whitespace-nowrap">
         {groupTypes.map(groupType =>{
           return(
           <label 

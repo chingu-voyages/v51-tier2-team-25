@@ -4,28 +4,42 @@ import { AppContext } from "../App";
 import EditGroupForm from "../components/EditGroupForm";
 import AddExpense from "../components/AddExpense";
 import EditAddFriendModal from "../components/EditAddFriendModal";
+import RemainingBudget from "../helpers/RemainingBudget";
+
+const getNavLinkClass = ({ isActive })=> 
+   `${isActive ? "px-2 py-1 text-sm bg-border rounded-t-md text-tab-text" : "px-2 py-1 text-sm text-button"} hover:text-tab-text`
 
 export default function Groups() {
   const { groupId } = useParams(); // Get the groupId from the URL
-  const { groups } = useContext(AppContext); // Get all groups from context
-  const navigate = useNavigate()  
+  const { groups, addExpenseToList } = useContext(AppContext); // Get all groups from context
+  const navigate = useNavigate();
 
-  const [isEditGroupFormModalOpen, setIsEditGroupFormModalOpen] =
-    useState(false);
-  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
-  const { addExpenseToList } = useContext(AppContext);
+  const [isEditGroupFormModalOpen, setIsEditGroupFormModalOpen] = useState(false);
+  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);  
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
 
-  // Find the current group based on the groupId
   const currentGroup = groups.find((group) => group.id === Number(groupId));
 
-  //console.log('current group expenses:',currentGroup?.expenses)  
-
-  useEffect(()=>{
-    if(currentGroup){
-      navigate(`expenses`) //auto navigate to expense page when group loads
+  useEffect(() => {
+    if (currentGroup) {
+      navigate(`expenses`); //auto navigate to expense page when group loads
     }
-  },[currentGroup, navigate])
+  }, [currentGroup, navigate]);
+  
+  // Find the current group based on the groupId
+  if(!groupId){
+    console.error("groupId undefined")
+    return
+  }
+
+  if(!currentGroup){
+    console.error("Group not found")
+    return
+  }
+
+  //console.log('current group expenses:',currentGroup?.expenses)
+
+  
 
   function openEditGroupFormModal() {
     setIsEditGroupFormModalOpen(true);
@@ -47,20 +61,19 @@ export default function Groups() {
     setIsAddFriendModalOpen(true);
   }
 
+
   return (
     <>
-      <div className="flex flex-col w-[785px] gap-6 font-geologica">
-        <div className="p-6 mt-12 border rounded-md border-border bg-zinc-50">
-          <div className="relative flex justify-between w-full">
-            <div className="relative min-w-max">
+      <div className="flex flex-col max-w-[785px] w-full gap-6 font-geologica mx-3 mt-6">
+        <div className="p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
+          <div className="relative flex flex-col justify-between w-full md:flex-row">
+            <div className="relative self-center min-w-max">
               <img
-                className="w-32 h-32 p-3 rounded-full"
+                className="w-24 h-24 mb-5 rounded-full border-border"
                 src="../../images/placeholder.jpg"
               />
-              <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-1/2 top-24 rounded-xl">
-
+              <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-1/2 bottom-3 rounded-xl">
                 {currentGroup?.groupType}
-
               </div>
             </div>
             <div className="w-full pl-3">
@@ -76,13 +89,13 @@ export default function Groups() {
             </div>
 
             <img
-              className="h-4"
+              className="h-4 w-4 absolute md:relative md:top-0 top-[120px] right-0"
               src="../../images/Setting.svg"
               onClick={openEditGroupFormModal}
             />
           </div>
 
-          <div className="flex items-end pt-6">
+          <div className="flex items-end pt-4">
             <div className="flex items-center w-1/2">
               <img
                 className="w-8 h-8 rounded-full"
@@ -96,18 +109,21 @@ export default function Groups() {
             <div className="flex items-center w-full gap-6 place-content-end">
               <div className="flex flex-col">
                 <p className="text-xs text-gray-500">Allotted budget</p>
-                <p className="text-sm, text-gray-950">
+                <p className="text-sm text-gray-950">
                   $ {currentGroup?.allottedBudget}
                 </p>
               </div>
 
               <div className="flex flex-col">
                 <p className="text-xs text-gray-500">Remaining</p>
-                <p className="text-sm, text-gray-950">$ placeholder</p>
+                <p className="text-sm text-gray-950">
+                  $ <RemainingBudget groupId={Number(groupId)} />
+                </p>
+                
               </div>
 
               <button
-                className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
+                className="hidden px-3 py-2 text-sm border-none rounded-lg md:block hover:bg-hover bg-button text-light-indigo"
                 onClick={openAddExpense}
               >
                 New expense
@@ -135,20 +151,21 @@ export default function Groups() {
               />
             )}
           </div>
-        </div>
-        <div className="flex gap-1">
-          <div className="bg-gray-200 rounded-t-md">
-            <NavLink className="px-2 py-1 text-sm" to={`expenses`}>
-              Expenses
-            </NavLink>
-          </div>
-
-          <div className="bg-gray-200 rounded-t-md">
-            <NavLink className="px-2 py-1 text-sm" to={`statistics`}>
-              Statistics
-            </NavLink>
-          </div>
-        </div>
+          <button
+            className="w-full px-3 py-2 mt-4 text-sm border-none rounded-lg md:hidden hover:bg-hover bg-button text-light-indigo"
+            onClick={openAddExpense}
+          >
+            New expense
+          </button>
+        </div>        
+        <div className="">
+          <NavLink className={getNavLinkClass} to={`expenses`}>
+            Expenses
+          </NavLink>   
+          <NavLink className={getNavLinkClass} to={`statistics`}>
+            Statistics
+          </NavLink>
+        </div>       
 
         <Outlet />
       </div>

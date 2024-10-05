@@ -1,11 +1,14 @@
+import { useState } from "react";
+import { IoMdClose } from "react-icons/io";
+
 /* eslint-disable react/prop-types */
-// eslint-disable-next-line react/prop-types
 export default function MembersOnGroup({
   groupMembers,
   deleteMemberFromGroup,
 }) {
+  const [activeMember, setActiveMember] = useState(null);
   const noMembersMessage = (
-    <div className="flex items-center m-2">
+    <div className="flex items-center md:m-2 ">
       <img src="../../images/Profile.svg" className="m-2" />
       <p className="text-xs text-gray-500">
         There is no one added to expense yet. Try searching and adding from your
@@ -17,21 +20,37 @@ export default function MembersOnGroup({
   return groupMembers.length < 1 ? (
     noMembersMessage
   ) : (
-    <ul className="flex flex-wrap">
-      {groupMembers.map((member) => (
-        <li
-          className="flex items-center w-2/6 p-2 m-1 text-sm bg-gray-300 rounded-md justify-items-start"
-          key={member.id}
-        >
-          <button
-            className="flex items-center h-4 p-1 mx-2 border border-current rounded-md hover:bg-hover"
-            onClick={() => deleteMemberFromGroup(member)}
+    <div className="flex flex-col items-center">
+      <h3 className="text-sm mb-2">Member</h3>
+      <ul className="flex flex-col">
+        {groupMembers.map((member) => (
+          <li
+            className={`flex p-1 text-sm transition duration-500 ease-in-out transform ${
+              activeMember === member.id
+                ? "bg-gray-300 scale-105"
+                : "hover:bg-gray-300 hover:scale-105"
+            }`}
+            key={member.id}
+            onMouseEnter={() => setActiveMember(member.id)}
+            onMouseLeave={() => setActiveMember(null)}
           >
-            x
-          </button>
-          <p className="truncate">{member.userName}</p>
-        </li>
-      ))}
-    </ul>
+            <div className="flex items-center w-auto gap-3">
+              <button
+                className={`w-6 h-6 flex items-center justify-center rounded-md  text-black  ${
+                  activeMember === member.id ? "bg-red-600 text-white" : ""
+                }`}
+                onClick={() => deleteMemberFromGroup(member)}
+              >
+                <IoMdClose />
+              </button>
+              <div className="border rounded-full h-7 w-7">
+                <img src="/public/images/Profile.svg" />
+              </div>
+              <p className="truncate">{member.userName}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
