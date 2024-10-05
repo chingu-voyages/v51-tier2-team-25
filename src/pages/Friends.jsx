@@ -2,16 +2,20 @@ import { useContext, useState, useEffect, useMemo} from "react";
 import {useParams } from "react-router-dom";
 import { AppContext } from "../App";
 import EditExpense from "../components/EditExpense";
-
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 export default function Friends() {
 
-  const { friends, expenses, groups } = useContext(AppContext)
+  const { friends, expenses, groups, deleteFriend } = useContext(AppContext)
   const { friendId } = useParams()
   const [isEditing, setIsEditing] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [title, setTitle] = useState([])
-    
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+
   const currentFriend = friends.find((friend)=>friend.id === friendId)
 
   const friendExpenses = useMemo(()=>{
@@ -32,9 +36,7 @@ export default function Friends() {
     const openReceipt = () =>{
       //**TODO */
       console.log("Receipt Open")
-    }
-
-    
+    }    
     const currentTitle = useMemo(()=>{
       const generateTitle = (expense) =>{
         const group= groups.find(group => group.id === expense.groupId)
@@ -58,6 +60,16 @@ export default function Friends() {
     // console.log('Friend not found')
   }
 
+  const handleDelete =() =>{        
+    setIsModalOpen(true)
+  }
+  const confirmDelete = () => {
+    deleteFriend(friendId)   
+    setIsModalOpen(false); // This closes the modal
+    navigate("/");
+    toast(`Friend ${currentFriend?.name} was deleted`);
+  };
+
   return (
     <>
       <div className="flex flex-col max-w-[785px] w-full font-outfit mx-3 mt-12 gap-4">
@@ -72,7 +84,7 @@ export default function Friends() {
               <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border rounded-md border-border'>placeholder</p>
               <p className='text-sm font-medium text-gray-950'>Id #</p>
               <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border rounded-md border-border'>{currentFriend?.id}</p>
-              <button className="px-3 py-2 text-sm rounded-md bg-red-button text-red-button-text hover:bg-red-button-hover">Remove Friend</button>
+              <button className="px-3 py-2 text-sm rounded-md bg-red-button text-red-button-text hover:bg-red-button-hover" onClick={handleDelete}>Remove Friend</button>
             </div>
           </div>          
         
@@ -133,6 +145,16 @@ export default function Friends() {
         />
       )}
       </div>
+      {isModalOpen && (
+        <ConfirmationModal
+          isOpen={isModalOpen}
+          onConfirm={confirmDelete}
+          onCancel={() => setIsModalOpen(false)}
+          title="Delete Friend?"
+          message={`Are you sure you want to delete ${currentFriend?.name}?`}
+          confirmButtonText="Delete Friend"
+        />
+      )}
     </>
   );
 
