@@ -68,6 +68,7 @@ const ExpenseCategorySelection = ({ handleChange, category }) => {
         placeholder="Choose a category"
         styles={customStyles}
         isClearable
+        required
       />
     </>
   )
