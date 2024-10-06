@@ -28,8 +28,7 @@ function App() {
   const [memberData, setMemberData] = useState({ name: "", id: "" });
 
   //members added from group to expense
-  const [participantData, setParticipantData] = useState({name:"", id:""}
-  )
+  const [participantData, setParticipantData] = useState({name:"", id:""})
 
   function addFriendToList(newFriend) {
     // console.log("addNewFriend-app", newFriend);
@@ -85,6 +84,13 @@ function App() {
       const updatedGroups = prevGroups.filter((group) => group.id !== groupId);
       localStorage.setItem("groupsData", JSON.stringify(updatedGroups)); // Update local storage
       return updatedGroups;
+    });
+  }
+  function deleteFriend(friendId) {
+    setFriends((prevFriends) => {
+      const updatedFriends = prevFriends.filter((friend) => friend.id !== friendId);
+      localStorage.setItem("friendsData", JSON.stringify(updatedFriends)); // Update local storage
+      return updatedFriends;
     });
   }
 
@@ -224,6 +230,7 @@ function App() {
         deleteGroup,
         friends,
         addFriendToList,
+        deleteFriend,
         memberData,
         setMemberData,
         expenses,

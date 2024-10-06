@@ -23,6 +23,7 @@ export default function Navbar() {
   function closeAddGroupModal() {
     setIsAddGroupModalOpen(false);
   }
+
   function openAddFriendModal() {
     setIsAddFriendModalOpen(true);
   }
@@ -32,7 +33,6 @@ export default function Navbar() {
   function openLinkAddFriendModal() {
     setIsLinkAddFriendModalOpen(true);
   }
-
   function closeLinkAddFriendModal() {
     setIsLinkAddFriendModalOpen(false);
     setIsAddGroupModalOpen(true);
@@ -77,12 +77,11 @@ useEffect(() => {
                     src="../../images/placeholder.jpg"
                     className="w-8 h-8 mr-2 border border-none rounded-full"
                   />
-                  <p className="block text-lg">Brand Name</p>
+                  <p className="block text-lg">Slice</p>
               </div>
             </NavLink>
           <img src="../../images/Menu.svg" className="cursor-pointer w-7 md:hidden" onClick={toggleMenu}/>
         </div>
-
 
         <div className={`md:block absolute z-10 w-full cursor-pointer md:bg-white bg-[#F0F1F5] ${isMenuOpen ? 'block' : 'hidden'}`}>
           <NavLink className="block" to="/">
