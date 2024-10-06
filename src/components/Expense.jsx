@@ -43,7 +43,7 @@ export default function Expense({expense, openReceipt, openEditExpense}) {
 
 Expense.propTypes = {
     expense: PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       category: PropTypes.string.isRequired,
     }).isRequired,

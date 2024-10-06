@@ -30,7 +30,7 @@ export default function EditGroupForm({
         ...tempGroupData,
       });
     }
-  }, [tempGroupData, setTempGroupData]);
+  }, []);
 
   // Handle input changes in the temporary state
   const handleChange = (e) => {
@@ -68,7 +68,20 @@ export default function EditGroupForm({
       return;
     }
 
-    updateGroup(tempGroupData); // Call updateGroup from AppContext
+    const totalExpenses = tempGroupData.expenses.reduce((total, expense) => {
+      return total + parseFloat(expense.amount); // Add each expense amount
+    }, 0);
+  
+    const allottedBudget = parseFloat(tempGroupData.allottedBudget);
+    const remainingBudget = allottedBudget - totalExpenses;
+
+    const updatedGroupData = {
+      ...tempGroupData,
+      remainingBudget, // Update with calculated remaining budget
+    };
+  
+    // Call the function to update the group data
+    updateGroup(updatedGroupData);
     closeEditGroupFormModal(); // Close the form after saving changes
     toast(`Changes saved`);
   };
