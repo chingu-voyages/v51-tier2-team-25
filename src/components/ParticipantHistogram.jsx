@@ -1,48 +1,18 @@
 import { Bar } from "react-chartjs-2";
 import PropTypes from "prop-types";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import ChartDataLabels from 'chartjs-plugin-datalabels';
+import calculateOwedAmounts from "../helpers/calculateOwedAmounts";
 
-// Registering necessary components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend, 
-  ChartDataLabels
-);
+const ParticipantHistogram = ({ group }) => {
+  const owedAmounts = calculateOwedAmounts(group);
 
-const ExpenseHistogram = ({ groups }) => {
   const data = {
-    labels: groups.map((group) => group.name),
+    labels: Object.values(owedAmounts).map(o => o.name),
     datasets: [
       {
         label: "",
-        data: groups.map((group) =>
-          (group.expenses || []).reduce(
-            (acc, exp) => acc + Number(exp.amount),
-            0
-          )
-        ),
+        data: Object.values(owedAmounts).map(o => o.totalOwed),
         backgroundColor: "#74779C",
-        barPercentage: 1.0, // set to 1.0 for no spacing
-        categoryPercentage: 0.8, // width of the bar
-      },
-      {
-        label: "",
-        data: groups.map((group) => group.allottedBudget),
-        backgroundColor: "#989898",
-        barPercentage: 1.0, // set to 1.0 for no spacing
+        barPercentage: 0.5, // set to 1.0 for no spacing
         categoryPercentage: 0.8, // width of the bar
       },
     ],
@@ -70,7 +40,6 @@ const ExpenseHistogram = ({ groups }) => {
         },
         grid: {
           color: "#D8DBE5", // y-axis grid lines
-          borderDash: [5, 5], //-----------------Can't get it to work
           z: 1,
         },
         border: {
@@ -80,7 +49,7 @@ const ExpenseHistogram = ({ groups }) => {
       x: {
         title: {
           display: true,
-          text: "Groups", // x-axis title
+          text: "Participants", // x-axis title
           font: {
             size: 12,
             weight: "300",
@@ -131,20 +100,10 @@ const ExpenseHistogram = ({ groups }) => {
         <div className="flex flex-col w-full px-[6px] py-[4px] mb-6 rounded-md border border-input-border max-w-[175px] max-h-[40px]">
           <div className="flex items-center">
             <span
-              className="block w-[31px] h-[8px] mr-2"
-              style={{ backgroundColor: "#74779C" }}
+              className="block w-[30px] h-[2px] mr-2 border-b-2 border-dashed border-red-average w-full my-2"
             ></span>
             <span className="font-geologica text-xs text-modal-text leading-[14px]">
-              Expenses
-            </span>
-          </div>
-          <div className="flex items-center">
-            <span
-              className="block w-[31px] h-[8px] mr-2"
-              style={{ backgroundColor: "#989898" }}
-            ></span>
-            <span className="font-geologica text-xs text-modal-text leading-[14px]">
-              Allotted Budget
+              Average owed
             </span>
           </div>
         </div>
@@ -154,20 +113,21 @@ const ExpenseHistogram = ({ groups }) => {
   );
 };
 
-ExpenseHistogram.propTypes = {
-  groups: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      expenses: PropTypes.arrayOf(
-        PropTypes.shape({
-          amount: PropTypes.number.isRequired,
-        })
-      ),
-      allottedBudget: PropTypes.number.isRequired,
-    })
-  ).isRequired,
-  expenseLabel: PropTypes.string,
-  budgetLabel: PropTypes.string,
+ParticipantHistogram.propTypes = {
+  group: PropTypes.shape({
+    expenses: PropTypes.arrayOf(
+      PropTypes.shape({
+        amount: PropTypes.number.isRequired,
+        participants: PropTypes.arrayOf(
+          PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            userName: PropTypes.string.isRequired,
+          })
+        ).isRequired,
+      })
+    ).isRequired,
+  }).isRequired,
 };
 
-export default ExpenseHistogram;
+export default ParticipantHistogram;
+
