@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import GetOwePaid from "../helpers/GetOwePaid"
 import PropTypes from 'prop-types';
+import { AppContext } from "../App";
 
 export default function Expense({expense, openReceipt, openEditExpense}) {
     const [isExpenseOpen, setIsExpenseOpen] = useState(false)
+    const { handleToggleIsPaid } = useContext(AppContext)
 
 
     return (
@@ -65,7 +67,12 @@ export default function Expense({expense, openReceipt, openEditExpense}) {
                                         <p>${participant.amountToPay}</p>
                                     </div>
                                     <div className="flex justify-end">
-                                        <p>{participant.isPaid ? "Paid" : "Unpaid"}</p>
+                                        <button
+                                        type="button"
+                                        onClick={() => handleToggleIsPaid(expense.id, participant.id)} 
+                                        >
+                                            {participant.isPaid ? "Paid" : "Unpaid"}
+                                        </button>
                                     </div>
                                 </React.Fragment>
                             ))}
@@ -91,7 +98,7 @@ Expense.propTypes = {
                 amountToPay: PropTypes.number.isRequired,
                 isPaid: PropTypes.bool.isRequired,
             })
-        ).isRequired, // Add this line if it's not already present
+        ).isRequired, 
     }).isRequired,
     openReceipt: PropTypes.func.isRequired,
     openEditExpense: PropTypes.func.isRequired,
