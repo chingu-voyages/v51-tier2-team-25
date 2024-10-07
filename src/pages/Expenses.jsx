@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom"
 import { AppContext } from "../App";
 import EditExpense from "../components/EditExpense";
 import Expense from "../components/Expense";
+import ViewReceipt from "../components/ViewReceipt";
+import { fetchReceiptImage } from '../helpers/firebaseUtils'
 
 export default function Expenses() {
   const { groupId } = useParams()
@@ -10,6 +12,8 @@ export default function Expenses() {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [title, setTitle]= useState([])
+  const [isViewingReceipt, setIsViewingReceipt] = useState(false)
+  const [receiptImageUrl, setReceiptImageUrl] = useState(null)
 
   const currentGroup = groups.find(group=> group.id === Number(groupId))
 
@@ -25,11 +29,16 @@ export default function Expenses() {
     setSelectedExpense(null);
   };
 
-  const openReceipt = () =>{
-    //**TODO */
-    console.log("Receipt Open")
+  const openReceipt = async (expenseId) =>{
+    setIsViewingReceipt(true)
+    const fileUrl = await fetchReceiptImage(expenseId)
+    console.log("Fetched URL:", fileUrl)
+    setReceiptImageUrl(fileUrl)
+    
   }
-
+  const closeReceipt = () =>{
+    setIsViewingReceipt(false)
+  }
   
   const generateTitle = () =>{
     const formattedDate = new Date().toLocaleString('en-US', 
@@ -64,6 +73,13 @@ export default function Expenses() {
           currentGroup={currentGroup}
         />
       )}
+      {isViewingReceipt && (
+        <ViewReceipt 
+          closeReceipt={closeReceipt} 
+          fileUrl={receiptImageUrl}
+        />
+      )}
+
     </div>
   );
 }
