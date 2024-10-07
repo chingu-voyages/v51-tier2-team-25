@@ -25,7 +25,7 @@ export default function ExpenseParticipant({
     setParticipantsShares(initialShares)
 
     participants.forEach(participant => addOrUpdateParticipants(participant));
-  }, [participants, addOrUpdateParticipants]);
+  }, []);
 
   const noParticipantsMessage = (
     <div className="flex items-center m-2">
@@ -73,13 +73,12 @@ export default function ExpenseParticipant({
     }
   }
 
-  // useEffect(() => {
-  //   if (expensesData.amount) {
-  //     const { updatedShares, totalSharePercentage } = calculateAmountsToPay(participants, expensesData.amount);
-  //     setParticipantsShares(updatedShares);
-  //     setTotalSharePercent(totalSharePercentage);
-  //   }
-  // }, [participants, expensesData.amount]);
+  useEffect(() => {
+    if (expensesData.amount) {
+      const { updatedShares } = calculateAmountsToPay(participants, expensesData.amount);
+      setParticipantsShares(updatedShares);
+    }
+  }, [participants, expensesData.amount]);
   
 
   return participants.length < 1 ? (
