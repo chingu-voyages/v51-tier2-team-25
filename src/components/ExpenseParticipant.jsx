@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
-import toast from "react-hot-toast";
+import { calculateAmountsToPay } from "../helpers/CalculateAmountsToPay";
 
 /* eslint-disable react/prop-types */
 export default function ExpenseParticipant({
@@ -11,26 +11,21 @@ export default function ExpenseParticipant({
   const { participants } = expensesData;
   const [currentlyActiveMember, setCurrentlyActiveMember] = useState(null);
   const [participantsShares, setParticipantsShares] = useState({});
-  const [totalSharePercent, setTotalSharePercent]= useState(0)
 
-  useEffect(()=>{
-    //initialize participantShares w/ existing data from participants
-    const initialShares = participants.reduce((acc,participant)=>{
+  useEffect(() => {
+    const initialShares = participants.reduce((acc, participant) => {
       acc[participant.id]= {
         ...participant,
         sharePercentage: participant.sharePercentage || 0,
-        amountToPay: participant.amountToPay || 0
+        amountToPay: participant.amountToPay || 0,
+        isPaid: participant.isPaid || false,
       }
       return acc
     }, {})
     setParticipantsShares(initialShares)
 
-    //calc initial total share percentage
-    const initialTotalShare = participants.reduce((total, participant)=> total + (participant.sharePercentage || 0), 0)
-    console.log("initial total share:", initialTotalShare)
-    setTotalSharePercent(initialTotalShare)
-    
-  }, [participants])
+    participants.forEach(participant => addOrUpdateParticipants(participant));
+  }, [participants, addOrUpdateParticipants]);
 
   const noParticipantsMessage = (
     <div className="flex items-center m-2">
@@ -44,42 +39,31 @@ export default function ExpenseParticipant({
 
   function handleSharedValue(event, member) {
     const enteredSharePercentage = parseInt(event.target.value) || 0;
-    if (
-      enteredSharePercentage > 100 ||
-      enteredSharePercentage < 0 ||
-      isNaN(enteredSharePercentage) 
-      // enteredSharePercentage === "e"
-    ) {
-      return;
-    }
 
-    //calc new total share include entered value
-    const currentParticipantShare = participantsShares[member.id]?.sharePercentage || 0
-    const newTotalShare = totalSharePercent - currentParticipantShare + enteredSharePercentage
-
-    if(newTotalShare >100){
-      toast.error("Total share percentage cannot exceed 100%")
-      return
-    }
-
-    const amountToPay = (expensesData.amount * enteredSharePercentage) / 100;
-
-    const updatedParticipant = {
-      ...member,
-      amountToPay: amountToPay,
-      sharePercentage: enteredSharePercentage,
-    };
-
-    setParticipantsShares((prev) => ({
-      ...prev,
-      [member.id]: {
-        ...member,
+    setParticipantsShares((prev) => {
+      const updatedMember = {
+        ...prev[member.id],
         sharePercentage: enteredSharePercentage,
-        amountToPay: amountToPay,
-      },
-    }));
+      };
+    
+      const { updatedShares} = calculateAmountsToPay(
+        [...participants, updatedMember], // Include updated member
+        expensesData.amount
+      );
+    
+      return updatedShares;
+    });
 
-    addOrUpdateParticipants(updatedParticipant);
+    const { updatedShares } = calculateAmountsToPay(participants, expensesData.amount);
+
+    setParticipantsShares(updatedShares);
+
+    addOrUpdateParticipants({
+      ...member,
+      sharePercentage: enteredSharePercentage,
+      amountToPay: participantsShares[member.id]?.amountToPay || 0,
+      isPaid: false,
+    });
   }
 
   function handleInvalidCharacters(event) {
@@ -89,6 +73,13 @@ export default function ExpenseParticipant({
     }
   }
 
+  // useEffect(() => {
+  //   if (expensesData.amount) {
+  //     const { updatedShares, totalSharePercentage } = calculateAmountsToPay(participants, expensesData.amount);
+  //     setParticipantsShares(updatedShares);
+  //     setTotalSharePercent(totalSharePercentage);
+  //   }
+  // }, [participants, expensesData.amount]);
   
 
   return participants.length < 1 ? (

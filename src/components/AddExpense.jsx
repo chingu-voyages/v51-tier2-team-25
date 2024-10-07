@@ -6,6 +6,7 @@ import SearchBar from "./SearchBar";
 import ExpenseCategorySelection from "./ExpenseCategorySelection";
 import { v4 as uuidv4 } from "uuid";
 import ExpenseParticipant from "./ExpenseParticipant";
+import { calculateAmountsToPay } from "../helpers/CalculateAmountsToPay";
 
 export default function AddExpense({ closeAddExpense, currentGroup }) {
   const { addExpenseToList } = useContext(AppContext);
@@ -53,16 +54,44 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
   const addNewExpense = (event) => {
     event.preventDefault();
 
-    //get stored data from local storage or initialize array
-    let storedExpenseData =
-      JSON.parse(localStorage.getItem("expensesData")) || [];
+    const totalSharePercentage = expensesData.participants.reduce((total, participant) => {
+      return total + (participant.sharePercentage || 0)
+    }, 0)
 
-    //append new form data to array
-    storedExpenseData.push(expensesData);
+    const allParticipantsHaveShare = expensesData.participants.every(participant => participant.sharePercentage != undefined)
 
-    //save updated array to local storage
+    if(allParticipantsHaveShare && totalSharePercentage < 100) {
+      toast.error("The total share percentage is less than 100%. Please adjust the shares.")
+      return;
+    } 
+
+    if(totalSharePercentage > 100) {
+      toast.error("Total share percentage cannot exceed 100%. Please adjust the shares.")
+      return;
+    }
+
+    const updatedParticipants = expensesData.participants.map((participant) => ({
+      ...participant,
+      sharePercentage: participant.sharePercentage || 0,
+      isPaid: false,
+    })); 
+
+    const { updatedShares } = calculateAmountsToPay(
+      updatedParticipants,
+      parseFloat(expensesData.amount)
+    );
+
+    let updatedExpensesData = {
+      ...expensesData,
+      participants: Object.values(updatedShares)
+    };
+    
+    let storedExpenseData = JSON.parse(localStorage.getItem("expensesData")) || [];
+
+    storedExpenseData.push(updatedExpensesData);
+
     localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
-    addExpenseToList(expensesData);
+    addExpenseToList(updatedExpensesData);
     closeAddExpense();
     toast.success("New expense added");
 

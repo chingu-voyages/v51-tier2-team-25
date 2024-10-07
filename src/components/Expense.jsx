@@ -32,8 +32,8 @@ export default function Expense({expense, openReceipt, openEditExpense}) {
                     </div>
                 </div>
                 {isExpenseOpen && 
-                    <div className="border-t mt-3 pt-3">
-                        <h1>open!</h1>
+                    <div className="border-t mt-3 pt-3 text-sm">
+                        <p>{expense.description}</p>
                     </div>
                 }
             </div>
@@ -46,6 +46,7 @@ Expense.propTypes = {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       category: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
     }).isRequired,
     openReceipt: PropTypes.func.isRequired,
     openEditExpense: PropTypes.func.isRequired,

@@ -6,6 +6,7 @@ import SearchBar from "./SearchBar";
 import ExpenseCategorySelection from "./ExpenseCategorySelection";
 import ConfirmationModal from "./ConfirmationModal";
 import ExpenseParticipant from "./ExpenseParticipant";
+import { calculateAmountsToPay } from "../helpers/CalculateAmountsToPay";
 
 export default function EditExpense({
   closeEditExpense,
@@ -53,7 +54,34 @@ export default function EditExpense({
 
   const saveChanges = (event) => {
     event.preventDefault();
-    updateExpenseInList(expensesData);
+
+    const totalSharePercentage = expensesData.participants.reduce((total, participant) => {
+      return total + (participant.sharePercentage || 0)
+    }, 0)
+
+    const hasZeroSharePercentage = expensesData.participants.some(participant => participant.sharePercentage === 0)
+
+    if(!hasZeroSharePercentage && totalSharePercentage < 100) {
+      toast.error("The total share percentage is less than 100%. Please adjust the shares.")
+      return;
+    } 
+
+    if(totalSharePercentage > 100) {
+      toast.error("Total share percentage cannot exceed 100%. Please adjust the shares.")
+      return;
+    }
+
+    const { updatedShares } = calculateAmountsToPay(
+      expensesData.participants,
+      parseFloat(expensesData.amount)
+    );
+
+    let updatedExpensesData = {
+      ...expensesData,
+      participants: Object.values(updatedShares)
+    };
+
+    updateExpenseInList(updatedExpensesData);
     closeEditExpense();
     toast(`Expense ${expensesData.name} was updated successfully`);
   };
