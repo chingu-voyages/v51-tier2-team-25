@@ -39,30 +39,31 @@ function App() {
   console.log("friends from app", friends);
 
   function addGroupToList(newGroup) {
-    console.log("addNewGroup-app", newGroup);
-    setGroups((prevGroups) => [...prevGroups, newGroup]);
+    const updatedGroups = { ...newGroup, remainingBudget: Number(newGroup.allottedBudget) };
+    setGroups((prevGroups) => [...prevGroups, updatedGroups]);
+    localStorage.setItem("groupsData", JSON.stringify([...groups, updatedGroups]));
   }
   console.log("groups from app:", groups);
 
   function addExpenseToList(newExpense) {
     console.log("addNewExpense-app", newExpense);
-    //update expenses state
     const updatedExpenses =[...expenses, newExpense]    
     setExpenses(updatedExpenses);
     localStorage.setItem("expensesData", JSON.stringify(updatedExpenses))
 
-    //update specific group w/ new expense
     setGroups(prevGroups =>{
       const updatedGroups = prevGroups.map(group =>{
         if(group.id === newExpense.groupId){
+          const updatedRemainingBudget = group.remainingBudget - newExpense.amount;
+          // const finalRemainingBudget = updatedRemainingBudget < 0 ? 0 : updatedRemainingBudget;
           return{
             ...group, 
-            expenses: group.expenses ? [...group.expenses, newExpense]: [newExpense],            
+            expenses: group.expenses ? [...group.expenses, newExpense]: [newExpense], 
+            remainingBudget: updatedRemainingBudget      
           }
         }
         return group
       })
-      //save updated groups to local storage
       localStorage.setItem("groupsData", JSON.stringify(updatedGroups))
       return updatedGroups
     })
@@ -102,6 +103,33 @@ function App() {
       localStorage.setItem("expensesData", JSON.stringify(updatedExpenses));
       return updatedExpenses;
     });    
+
+    setGroups((prevGroups) => {
+      const updatedGroups = prevGroups.map((group) => {
+          if (group.id === updatedExpense.groupId) {
+            const updatedGroupExpenses = group.expenses.map((expense) =>
+              expense.id === updatedExpense.id ? { ...expense, ...updatedExpense } : expense
+            );
+    
+            const totalExpenses = updatedGroupExpenses.reduce(
+              (total, expense) => total + Number(expense.amount),
+              0
+            );
+            const updatedRemainingBudget = Math.max(0, group.allottedBudget - totalExpenses);
+    
+            return {
+              ...group,
+              expenses: updatedGroupExpenses,
+              remainingBudget: updatedRemainingBudget,
+            };
+          }
+          return group;
+      });
+
+      // Save updated groups to local storage
+      localStorage.setItem("groupsData", JSON.stringify(updatedGroups));
+      return updatedGroups;
+  });
   }
 
   //updates expenses states @ global
@@ -151,14 +179,23 @@ function App() {
       return updatedExpenses
     })
 
-    //update group
-    setGroups(prevGroups => {
-      const updatedGroups = prevGroups.map(group => {
-        return{
-          ...group,
-          expenses: group.expenses.filter(expense => expense.id !==  expenseId)
+    setGroups((prevGroups) => {
+      const updatedGroups = prevGroups.map((group) => {
+        const groupHasExpense = group.expenses.some(expense => expense.id === expenseId);
+        
+        if (groupHasExpense) {
+          const newGroupExpenses = group.expenses.filter((expense) => expense.id !== expenseId);
+          const totalExpenses = newGroupExpenses.reduce((total, expense) => total + Number(expense.amount), 0);
+          const updatedRemainingBudget = Math.max(0, Number(group.allottedBudget) - totalExpenses);
+          
+          return {
+            ...group,
+            expenses: newGroupExpenses,
+            remainingBudget: updatedRemainingBudget,
+          };
         }
-      })
+        return group;
+      });
       localStorage.setItem("groupsData", JSON.stringify(updatedGroups))
       return updatedGroups
     })

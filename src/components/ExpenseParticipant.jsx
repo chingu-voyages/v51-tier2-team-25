@@ -126,7 +126,7 @@ export default function ExpenseParticipant({
                 <IoMdClose />
               </button>
               <div className="border rounded-full h-7 w-7">
-                <img src="/public/images/Profile.svg" />
+                <img src="/images/Profile.svg" />
               </div>
               <p>{member.userName}</p>
             </div>
@@ -137,7 +137,7 @@ export default function ExpenseParticipant({
                 value={participantsShares[member.id]?.sharePercentage || ""}
                 type="number"
                 placeholder={0}
-                step={5}
+                step={10}
                 className="w-8/12 text-center h-7"
                 onChange={(event) => handleSharedValue(event, member)}
               />

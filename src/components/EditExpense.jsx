@@ -321,12 +321,12 @@ export default function EditExpense({
         onConfirm={confirmDelete}
         onCancel={() => setIsModalOpen(false)}
         title="Delete Expense?"
-        message={(
+        message={
           <>
             Are you sure you want to delete the expense <span className="font-bold">{expensesData.name}</span>?
             Any money accumulated so far will be refunded to the respective members.
           </>
-        )}
+        }
         confirmButtonText="Delete Expense"
       />
 

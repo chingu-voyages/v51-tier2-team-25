@@ -17,8 +17,8 @@ export default {
         'modal-text': '#464646', 
         'green':'#247A51',     
         'blue-background':'#E9EAF0',
-        'tab-text':'#2F2F3C'        
-
+        'tab-text':'#2F2F3C',
+        'gray-histogram': '#FAFAFA'
       },
       fontFamily: {
         sans: ['Outfit', 'sans-serif'],
