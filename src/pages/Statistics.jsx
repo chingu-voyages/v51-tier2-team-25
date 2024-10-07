@@ -8,11 +8,10 @@ const Statistics = () => {
 
   return (
     <div>
-      <h1 className='text-button'>Total Expenses vs Allotted Budget</h1>
+      <h1 className='text-button text-sm leading-[16.8px]'>Total Expenses vs Allotted Budget</h1>
       <div>
       <ExpenseHistogram groups={groups} />
       </div>
-      
     </div>
   );
 };

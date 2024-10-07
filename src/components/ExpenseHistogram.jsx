@@ -1,5 +1,5 @@
-import { Bar } from 'react-chartjs-2';
-import PropTypes from 'prop-types';
+import { Bar } from "react-chartjs-2";
+import PropTypes from "prop-types";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -7,9 +7,9 @@ import {
   BarElement,
   Title,
   Tooltip,
-  Legend
-} from 'chart.js';
-// import { color } from 'chart.js/helpers';
+  Legend,
+} from "chart.js";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 // Registering necessary components
 ChartJS.register(
@@ -18,126 +18,156 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend, 
+  ChartDataLabels
 );
 
-
 const ExpenseHistogram = ({ groups }) => {
-    const data = {
-      labels: groups.map(group => group.name),
-      datasets: [
-        {
-          label: '',
-          data: groups.map(group =>
-            (group.expenses || []).reduce((acc, exp) => acc + Number(exp.amount), 0)
-          ),
-          backgroundColor: '#74779C', 
+  const data = {
+    labels: groups.map((group) => group.name),
+    datasets: [
+      {
+        label: "",
+        data: groups.map((group) =>
+          (group.expenses || []).reduce(
+            (acc, exp) => acc + Number(exp.amount),
+            0
+          )
+        ),
+        backgroundColor: "#74779C",
         barPercentage: 1.0, // set to 1.0 for no spacing
         categoryPercentage: 0.8, // width of the bar
-        },
-        {
-            label: '',
-            data: groups.map(group => group.allottedBudget),
-            backgroundColor: '#989898',
-            barPercentage: 1.0, // set to 1.0 for no spacing
+      },
+      {
+        label: "",
+        data: groups.map((group) => group.allottedBudget),
+        backgroundColor: "#989898",
+        barPercentage: 1.0, // set to 1.0 for no spacing
         categoryPercentage: 0.8, // width of the bar
-          },
-      ],
-    };
-  
-    const options = {
-      scales: {
-        y: {
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: 'Expenses (USD)', // y-axis title
-            font: {
-                size: 12,
-                weight: 'normal',
-                family: 'geologica',
-            }
-          },
-          ticks: {
-            font: {
-              family: 'Geologica',
-              size: 12,
-              color: '#292929',
-            }
-          }
-        },
-        x: {
-            title: {
-              display: true,
-              text: 'Groups', // x-axis title
-              font: {
-                size: 12,
-                family: 'geologica',
-            }
-            },
-            ticks: {
-                font: {
-                  family: 'Geologica',
-                  size: 12,
-                  color: '#292929'
-                }
-              }
-          },
       },
-      plugins: {
-        legend: {
-            display: false,
-        //   position: 'top',
-        //   labels: {
-        //     font: {
-        //       family: 'Geologica', 
-        //     },
-        //   },
+    ],
+  };
+
+  const options = {
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: "Expenses (USD)", // y-axis title
+          font: {
+            size: 12,
+            weight: "300",
+            family: "geologica",
+          },
         },
-      // isn't working yet
-        // datalabels: {
-        //     anchor: 'end',
-        //     align: 'end',
-        //     formatter: (value) => value.toFixed(2), // Format the number
-        //     color: '#FFFFFF', // Color of the labels
-        //     font: {
-        //       weight: 'bold',
-        //     },
-        //   },
+        ticks: {
+          font: {
+            family: "Geologica",
+            size: 12,
+            color: "#292929",
+          },
+        },
+        grid: {
+          color: "#D8DBE5", // y-axis grid lines
+          borderDash: [5, 5], //-----------------Can't get it to work!
+          z: 1,
+        },
+        border: {
+          color: "#292929", //y-axis border
+        },
       },
-    };
-  
-    return (
-        <div className="flex flex-col  justify-center w-full bg-gray-histogram max-w-[785px] max-h-[495px] rounded-[8px] border-border text-gray-800 ">
-               <div className="flex flex-col justify-between w-full px-4 py-2">
-                <div className="flex items-center">
-                    <span className="block w-10 h-4 mr-2" style={{ backgroundColor: '#74779C' }}></span>
-                    <span className="font-geologica text-lg text-gray-800">Total Expenses</span>
-                </div>
-                <div className="flex items-center">
-                    <span className="block w-10 h-4 mr-2" style={{ backgroundColor: '#989898' }}></span>
-                    <span className="font-geologica text-lg text-gray-800">Allotted Budget</span>
-                </div>
-            </div>
-            <div className="max-w-[644px] max-h-[447px]">
-            <Bar data={data} options={options} />
-            </div>
+      x: {
+        title: {
+          display: true,
+          text: "Groups", // x-axis title
+          font: {
+            size: 12,
+            weight: "300",
+            family: "geologica",
+          },
+        },
+        ticks: {
+          font: {
+            family: "Geologica",
+            size: 12,
+            color: "#292929",
+          },
+        },
+        grid: {
+          drawOnChartArea: false,
+        },
+        border: {
+          color: "#292929", // y-axis border
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+      datalabels: {
+        display: true,
+          anchor: 'end',
+          align: 'end',
+          formatter: (value) => {
+            if (typeof value !== 'number') {
+              return Number(value); 
+            }
+            return value;},
+          color: '#292929', 
+          font: {
+            weight: '400',
+            size: 12,
+            family: "Geologica",
+          },
+        },
+    },
+  };
+
+  return (
+    <div className="flex flex-col items-center w-full bg-gray-histogram max-w-[785px] max-h-[495px] pt-[24px] pb-[24px] rounded-md border border-border">
+      <div className="flex flex-col w-full max-w-[644px] max-h-[447px]">
+        <div className="flex flex-col w-full px-[6px] py-[4px] mb-6 rounded-md border border-input-border max-w-[175px] max-h-[40px]">
+          <div className="flex items-center">
+            <span
+              className="block w-[31px] h-[8px] mr-2"
+              style={{ backgroundColor: "#74779C" }}
+            ></span>
+            <span className="font-geologica text-xs text-modal-text leading-[14px]">
+              Expenses
+            </span>
+          </div>
+          <div className="flex items-center">
+            <span
+              className="block w-[31px] h-[8px] mr-2"
+              style={{ backgroundColor: "#989898" }}
+            ></span>
+            <span className="font-geologica text-xs text-modal-text leading-[14px]">
+              Allotted Budget
+            </span>
+          </div>
         </div>
-    )
-  };
-  
-  ExpenseHistogram.propTypes = {
-    groups: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        expenses: PropTypes.arrayOf(
-          PropTypes.shape({
-            amount: PropTypes.number.isRequired,
-          })
-        ),
-        allottedBudget: PropTypes.number.isRequired,
-      })
-    ).isRequired,
-  };
+        <Bar data={data} options={options} />
+      </div>
+    </div>
+  );
+};
+
+ExpenseHistogram.propTypes = {
+  groups: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      expenses: PropTypes.arrayOf(
+        PropTypes.shape({
+          amount: PropTypes.number.isRequired,
+        })
+      ),
+      allottedBudget: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+  expenseLabel: PropTypes.string,
+  budgetLabel: PropTypes.string,
+};
 
 export default ExpenseHistogram;
