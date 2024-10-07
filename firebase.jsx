@@ -3,12 +3,12 @@ import { getFirestore, } from "firebase/firestore";
 import { getStorage, } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCGK4eY08PLnltkiBhvhWBbJBkN5izQb7I",
-  authDomain: "splice-566ff.firebaseapp.com",
-  projectId: "splice-566ff",
-  storageBucket: "splice-566ff.appspot.com",
-  messagingSenderId: "359861429848",
-  appId: "1:359861429848:web:45d2484f7e7c68a7eb4c2d"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY ,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID ,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID 
 };
 
 let app, db, storage;
