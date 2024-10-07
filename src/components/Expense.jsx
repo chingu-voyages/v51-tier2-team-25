@@ -9,7 +9,7 @@ export default function Expense({expense, openReceipt, openEditExpense}) {
     return (
         <div>
             <div key={expense.id} className="p-4 my-2 border border-gray-300 rounded-md bg-zinc-50">
-                <div className="flex items-center justify-betweenflex items-center justify-between" onClick={()=> setIsExpenseOpen(!isExpenseOpen)}>
+                <div className="flex items-center justify-between justify-betweenflex" onClick={()=> setIsExpenseOpen(!isExpenseOpen)}>
                     <div className='flex flex-col gap-2'>
                         <div className="flex gap-2 bg-zinc-50">
                             <p className="text-sm font-bold">{expense.name}</p>
@@ -26,7 +26,7 @@ export default function Expense({expense, openReceipt, openEditExpense}) {
                             <p>Placeholder people remaining</p>
                         </div>
                         <div className="flex gap-2">
-                            <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openReceipt}><img src="../../images/Ticket.svg" alt="Ticket" /></button>
+                        <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openReceipt(expense.id)}><img src="../../images/Ticket.svg" alt="Ticket" /></button>
                             <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openEditExpense(expense)}><img src="../../images/Edit.svg" alt="Edit" /></button>
                         </div>
                     </div>
