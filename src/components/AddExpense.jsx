@@ -6,6 +6,7 @@ import SearchBar from "./SearchBar";
 import ExpenseCategorySelection from "./ExpenseCategorySelection";
 import { v4 as uuidv4 } from "uuid";
 import ExpenseParticipant from "./ExpenseParticipant";
+import { calculateAmountsToPay } from "../helpers/CalculateAmountsToPay";
 import ReceiptManagement from "./ReceiptManagement";
 
 export default function AddExpense({ closeAddExpense, currentGroup }) {
@@ -59,6 +60,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     event.preventDefault();
     setUploading(true)
 
+    // Handle receipt upload
     try{
       console.log("Checking for receiptManagementRef");
       //Trigger receipt upload vai ref to ReceiptManagement
@@ -76,22 +78,63 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
       }
 
       console.log("Preparing to save expense data...");
+
+      // Calculate total share percentage
+      const totalSharePercentage = expensesData.participants.reduce((total, participant) => {
+        return total + (participant.sharePercentage || 0)
+      }, 0)
+
+      const allParticipantsHaveShare = expensesData.participants.every(participant => participant.sharePercentage != undefined)
+
+      // Validate share percentages
+      if(allParticipantsHaveShare && totalSharePercentage < 100) {
+        toast.error("The total share percentage is less than 100%. Please adjust the shares.")
+        return;
+      } 
+  
+      if(totalSharePercentage > 100) {
+        toast.error("Total share percentage cannot exceed 100%. Please adjust the shares.")
+        return;
+      }
+      
+      // Prepare participants for the expense data
+      const updatedParticipants = expensesData.participants.map((participant) => ({
+        ...participant,
+        sharePercentage: participant.sharePercentage || 0,
+        isPaid: false,
+      })); 
+
+      // Prepare participants for the expense data
+      const { updatedShares } = calculateAmountsToPay(
+        updatedParticipants,
+        parseFloat(expensesData.amount)
+      );
+
+      let updatedExpensesData = {
+        ...expensesData,
+        participants: Object.values(updatedShares)
+      };
+
       //get stored data from local storage or initialize array
       let storedExpenseData = JSON.parse(localStorage.getItem("expensesData")) || [];
       console.log("Current stored expense data:", storedExpenseData);
 
       //append new form data to array
       console.log("Adding new expense to stored data:", expensesData);
-      storedExpenseData.push(expensesData);
+      storedExpenseData.push(updatedExpensesData);
 
-      //save updated array to local storage
+      // Save updated array to local storage
       console.log("Saving updated expense data to localStorage");
       localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
+
+      //save updated array to local storage
       console.log("Adding expense to list");
-      addExpenseToList(expensesData);
+      addExpenseToList(updatedExpensesData);
+
       console.log("Expense added successfully");
       toast.success("New expense added");
 
+      // Reset form data
       console.log("Resetting form data");
       setExpensesData({
         name: "",

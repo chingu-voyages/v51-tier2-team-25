@@ -1,15 +1,17 @@
-import { useState } from "react";
+import React, { useState, useContext } from "react";
 import GetOwePaid from "../helpers/GetOwePaid"
 import PropTypes from 'prop-types';
+import { AppContext } from "../App";
 
 export default function Expense({expense, openReceipt, openEditExpense}) {
     const [isExpenseOpen, setIsExpenseOpen] = useState(false)
+    const { handleToggleIsPaid } = useContext(AppContext)
 
 
     return (
         <div>
             <div key={expense.id} className="p-4 my-2 border border-gray-300 rounded-md bg-zinc-50">
-                <div className="flex items-center justify-between justify-betweenflex" onClick={()=> setIsExpenseOpen(!isExpenseOpen)}>
+                <div className="flex items-center justify-between" onClick={()=> setIsExpenseOpen(!isExpenseOpen)}>
                     <div className='flex flex-col gap-2'>
                         <div className="flex gap-2 bg-zinc-50">
                             <p className="text-sm font-bold">{expense.name}</p>
@@ -31,11 +33,52 @@ export default function Expense({expense, openReceipt, openEditExpense}) {
                         </div>
                     </div>
                 </div>
-                {isExpenseOpen && 
-                    <div className="pt-3 mt-3 border-t">
-                        <h1>open!</h1>
+                {isExpenseOpen && (
+                    <div className="border-t mt-3 pt-3 text-sm">
+                        <p>{expense.description}</p>
+                        <div className="mt-2 grid grid-cols-4 gap-2">
+                            <div>
+                                <p className="font-medium">Members</p>
+                            </div>
+                            <div className="flex justify-center">
+                                <p className="font-medium">Share</p>
+                            </div>
+                            <div className="flex justify-end">
+                                <p className="font-medium">Owe</p>
+                            </div>
+                            <div className="flex justify-end">
+                                <p className="font-medium">State</p>
+                            </div>
+
+                            {expense.participants.map((participant) => (
+                                <React.Fragment key={participant.id}>
+                                    <div className="flex">
+                                        <img
+                                            src="../../images/profilePlaceHolder.png"
+                                            className="w-4 h-4 mr-2 border border-none rounded-full"
+                                            alt="Profile"
+                                        />
+                                        <p>{participant.name}</p>
+                                    </div>
+                                    <div className="flex justify-center">
+                                        <p>{participant.sharePercentage}%</p>
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <p>${participant.amountToPay}</p>
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <button
+                                        type="button"
+                                        onClick={() => handleToggleIsPaid(expense.id, participant.id)} 
+                                        >
+                                            {participant.isPaid ? "Paid" : "Unpaid"}
+                                        </button>
+                                    </div>
+                                </React.Fragment>
+                            ))}
+                        </div>
                     </div>
-                }
+                )}
             </div>
         </div>
     )
@@ -43,10 +86,20 @@ export default function Expense({expense, openReceipt, openEditExpense}) {
 
 Expense.propTypes = {
     expense: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      category: PropTypes.string.isRequired,
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        category: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+        participants: PropTypes.arrayOf(
+            PropTypes.shape({
+                id: PropTypes.string.isRequired,
+                name: PropTypes.string.isRequired,
+                sharePercentage: PropTypes.number.isRequired,
+                amountToPay: PropTypes.number.isRequired,
+                isPaid: PropTypes.bool.isRequired,
+            })
+        ).isRequired, 
     }).isRequired,
     openReceipt: PropTypes.func.isRequired,
     openEditExpense: PropTypes.func.isRequired,
-}
+};

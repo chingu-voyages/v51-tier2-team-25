@@ -200,8 +200,45 @@ function App() {
       return updatedGroups
     })
   }
-  
 
+  function handleToggleIsPaid(expenseId, participantId) {
+    setExpenses((prevExpenses) => {
+      const updatedExpenses = prevExpenses.map((expense) => {
+        if (expense.id === expenseId) {
+          const updatedParticipants = expense.participants.map((participant) =>
+            participant.id === participantId
+              ? { ...participant, isPaid: !participant.isPaid }
+              : participant
+          );
+          return { ...expense, participants: updatedParticipants };
+        }
+        return expense;
+      });
+      localStorage.setItem("expensesData", JSON.stringify(updatedExpenses));
+      return updatedExpenses;
+    });
+
+    setGroups((prevGroups) => {
+      const updatedGroups = prevGroups.map((group) => {
+        const updatedExpenses = group.expenses.map((expense) => {
+          if (expense.id === expenseId) {
+            const updatedParticipants = expense.participants.map(
+              (participant) =>
+                participant.id === participantId
+                  ? { ...participant, isPaid: !participant.isPaid }
+                  : participant
+            );
+            return { ...expense, participants: updatedParticipants };
+          }
+          return expense;
+        });
+        return { ...group, expenses: updatedExpenses };
+      });
+
+      localStorage.setItem("groupsData", JSON.stringify(updatedGroups));
+      return updatedGroups;
+    });
+  }
 
   const router = createBrowserRouter([
     {
@@ -276,7 +313,8 @@ function App() {
         participantData,
         setParticipantData,
         addParticipantToExpense,
-        deleteExpenseInList
+        deleteExpenseInList,
+        handleToggleIsPaid,
       }}
     >
       <RouterProvider router={router} />
