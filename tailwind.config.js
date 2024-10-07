@@ -18,7 +18,8 @@ export default {
         'green':'#247A51',     
         'blue-background':'#E9EAF0',
         'tab-text':'#2F2F3C',
-        'gray-histogram': '#FAFAFA'
+        'gray-histogram': '#FAFAFA',
+        'red-average':"#A50F0F",
       },
       fontFamily: {
         sans: ['Outfit', 'sans-serif'],
