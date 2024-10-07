@@ -126,7 +126,7 @@ export default function ExpenseParticipant({
                 <IoMdClose />
               </button>
               <div className="border rounded-full h-7 w-7">
-                <img src="/public/images/Profile.svg" />
+                <img src="/images/Profile.svg" />
               </div>
               <p>{member.userName}</p>
             </div>
