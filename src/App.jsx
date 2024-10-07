@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { createContext, useState} from "react";
+import { createContext, useState } from "react";
 import MobileGroupsPage from "./pages/MobileGroupsPage.jsx";
 import MobileFriendsPage from "./pages/MobileFriendsPage.jsx";
 import RootLayout from "./pages/Root.jsx";
@@ -29,7 +29,6 @@ function App() {
 
   //members added from group to expense
   const [participantData, setParticipantData] = useState({name:"", id:""})
-
 
   function addFriendToList(newFriend) {
     // console.log("addNewFriend-app", newFriend);
@@ -96,35 +95,7 @@ function App() {
     });
   }
 
-  // function updateExpenseInList(updatedExpense) {
-  //   setExpenses((prevExpenses) => {
-  //     const updatedExpenses = prevExpenses.map((expense) =>
-  //       expense.id === updatedExpense.id ? { ...expense, ...updatedExpense } : expense
-  //     );
-  //     localStorage.setItem("expensesData", JSON.stringify(updatedExpenses));
-  //     return updatedExpenses;
-  //   });    
-  // }
-
-  //////////////////////////////////////////////////updated group and expenses rendering
-
   function updateExpenseInList(updatedExpense) {
-    setGroups((prevGroups) => {
-      return prevGroups.map((group) => {
-        // Check if the group contains the expense
-        const hasExpense = group.expenses.some(expense => expense.id === updatedExpense.id);
-        if (hasExpense) {
-          return {
-            ...group,
-            expenses: group.expenses.map((expense) =>
-              expense.id === updatedExpense.id ? { ...expense, ...updatedExpense } : expense
-            )
-          };
-        }
-        return group;
-      });
-    });
-  
     setExpenses((prevExpenses) => {
       const updatedExpenses = prevExpenses.map((expense) =>
         expense.id === updatedExpense.id ? { ...expense, ...updatedExpense } : expense
@@ -160,7 +131,6 @@ function App() {
       return updatedGroups;
   });
   }
-/////////////////////////////////////////////////////  
 
   //updates expenses states @ global
   function addParticipantToExpense(expenseId, newParticipant){
@@ -231,6 +201,8 @@ function App() {
     })
   }
   
+
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -304,7 +276,7 @@ function App() {
         participantData,
         setParticipantData,
         addParticipantToExpense,
-        deleteExpenseInList,
+        deleteExpenseInList
       }}
     >
       <RouterProvider router={router} />
