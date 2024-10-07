@@ -38,6 +38,7 @@ export default function AddGroup({
           id: generateGroupId(),
           description: "",
           allottedBudget: "",
+          remainingBudget: "",
           members: [],
           groupType: "",
           expenses: [],
@@ -107,13 +108,12 @@ export default function AddGroup({
       return;
     }
 
-    //get stored data from local storage or initialize array
-    let storedGroupData = JSON.parse(localStorage.getItem("groupsData")) || [];
-    //append new form data to array
-    storedGroupData.push(groupsData);
-    //save updated array to local storage
-    localStorage.setItem("groupsData", JSON.stringify(storedGroupData));
-    addGroupToList(groupsData);
+    const newGroupData = {
+      ...groupsData,
+      remainingBudget: Number(groupsData.allottedBudget), 
+    };
+
+    addGroupToList(newGroupData);
     navigate(`/group/${groupsData.id}`)
     closeAddGroupModal();    
     toast.success("New group added");
