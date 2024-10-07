@@ -4,7 +4,6 @@ import { AppContext } from "../App";
 import EditGroupForm from "../components/EditGroupForm";
 import AddExpense from "../components/AddExpense";
 import EditAddFriendModal from "../components/EditAddFriendModal";
-import RemainingBudget from "../helpers/RemainingBudget";
 
 const getNavLinkClass = ({ isActive })=> 
    `${isActive ? "px-2 py-1 text-sm bg-border rounded-t-md text-tab-text" : "px-2 py-1 text-sm text-button"} hover:text-tab-text`
@@ -119,7 +118,7 @@ export default function Groups() {
               <div className="flex flex-col">
                 <p className="text-xs text-gray-500">Remaining</p>
                 <p className="text-sm text-gray-950">
-                  $ <RemainingBudget groupId={Number(groupId)} />
+                  $ {currentGroup?.remainingBudget}
                 </p>
                 
               </div>
