@@ -137,7 +137,7 @@ export default function ExpenseParticipant({
                 value={participantsShares[member.id]?.sharePercentage || ""}
                 type="number"
                 placeholder={0}
-                step={5}
+                step={10}
                 className="w-8/12 text-center h-7"
                 onChange={(event) => handleSharedValue(event, member)}
               />
