@@ -2,7 +2,6 @@ import { Bar} from "react-chartjs-2";
 import PropTypes from "prop-types";
 import calculateOwedAmounts from "../helpers/calculateOwedAmounts";
 import annotationPlugin from 'chartjs-plugin-annotation';
-
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -32,7 +31,6 @@ const ParticipantHistogram = ({ group }) => {
   console.log("total owed :", owedAmounts);
   const participantNames = Object.values(owedAmounts).map(o => o.name);
   const owedValues = Object.values(owedAmounts).map(o => o.totalOwed);
-//   const participantImages = Object.values(owedAmounts).map(o => o.imageUrl);/////////////////////////////////////////////
 
   const data = {
     labels: participantNames,

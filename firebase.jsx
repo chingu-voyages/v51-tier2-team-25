@@ -13,6 +13,9 @@ const firebaseConfig = {
 
 let app, db, storage;
 
+console.log("Storage Bucket:", import.meta.env.VITE_FIREBASE_STORAGE_BUCKET);
+
+
 try {
   console.log("Initializing Firebase...");
   app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
