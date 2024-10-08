@@ -3,12 +3,11 @@ import {useParams } from "react-router-dom";
 import { AppContext } from "../App";
 import EditExpense from "../components/EditExpense";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import ConfirmationModal from "../components/ConfirmationModal";
 
 export default function Friends() {
 
-  const { friends, expenses, groups, deleteFriend } = useContext(AppContext)
+  const { friends, expenses, groups, deleteFriend, showNotification } = useContext(AppContext)
   const { friendId } = useParams()
   const [isEditing, setIsEditing] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
@@ -67,7 +66,7 @@ export default function Friends() {
     deleteFriend(friendId)   
     setIsModalOpen(false); // This closes the modal
     navigate("/");
-    toast(`Friend ${currentFriend?.name} was deleted`);
+    showNotification(`Friend ${currentFriend?.name} was deleted`,'success');
   };
 
   return (

@@ -1,6 +1,5 @@
 import { useContext, useState, useRef } from "react";
 import { AppContext } from "../App";
-import toast from "react-hot-toast";
 import PropTypes from "prop-types";
 import SearchBar from "./SearchBar";
 import ExpenseCategorySelection from "./ExpenseCategorySelection";
@@ -10,7 +9,7 @@ import { calculateAmountsToPay } from "../helpers/CalculateAmountsToPay";
 import ReceiptManagement from "./ReceiptManagement";
 
 export default function AddExpense({ closeAddExpense, currentGroup }) {
-  const { addExpenseToList } = useContext(AppContext);
+  const { addExpenseToList, showNotification } = useContext(AppContext);
   const receiptManagementRef =useRef()
   const [uploading, setUploading] = useState(false);
 
@@ -88,12 +87,12 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
 
       // Validate share percentages
       if(allParticipantsHaveShare && totalSharePercentage < 100) {
-        toast.error("The total share percentage is less than 100%. Please adjust the shares.")
+        showNotification("The total share percentage is less than 100%. Please adjust the shares.",'error')
         return;
       } 
   
       if(totalSharePercentage > 100) {
-        toast.error("Total share percentage cannot exceed 100%. Please adjust the shares.")
+        showNotification("Total share percentage cannot exceed 100%. Please adjust the shares.",'error')
         return;
       }
       
@@ -132,7 +131,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
       addExpenseToList(updatedExpensesData);
 
       console.log("Expense added successfully");
-      toast.success("New expense added");
+      showNotification("New expense added",'success');
 
       // Reset form data
       console.log("Resetting form data");
@@ -154,7 +153,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
 
     } catch (error){
       console.error("Error in addNewExpense:", error);
-      toast.error('Failed to add expense')      
+      showNotification('Failed to add expense','error')      
     } finally  {
         setUploading(false)
         console.log("addNewExpense completed");
@@ -166,7 +165,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
       const isSelectedParticipantIncluded =
         expensesData.participants.includes(selectedParticipant);
       if (isSelectedParticipantIncluded) {
-        toast("Friend is already included");
+        showNotification("Friend is already included");
         return;
       }
       setExpensesData((prevData) => ({
