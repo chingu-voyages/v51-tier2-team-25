@@ -61,7 +61,7 @@ export default function Expenses() {
         <>
           {title && <p className="text-sm text-button">{title}</p>}
           {filteredExpenses.map((expense)=>(
-            <Expense key={expense.id} expense={expense} openReceipt={openReceipt} openEditExpense={openEditExpense}/>
+            <Expense key={expense.id} expense={expense} showButtons={true} openReceipt={openReceipt} openEditExpense={openEditExpense}/>
           ))}  
         </>     
       )}
