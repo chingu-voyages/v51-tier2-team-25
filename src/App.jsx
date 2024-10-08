@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 import MobileGroupsPage from "./pages/MobileGroupsPage.jsx";
 import MobileFriendsPage from "./pages/MobileFriendsPage.jsx";
 import RootLayout from "./pages/Root.jsx";
@@ -11,10 +11,17 @@ import Home from "./pages/Home.jsx";
 import Expenses from "./pages/Expenses.jsx";
 import Statistics from "./pages/Statistics.jsx";
 import ExpensesUser from './pages/ExpensesUser.jsx';
+import toast from "react-hot-toast"
 
 export const AppContext = createContext([]);
 
 function App() {
+
+  const [mainUser, setMainUser] = useState({
+    name:"",
+    userName:"",
+    id:null,
+  })
   const [groups, setGroups] = useState(
     JSON.parse(localStorage.getItem("groupsData")) || []
   );
@@ -30,7 +37,35 @@ function App() {
   //members added from group to expense
   const [participantData, setParticipantData] = useState({name:"", id:""})
 
+
+
+  const addMainUserToFriends = useCallback(() => {
+    if (!mainUser.id) {
+      console.log("Main user must be set before adding friend.");
+      return;
+    }
+    const userAlreadyAdded = friends.some((friend) => friend.id === mainUser.id);
+    if (!userAlreadyAdded) {
+      const updatedFriends = [...friends, mainUser];
+      setFriends(updatedFriends);
+      localStorage.setItem("friendsData", JSON.stringify(updatedFriends));
+    }
+  }, [mainUser, friends]);
+
+  useEffect(() => {
+    // Ensure mainUser is added to the friends list if it has an id
+    if (mainUser.id) {
+      addMainUserToFriends();
+    }
+  }, [mainUser, addMainUserToFriends]); 
+
+
   function addFriendToList(newFriend) {
+    //check if main user exists
+    if(!mainUser || !mainUser.id){
+      toast.error('Create a profile before you add a friend.')
+      return
+    }
     // console.log("addNewFriend-app", newFriend);
     const updatedFriends = [...friends, newFriend];
     setFriends(updatedFriends);
@@ -298,16 +333,22 @@ function App() {
   return (
     <AppContext.Provider
       value={{
+        mainUser,
+        setMainUser,
+        addMainUserToFriends,
         groups,
+        setGroups,
         updateGroup,
         addGroupToList,
         deleteGroup,
         friends,
+        setFriends,
         addFriendToList,
         deleteFriend,
         memberData,
         setMemberData,
         expenses,
+        setExpenses,
         addExpenseToList,
         updateExpenseInList,
         participantData,

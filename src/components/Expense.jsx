@@ -6,8 +6,7 @@ import { AppContext } from "../App";
 export default function Expense({expense, openReceipt, openEditExpense}) {
     const [isExpenseOpen, setIsExpenseOpen] = useState(false)
     const { handleToggleIsPaid } = useContext(AppContext)
-
-
+      
     return (
         <div>
             <div key={expense.id} className="p-4 my-2 border border-gray-300 rounded-md bg-zinc-50">
@@ -34,9 +33,9 @@ export default function Expense({expense, openReceipt, openEditExpense}) {
                     </div>
                 </div>
                 {isExpenseOpen && (
-                    <div className="border-t mt-3 pt-3 text-sm">
+                    <div className="pt-3 mt-3 text-sm border-t">
                         <p>{expense.description}</p>
-                        <div className="mt-2 grid grid-cols-4 gap-2">
+                        <div className="grid grid-cols-4 gap-2 mt-2">
                             <div>
                                 <p className="font-medium">Members</p>
                             </div>

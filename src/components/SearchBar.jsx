@@ -35,10 +35,12 @@ export default function SearchBar({
   customPlaceholder
 }) {  
   //using react select library for component
-  const { friends } = useContext(AppContext);
+  const { friends, mainUser } = useContext(AppContext);
+
+  const filteredFriends = friends.filter(friend => friend.id !== mainUser.id)
   
   //options based on purpose of SearchBar
-  const options = (purpose === 'participant' ? groupMembers : friends).map(person =>({
+  const options = (purpose === 'participant' ? groupMembers : filteredFriends).map(person =>({
     value: person.userName,
     label: person.userName,
     id:person.id,
