@@ -9,7 +9,9 @@ const calculateOwedAmounts = (group) => {
             totalOwed: 0,
           };
         }
+        if (!participant.isPaid){
         owedAmounts[participant.id].totalOwed += participant.amountToPay;
+        }
       });
     });
   
