@@ -60,6 +60,7 @@ const ExpenseHistogram = ({ groups }) => {
             weight: "300",
             family: "geologica",
           },
+         
         },
         ticks: {
           font: {
