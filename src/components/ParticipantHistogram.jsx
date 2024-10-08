@@ -32,6 +32,7 @@ const ParticipantHistogram = ({ group }) => {
   console.log("total owed :", owedAmounts);
   const participantNames = Object.values(owedAmounts).map(o => o.name);
   const owedValues = Object.values(owedAmounts).map(o => o.totalOwed);
+//   const participantImages = Object.values(owedAmounts).map(o => o.imageUrl);/////////////////////////////////////////////
 
   const data = {
     labels: participantNames,
@@ -151,7 +152,7 @@ const ParticipantHistogram = ({ group }) => {
         <div className="flex flex-col w-full px-[6px] py-[4px] mb-6 rounded-md border border-input-border max-w-[175px] max-h-[40px]">
           <div className="flex items-center w-[175px] ">
             <span
-              className="block w-[30px] h-[2px] mr-2 border-b-2 border-dashed border-red-average w-full my-2"
+              className="block w-[15px] h-[2px] mr-2 border-b-2 border-dashed border-red-average w-full my-2"
             ></span>
             <span className="font-geologica text-xs text-modal-text leading-[14px]">
               Average owed (US ${averageOwed.toFixed(2)})

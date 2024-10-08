@@ -3,7 +3,7 @@ import GetOwePaid from "../helpers/GetOwePaid"
 import PropTypes from 'prop-types';
 import { AppContext } from "../App";
 
-export default function Expense({expense, openReceipt, openEditExpense}) {
+export default function Expense({expense, showButtons, openReceipt, openEditExpense}) {
     const [isExpenseOpen, setIsExpenseOpen] = useState(false)
     const { handleToggleIsPaid } = useContext(AppContext)
 
@@ -27,10 +27,12 @@ export default function Expense({expense, openReceipt, openEditExpense}) {
                             <GetOwePaid />             
                             <p>Placeholder people remaining</p>
                         </div>
+                        {showButtons && (
                         <div className="flex gap-2">
                         <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openReceipt(expense.id)}><img src="../../images/Ticket.svg" alt="Ticket" /></button>
                             <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openEditExpense(expense)}><img src="../../images/Edit.svg" alt="Edit" /></button>
                         </div>
+                        )}
                     </div>
                 </div>
                 {isExpenseOpen && (
@@ -100,6 +102,7 @@ Expense.propTypes = {
             })
         ).isRequired, 
     }).isRequired,
+    showButtons: PropTypes.bool,
     openReceipt: PropTypes.func.isRequired,
     openEditExpense: PropTypes.func.isRequired,
 };
