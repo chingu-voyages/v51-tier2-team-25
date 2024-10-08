@@ -52,9 +52,8 @@ useEffect(() => {
 
   function handleScreenResize(event) {
     if (event.matches) {
-      // Check if user is on the MobileGroupsPage
       if (location.pathname === "/mobile-groups" || location.pathname === "/mobile-friends") {
-        navigate("/"); // Redirect to Home if screen is larger
+        navigate("/");
       }
     }
   }
@@ -78,7 +77,6 @@ useEffect(() => {
                     alt="Slice Logo"
                     className="md:w-[137px] w-[90px] my-1"
                   />
-                  {/* <p className="block text-lg">Slice</p> */}
               </div>
             </NavLink>
           <img src="../../images/Menu.svg" className="cursor-pointer w-7 md:hidden" onClick={toggleMenu}/>
