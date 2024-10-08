@@ -84,7 +84,7 @@ export default function Friends() {
               <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border rounded-md border-border'>placeholder</p>
               <p className='text-sm font-medium text-gray-950'>Id #</p>
               <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border rounded-md border-border'>{currentFriend?.id}</p>
-              <button className="px-3 py-2 text-sm rounded-md bg-red-button text-red-button-text hover:bg-red-button-hover" onClick={handleDelete}>Remove Friend</button>
+              <button type="button" className="px-3 py-2 text-sm rounded-md bg-red-button text-red-button-text hover:bg-red-button-hover" onClick={handleDelete}>Remove Friend</button>
             </div>
           </div>          
         
@@ -92,11 +92,21 @@ export default function Friends() {
             <p className='pl-2 m-0 text-sm text-button'>Payment Services</p>
             <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
               <p className='text-sm font-medium text-gray-950'>Paypal</p>
-              <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border rounded-md border-border'>placeholder</p>
+              <div className='flex'>
+                <p className='p-2 mt-1 mb-4 text-sm text-gray-800 border w-fit rounded-l-md border-input-border bg-profile-background'>paypal.me/</p>
+                <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border border-l-0 rounded-r-md border-border'>placeholder</p>
+              </div>              
               <p className='text-sm font-medium text-gray-950'>Venmo</p>
-              <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border rounded-md border-border'>placeholder</p>
+              <div className='flex'>
+                <p className='p-2 mt-1 mb-4 text-sm text-gray-800 border w-fit rounded-l-md border-input-border bg-profile-background'>venmo.com/</p>
+                <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border border-l-0 rounded-r-md border-border'>placeholder</p>
+              </div>              
               <p className='text-sm font-medium text-gray-950'>Cash app</p>
-              <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border rounded-md border-border'>placeholder</p>
+              <div className='flex'>
+                <p className='p-2 mt-1 mb-4 text-sm text-gray-800 border w-fit rounded-l-md border-input-border bg-profile-background'>cash.app/$</p>
+                <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border border-l-0 rounded-r-md border-border'>placeholder</p>
+              </div>
+              
             </div>
           </div>
           

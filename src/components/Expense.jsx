@@ -2,6 +2,7 @@ import React, { useState, useContext,useEffect } from "react";
 import PropTypes from 'prop-types';
 import { AppContext } from "../App";
 
+
 export default function Expense({expense, showButtons, openReceipt, openEditExpense}) {
     const [isExpenseOpen, setIsExpenseOpen] = useState(false);
     const { handleToggleIsPaid } = useContext(AppContext);
@@ -59,9 +60,10 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                     </div>
                 </div>
                 {isExpenseOpen && (
-                    <div className="border-t mt-3 pt-3 text-sm">
+                    <div className="pt-3 mt-3 text-sm border-t">
                         <p>{expense.description}</p>
-                        <div className="mt-3 grid grid-cols-4 gap-2">
+
+                        <div className="grid grid-cols-4 gap-2 mt-3">
                             <div className="mb-1">
                                 <p className="font-medium">Members</p>
                             </div>
