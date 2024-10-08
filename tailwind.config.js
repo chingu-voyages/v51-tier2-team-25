@@ -20,6 +20,7 @@ export default {
         'tab-text':'#2F2F3C',
         'gray-histogram': '#FAFAFA',
         'red-average':"#A50F0F",
+        'profile-background':'#F1F1F1'
       },
       fontFamily: {
         sans: ['Outfit', 'sans-serif'],

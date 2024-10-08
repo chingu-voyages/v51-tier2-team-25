@@ -1,6 +1,5 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from "../App";
-import toast from "react-hot-toast";
 import PropTypes from "prop-types";
 import AddMember from "./AddMember";
 import MembersOnGroup from "./MembersOnGroup";
@@ -13,7 +12,9 @@ export default function AddGroup({
   closeAddGroupModal,
   openLinkAddFriendModal,
 }) {
-  const { addGroupToList } = useContext(AppContext);
+
+  const { addGroupToList, mainUser, showNotification } = useContext(AppContext);
+
   const modalRef = useRef()
   const navigate = useNavigate()
   //Maybe move this to a helper function also maybe use uuid library?
@@ -73,7 +74,7 @@ export default function AddGroup({
 
     //check if value is empty or contains only spaces
     if (value.trim() === "" && value.length > 0) {
-      toast.error("Input cannot be empty or contain only spaces");
+      showNotification("Input cannot be empty or contain only spaces",'error');
       return;
     }
 
@@ -82,7 +83,7 @@ export default function AddGroup({
       const newValue = parseFloat(value);
 
       if (!isNaN(newValue) && newValue > 1000000) {
-        toast.error("Alloted budget cannot exceed $1,000,000");
+        showNotification("Alloted budget cannot exceed $1,000,000",'error');
         return;
       }
     }
@@ -99,24 +100,25 @@ export default function AddGroup({
     const budgetRegex = /^(0|[1-9]\d*)(\.\d+)?$/;
 
     if (!budgetRegex.test(groupsData.allottedBudget)) {
-      toast.error("Allotted budget must be a valid number");
+      showNotification("Allotted budget must be a valid number", 'error');
       return;
     }
 
     if (groupsData.groupType === "") {
-      toast.error("Please select a Group type");
+      showNotification("Please select a Group type", 'error');
       return;
     }
 
     const newGroupData = {
       ...groupsData,
       remainingBudget: Number(groupsData.allottedBudget), 
+      members: [...groupsData.members, mainUser]
     };
 
     addGroupToList(newGroupData);
     navigate(`/group/${groupsData.id}`)
     closeAddGroupModal();    
-    toast.success("New group added");
+    showNotification("New group added",'success');
     localStorage.removeItem("temporaryGroupData");
   };
 

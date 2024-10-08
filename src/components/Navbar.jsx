@@ -4,6 +4,7 @@ import AddGroup from "./AddGroup.jsx";
 import { AppContext } from "../App";
 import AddFriend from "./AddFriend.jsx";
 import LinkAddFriendModal from "./LinkAddFriendModal.jsx";
+import toast from "react-hot-toast";
 
 export default function Navbar() {
   // TESTING ONLY to clear local storage -REMOVE
@@ -13,11 +14,15 @@ export default function Navbar() {
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
   const [isLinkAddFriendModalOpen, setIsLinkAddFriendModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { groups, friends } = useContext(AppContext);
+  const { groups, friends, mainUser } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
 
   function openAddGroupModal() {
+    if(!mainUser || !mainUser.id){
+      toast.error("Please create a profile before adding a group.")
+      return
+    }
     setIsAddGroupModalOpen(true);
   }
   function closeAddGroupModal() {
@@ -25,6 +30,10 @@ export default function Navbar() {
   }
 
   function openAddFriendModal() {
+    if(!mainUser || !mainUser.id){
+      toast.error("Please create a profile before adding friends.")
+      return
+    }
     setIsAddFriendModalOpen(true);
   }
   function closeAddFriendModal() {
@@ -45,6 +54,9 @@ export default function Navbar() {
   function handleNavClick() {
     setIsMenuOpen()
   }
+
+  //filter main user from friends list for display
+  const displayedFriends = friends.filter(friend => friend.id !== mainUser.id)
 
 // Screen size change effect
 useEffect(() => {
@@ -148,9 +160,9 @@ useEffect(() => {
                   +
                 </button>
               </div>
-              {friends.length > 0 && (
+              {displayedFriends.length > 0 && (
                 <ul className="">
-                  {friends.map((friend) => (
+                  {displayedFriends.map((friend) => (
                     <li
                       key={friend.id}
                       className="flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]"
