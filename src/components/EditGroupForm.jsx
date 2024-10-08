@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../App";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import GroupTypeSelection from "./GroupTypeSelection";
 import AddMember from "./AddMember";
 import MembersOnGroup from "./MembersOnGroup";
@@ -15,7 +14,7 @@ export default function EditGroupForm({
   closeEditGroupFormModal,
   openAddFriendModal,
 }) {
-  const { updateGroup, deleteGroup } = useContext(AppContext);
+  const { updateGroup, deleteGroup, showNotification } = useContext(AppContext);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -38,7 +37,7 @@ export default function EditGroupForm({
     const newValue = value.trim();
 
     if (newValue === "" && value !== "") {
-      toast("Input cannot be empty or contain only spaces");
+      showNotification("Input cannot be empty or contain only spaces", 'error');
       return;
     }
 
@@ -46,7 +45,7 @@ export default function EditGroupForm({
       const newValue = parseFloat(value);
 
       if (!isNaN(newValue) && newValue > 1000000) {
-        toast("Alloted budget cannot exceed $1,000,000");
+        showNotification("Alloted budget cannot exceed $1,000,000",'error');
         return;
       }
     }
@@ -64,7 +63,7 @@ export default function EditGroupForm({
     const budgetRegex = /^(0|[1-9]\d*)(\.\d+)?$/;
 
     if (!budgetRegex.test(tempGroupData.allottedBudget)) {
-      toast("Allotted budget must be a valid number");
+      showNotification("Allotted budget must be a valid number",'error');
       return;
     }
 
@@ -83,7 +82,7 @@ export default function EditGroupForm({
     // Call the function to update the group data
     updateGroup(updatedGroupData);
     closeEditGroupFormModal(); // Close the form after saving changes
-    toast(`Changes saved`);
+    showNotification(`Changes saved`,'success');
   };
 
   const handleDelete = () => {
@@ -99,7 +98,7 @@ export default function EditGroupForm({
     closeEditGroupFormModal(); // Close the form after deletion
     setIsModalOpen(false); // This closes the modal
     navigate("/");
-    toast(`Group ${groupName} was deleted`);
+    showNotification(`Group ${groupName} was deleted`, 'success');
   };
 
   function addMemberToGroup(newMember) {

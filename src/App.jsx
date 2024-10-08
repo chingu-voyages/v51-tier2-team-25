@@ -11,10 +11,21 @@ import Home from "./pages/Home.jsx";
 import Expenses from "./pages/Expenses.jsx";
 import Statistics from "./pages/Statistics.jsx";
 import ExpensesUser from './pages/ExpensesUser.jsx';
+import toast from "react-hot-toast";
 
 export const AppContext = createContext([]);
 
 function App() {
+  const [toastId, setToastId] = useState(null)
+
+  const showNotification = (message, type='default')=>{
+    if(toastId){
+      toast.dismiss(toastId)
+    }
+    const newToastId= type === 'error' ? toast.error(message) : toast.success(message)
+    setToastId(newToastId)
+  }
+  
   const [groups, setGroups] = useState(
     JSON.parse(localStorage.getItem("groupsData")) || []
   );
@@ -296,6 +307,7 @@ function App() {
   ]);
 
   return (
+
     <AppContext.Provider
       value={{
         groups,
@@ -315,6 +327,7 @@ function App() {
         addParticipantToExpense,
         deleteExpenseInList,
         handleToggleIsPaid,
+        showNotification,
       }}
     >
       <RouterProvider router={router} />

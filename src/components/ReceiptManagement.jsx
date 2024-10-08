@@ -1,16 +1,16 @@
 import { useDropzone } from 'react-dropzone'
-import { useState, useCallback, useEffect, forwardRef, useImperativeHandle } from 'react'
+import { useState, useCallback, useEffect, forwardRef, useImperativeHandle, useContext } from 'react'
+import { AppContext } from "../App";
 import { db, storage } from '../../firebase'
 import { getDownloadURL, uploadBytes, ref as firebaseRef } from 'firebase/storage'
 import { collection, addDoc } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import PropTypes from 'prop-types';
-import toast from "react-hot-toast";
 
 //Each receipt should have a unique id and be under expense id
 
 const ReceiptManagement = forwardRef(({ expenseId }, ref) => {
-
+  const {showNotification}=useContext(AppContext)
   // console.log('expenseId', expenseId)
   
   const [ selectedImages, setSelectedImages ]= useState([])  
@@ -66,7 +66,7 @@ const ReceiptManagement = forwardRef(({ expenseId }, ref) => {
 
         // Check file size (limit to 5MB)
         if (file.size / 1024 / 1024 > 5) {
-          toast.error(`${file.name} exceeds the 5MB file size limit`);
+          showNotification(`${file.name} exceeds the 5MB file size limit`,'error');
           continue;  // Skip this file if it exceeds the limit
         }
 
@@ -121,10 +121,10 @@ const ReceiptManagement = forwardRef(({ expenseId }, ref) => {
         } 
       }
       console.log('All files processed successfully');
-      toast.success('Receipts uploaded successfully')
+      showNotification('Receipts uploaded successfully', 'success')
     }catch (error){
       console.error('Error in uploadReceiptsToFirebase:', error);
-      toast.error(`Error uploading receipts: ${error.message}`);
+      showNotification(`Error uploading receipts: ${error.message}`, 'error');
       throw error;
     }finally{
       setUploading(false)

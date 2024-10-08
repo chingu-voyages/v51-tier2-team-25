@@ -1,6 +1,5 @@
 import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../App";
-import toast from "react-hot-toast";
 import PropTypes from "prop-types";
 import SearchBar from "./SearchBar";
 import ExpenseCategorySelection from "./ExpenseCategorySelection";
@@ -13,7 +12,7 @@ export default function EditExpense({
   expense,
   currentGroup,
 }) {
-  const { updateExpenseInList, deleteExpenseInList } = useContext(AppContext);
+  const { updateExpenseInList, deleteExpenseInList, showNotification } = useContext(AppContext);
 
   const [expensesData, setExpensesData] = useState({
     name: "",
@@ -62,12 +61,12 @@ export default function EditExpense({
     const hasZeroSharePercentage = expensesData.participants.some(participant => participant.sharePercentage === 0)
 
     if(!hasZeroSharePercentage && totalSharePercentage < 100) {
-      toast.error("The total share percentage is less than 100%. Please adjust the shares.")
+      showNotification("The total share percentage is less than 100%. Please adjust the shares.",'error')
       return;
     } 
 
     if(totalSharePercentage > 100) {
-      toast.error("Total share percentage cannot exceed 100%. Please adjust the shares.")
+      showNotification("Total share percentage cannot exceed 100%. Please adjust the shares.",'error')
       return;
     }
 
@@ -83,7 +82,7 @@ export default function EditExpense({
 
     updateExpenseInList(updatedExpensesData);
     closeEditExpense();
-    toast(`Expense ${expensesData.name} was updated successfully`);
+    showNotification(`Expense ${expensesData.name} was updated successfully`,'success');
   };
 
   const handleDelete = () => {
@@ -95,7 +94,7 @@ export default function EditExpense({
     deleteExpenseInList(expense.id); // Call deleteGroup with the group's ID
     closeEditExpense(); // Close the form after deletion
     setIsModalOpen(false); // This closes the modal
-    toast(`Expense ${expenseName} was deleted`);
+    showNotification(`Expense ${expenseName} was deleted`);
   };
 
   const handleClose = () => {
@@ -141,13 +140,6 @@ export default function EditExpense({
 
         return { ...prevData, participants: updatedParticipants };
       });
-
-      // Display appropriate toast message based on the action
-      // toast(
-      //   isParticipantIncluded
-      //     ? "Participant updated successfully"
-      //     : "Participant added successfully"
-      // );
     }
   };
 

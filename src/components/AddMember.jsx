@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useContext, useState } from "react";
 import SearchBar from "./SearchBar";
-import toast from "react-hot-toast";
+import { AppContext } from "../App";
 
 export default function AddMember({ 
   addMemberToGroup, 
   groupMembers,
 }) {
+  const {showNotification} = useContext(AppContext)
   const [newMember, setNewMember] = useState("");
 
   function handleMemberSelected(newMember) {
@@ -23,7 +24,7 @@ export default function AddMember({
     );
 
     if (isMemberAllreadyIncluded) {
-      toast("Member is already in the group");
+      showNotification("Member is already in the group");
       return;
     }
 
