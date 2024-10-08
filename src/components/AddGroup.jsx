@@ -12,7 +12,9 @@ export default function AddGroup({
   closeAddGroupModal,
   openLinkAddFriendModal,
 }) {
-  const { addGroupToList, showNotification } = useContext(AppContext);
+
+  const { addGroupToList, mainUser, showNotification } = useContext(AppContext);
+
   const modalRef = useRef()
   const navigate = useNavigate()
   //Maybe move this to a helper function also maybe use uuid library?
@@ -110,6 +112,7 @@ export default function AddGroup({
     const newGroupData = {
       ...groupsData,
       remainingBudget: Number(groupsData.allottedBudget), 
+      members: [...groupsData.members, mainUser]
     };
 
     addGroupToList(newGroupData);
