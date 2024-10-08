@@ -7,8 +7,9 @@ const calculateOwedAmounts = (group) => {
       expense.participants.forEach((participant) => {
         if (!owedAmounts[participant.id]) {
           owedAmounts[participant.id] = {
-            name: participant.userName,
+            name: participant.name,
             totalOwed: 0,
+            picture: participant.picture,
           };
         }
         owedAmounts[participant.id].totalOwed += amountPerParticipant;
@@ -17,5 +18,5 @@ const calculateOwedAmounts = (group) => {
   
     return owedAmounts;
   };
-  
+    
   export default calculateOwedAmounts;

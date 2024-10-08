@@ -4,6 +4,9 @@ import calculateOwedAmounts from "../helpers/calculateOwedAmounts";
 
 const ParticipantHistogram = ({ group }) => {
   const owedAmounts = calculateOwedAmounts(group);
+  const totalOwed = Object.values(owedAmounts).reduce((sum, participant) => sum + participant.totalOwed, 0);
+  const participantCount = Object.keys(owedAmounts).length;
+  const averageOwed = totalOwed / participantCount;
 
   const data = {
     labels: Object.values(owedAmounts).map(o => o.name),
@@ -94,6 +97,32 @@ const ParticipantHistogram = ({ group }) => {
     },
   };
 
+    // Add the average line to the chart options
+    const averageLine = {
+        id: 'averageLine',
+        beforeDraw(chart) {
+          const { ctx, chartArea } = chart;
+          const y = chartArea.bottom - (averageOwed / Math.max(...Object.values(owedAmounts).map(o => o.totalOwed)) * chartArea.height);
+          
+          ctx.save();
+          ctx.strokeStyle = 'red';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([5, 5]);
+          ctx.beginPath();
+          ctx.moveTo(chartArea.left, y);
+          ctx.lineTo(chartArea.right, y);
+          ctx.stroke();
+          ctx.restore();
+        }
+      };
+    
+      options.plugins.averageLine = averageLine;
+
+      console.log('Owed amounts:', owedAmounts);
+console.log('Total owed:', totalOwed);
+console.log('Average owed:', averageOwed);
+
+
   return (
     <div className="flex flex-col items-center w-full bg-gray-histogram max-w-[785px] max-h-[495px] pt-[24px] pb-[24px] rounded-md border border-border">
       <div className="flex flex-col w-full max-w-[644px] max-h-[447px]">
@@ -114,7 +143,7 @@ const ParticipantHistogram = ({ group }) => {
 };
 
 ParticipantHistogram.propTypes = {
-  group: PropTypes.shape({
+  group: PropTypes.shape({ 
     expenses: PropTypes.arrayOf(
       PropTypes.shape({
         amount: PropTypes.number.isRequired,
