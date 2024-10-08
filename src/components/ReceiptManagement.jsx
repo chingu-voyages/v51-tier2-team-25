@@ -1,7 +1,7 @@
 import { useDropzone } from 'react-dropzone'
 import { useState, useCallback, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { db, storage } from '../../firebase'
-import { getDownloadURL, uploadBytes, ref as storageRef } from 'firebase/storage'
+import { getDownloadURL, uploadBytes, ref as firebaseRef } from 'firebase/storage'
 import { collection, addDoc } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import PropTypes from 'prop-types';
@@ -64,12 +64,19 @@ const ReceiptManagement = forwardRef(({ expenseId }, ref) => {
         const fileId = uuidv4()
         console.log(`Generated fileId: ${fileId}`);
 
-        const fileRef = storageRef(storage, `receipts/${expenseId}/${fileId}`)
+        // Check file size (limit to 5MB)
+        if (file.size / 1024 / 1024 > 5) {
+          toast.error(`${file.name} exceeds the 5MB file size limit`);
+          continue;  // Skip this file if it exceeds the limit
+        }
+
+        const fileRef = firebaseRef(storage, `receipts/${expenseId}/${fileId}`)
         console.log(`Created storage reference: ${fileRef.fullPath}`);
 
         console.log(`Uploading ${file.name}`)
         try{
-          await uploadBytes(fileRef, file) //upload file to storage
+          //Upload file to storage
+          await uploadBytes(fileRef, file) 
           console.log(`File uploaded successfully: ${file.name}`);
         }catch(uploadError){
           console.error(`Error uploading file ${file.name}:`, uploadError);
@@ -79,6 +86,7 @@ const ReceiptManagement = forwardRef(({ expenseId }, ref) => {
         console.log(`Getting download URL for file: ${file.name}`)
         let fileUrl;
         try{
+          // Get download URL
           fileUrl = await getDownloadURL(fileRef)
           console.log(`Got download URL: ${fileUrl}`);
         }catch (urlError){
