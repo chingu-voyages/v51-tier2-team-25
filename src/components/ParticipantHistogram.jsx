@@ -2,7 +2,6 @@ import { Bar} from "react-chartjs-2";
 import PropTypes from "prop-types";
 import calculateOwedAmounts from "../helpers/calculateOwedAmounts";
 import annotationPlugin from 'chartjs-plugin-annotation';
-
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -151,7 +150,7 @@ const ParticipantHistogram = ({ group }) => {
         <div className="flex flex-col w-full px-[6px] py-[4px] mb-6 rounded-md border border-input-border max-w-[175px] max-h-[40px]">
           <div className="flex items-center w-[175px] ">
             <span
-              className="block w-[30px] h-[2px] mr-2 border-b-2 border-dashed border-red-average w-full my-2"
+              className="block w-[15px] h-[2px] mr-2 border-b-2 border-dashed border-red-average w-full my-2"
             ></span>
             <span className="font-geologica text-xs text-modal-text leading-[14px]">
               Average owed (US ${averageOwed.toFixed(2)})
