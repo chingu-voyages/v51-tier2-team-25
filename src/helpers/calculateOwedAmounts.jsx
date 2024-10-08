@@ -1,5 +1,7 @@
 const calculateOwedAmounts = (group) => {
     const owedAmounts = {};
+    let totalOwed = 0;
+    let participantCount = 0;
   
     group.expenses.forEach((expense) => {  
       expense.participants.forEach((participant) => {
@@ -11,11 +13,15 @@ const calculateOwedAmounts = (group) => {
         }
         if (!participant.isPaid){
         owedAmounts[participant.id].totalOwed += participant.amountToPay;
+        totalOwed += participant.amountToPay;
+          participantCount++;
         }
       });
     });
   
-    return owedAmounts;
+    const averageOwed = participantCount > 0 ? totalOwed / participantCount : 0;
+
+    return {owedAmounts, averageOwed};
   };
   
   export default calculateOwedAmounts;
