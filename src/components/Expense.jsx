@@ -59,17 +59,17 @@ export default function Expense({expense, openReceipt, openEditExpense}) {
                 {isExpenseOpen && (
                     <div className="border-t mt-3 pt-3 text-sm">
                         <p>{expense.description}</p>
-                        <div className="mt-2 grid grid-cols-4 gap-2">
-                            <div>
+                        <div className="mt-3 grid grid-cols-4 gap-2">
+                            <div className="mb-1">
                                 <p className="font-medium">Members</p>
                             </div>
-                            <div className="flex justify-center">
+                            <div className="flex justify-center mb-1">
                                 <p className="font-medium">Share</p>
                             </div>
-                            <div className="flex justify-end">
+                            <div className="flex justify-end mb-1">
                                 <p className="font-medium">Owe</p>
                             </div>
-                            <div className="flex justify-end">
+                            <div className="flex justify-end mb-1">
                                 <p className="font-medium">State</p>
                             </div>
 
