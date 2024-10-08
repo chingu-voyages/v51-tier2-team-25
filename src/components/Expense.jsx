@@ -1,5 +1,4 @@
 import React, { useState, useContext,useEffect } from "react";
-import GetOwePaid from "../helpers/GetOwePaid"
 import PropTypes from 'prop-types';
 import { AppContext } from "../App";
 
@@ -37,15 +36,14 @@ export default function Expense({expense, openReceipt, openEditExpense}) {
                             </div>
                             <p className="px-1 text-xs border rounded-md bg-light-indigo border-border">{expense.category}</p>
                         </div>
-                        {allPaid ? (
-                            <p className="text-sm"><span className="font-bold">Fully paid</span> on {fullyPaidDate}</p>
-                        ) : (
-                            <p className="text-sm">${unpaidAmount} left</p>
-                        )}
                     </div>
                     <div className='flex gap-4 text-sm'>
-                        <div className='flex flex-col gap-2'>
-                            <GetOwePaid />             
+                        <div className='flex flex-col gap-2'>    
+                            {allPaid ? (
+                                <p className="text-sm"><span className="font-bold">Fully paid</span> on {fullyPaidDate}</p>
+                            ) : (
+                                <p className="text-sm">${unpaidAmount} left</p>
+                            )}        
                             {allPaid ? (
                                 <p>${expense.amount} paid by {expense.participants.length} members</p>
                             ) : (

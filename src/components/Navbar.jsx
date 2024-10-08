@@ -72,12 +72,13 @@ useEffect(() => {
       <nav className="relative md:w-48">
         <div className="flex justify-between mx-4 my-3 md:m-0">
           <NavLink className="block" to="/">
-              <div className="flex items-center px-3 md:pb-12">
+              <div className="flex items-center px-3 md:mb-12">
                   <img
-                    src="../../images/placeholder.jpg"
-                    className="w-8 h-8 mr-2 border border-none rounded-full"
+                    src="../../images/SliceLogo.svg"
+                    alt="Slice Logo"
+                    className="md:w-[137px] w-[90px] my-1"
                   />
-                  <p className="block text-lg">Slice</p>
+                  {/* <p className="block text-lg">Slice</p> */}
               </div>
             </NavLink>
           <img src="../../images/Menu.svg" className="cursor-pointer w-7 md:hidden" onClick={toggleMenu}/>
