@@ -1,4 +1,4 @@
-import { Bar } from "react-chartjs-2";
+import { Bar} from "react-chartjs-2";
 import PropTypes from "prop-types";
 import {
   Chart as ChartJS,
@@ -9,7 +9,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import ChartDataLabels from 'chartjs-plugin-datalabels';
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import histogramDownloader from "../helpers/histogramDownloader";
+import { useRef, useEffect } from "react";
 
 // Registering necessary components
 ChartJS.register(
@@ -18,11 +20,22 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend, 
+  Legend,
   ChartDataLabels
 );
 
 const ExpenseHistogram = ({ groups }) => {
+  const chartRef = useRef();
+  const { downloadImage, downloadPDF } = histogramDownloader(chartRef);
+
+  useEffect(() => {
+    if (chartRef.current) {
+      console.log("Chart is rendered and ready for export.");
+    } else {
+      console.error("Chart reference is not set yet.");
+    }
+  }, [chartRef]);
+
   const data = {
     labels: groups.map((group) => group.name),
     datasets: [
@@ -60,7 +73,6 @@ const ExpenseHistogram = ({ groups }) => {
             weight: "300",
             family: "geologica",
           },
-         
         },
         ticks: {
           font: {
@@ -109,20 +121,21 @@ const ExpenseHistogram = ({ groups }) => {
       },
       datalabels: {
         display: true,
-          anchor: 'end',
-          align: 'end',
-          formatter: (value) => {
-            if (typeof value !== 'number') {
-              return Number(value); 
-            }
-            return value;},
-          color: '#292929', 
-          font: {
-            weight: '400',
-            size: 12,
-            family: "Geologica",
-          },
+        anchor: "end",
+        align: "end",
+        formatter: (value) => {
+          if (typeof value !== "number") {
+            return Number(value);
+          }
+          return value;
         },
+        color: "#292929",
+        font: {
+          weight: "400",
+          size: 12,
+          family: "Geologica",
+        },
+      },
     },
   };
 
@@ -149,7 +162,19 @@ const ExpenseHistogram = ({ groups }) => {
             </span>
           </div>
         </div>
-        <Bar data={data} options={options} />
+        <Bar
+          data={data}
+          options={options}
+          ref={chartRef}
+        />
+      </div>
+      <div className="flex space-x-2 mt-4">
+        <button onClick={downloadImage} className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo">
+          Export as PNG
+        </button>
+        <button onClick={downloadPDF} className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo">
+          Export as PDF
+        </button>
       </div>
     </div>
   );
