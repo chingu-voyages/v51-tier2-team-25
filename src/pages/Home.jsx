@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate, useLocation} from "react-router-dom";
-import { useEffect } from 'react'
+import { useEffect } from 'react';
 
 const getNavLinkClass = ({ isActive }) => 
   `${isActive ? "px-2 py-1 text-sm bg-border rounded-t-md text-tab-text" : "px-2 py-1 text-sm text-button"} hover:text-tab-text`
@@ -50,9 +50,7 @@ export default function Home() {
             Statistics
           </NavLink>
         </div>       
-
         <Outlet />
-        
       </div>
     </>
 }

@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
 import { Toaster } from "react-hot-toast";
+import Footer from "./Footer.jsx";
 
 export default function RootLayout() {
   return (
@@ -12,6 +13,7 @@ export default function RootLayout() {
             className="w-full"
           />
         </div>
+        <Footer/>
       </main>
       <Toaster />
     </div>
