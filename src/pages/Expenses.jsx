@@ -4,7 +4,8 @@ import { AppContext } from "../App";
 import EditExpense from "../components/EditExpense";
 import Expense from "../components/Expense";
 import ViewReceipt from "../components/ViewReceipt";
-import { fetchReceiptImage } from '../helpers/firebaseUtils'
+import { collection, query, where, getDocs } from 'firebase/firestore'
+import { db } from '../../firebase';
 
 export default function Expenses() {
   const { groupId } = useParams()
@@ -30,11 +31,29 @@ export default function Expenses() {
   };
 
   const openReceipt = async (expenseId) =>{
-    setIsViewingReceipt(true)
-    const fileUrl = await fetchReceiptImage(expenseId)
-    console.log("Fetched URL:", fileUrl)
-    setReceiptImageUrl(fileUrl)
-    
+    try{
+      console.log("Fetching receipts for expenseId:", expenseId);
+      setIsViewingReceipt(true)
+
+      // Query Firestore for receipts associated with the expenseId
+      const q = query(collection(db, 'receipts'), where('expenseId', '==', expenseId));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const fileUrls = querySnapshot.docs.map((doc) => {
+          const receiptData = doc.data();
+          console.log("Fetched receipt data:", receiptData);
+          return receiptData.fileUrl; 
+        });
+        console.log("Fetched URL:", fileUrls)
+        setReceiptImageUrl(fileUrls)
+      }else{
+        console.log("No receipts found for this expense.");
+        setReceiptImageUrl([]); // Handle no receipts case
+      }
+    }catch (error) {
+      console.error("Error fetching receipts:", error);
+    }  
   }
   const closeReceipt = () =>{
     setIsViewingReceipt(false)
@@ -76,7 +95,7 @@ export default function Expenses() {
       {isViewingReceipt && (
         <ViewReceipt 
           closeReceipt={closeReceipt} 
-          fileUrl={receiptImageUrl}
+          fileUrls={receiptImageUrl}
         />
       )}
 

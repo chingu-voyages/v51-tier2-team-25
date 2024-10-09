@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from "../App";
 import PropTypes from "prop-types";
 import SearchBar from "./SearchBar";
@@ -6,6 +6,10 @@ import ExpenseCategorySelection from "./ExpenseCategorySelection";
 import ConfirmationModal from "./ConfirmationModal";
 import ExpenseParticipant from "./ExpenseParticipant";
 import { calculateAmountsToPay } from "../helpers/CalculateAmountsToPay";
+import ReceiptManagement from "./ReceiptManagement";
+import { ref as firebaseRef,deleteObject } from 'firebase/storage'
+import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore'
+import { db, storage } from '../../firebase'; 
 
 export default function EditExpense({
   closeEditExpense,
@@ -13,7 +17,7 @@ export default function EditExpense({
   currentGroup,
 }) {
   const { updateExpenseInList, deleteExpenseInList, showNotification } = useContext(AppContext);
-
+  const receiptManagementRef =useRef()
   const [expensesData, setExpensesData] = useState({
     name: "",
     amount: "",
@@ -23,7 +27,7 @@ export default function EditExpense({
     id: "",
     participants: [],
   });
-
+  const [uploading, setUploading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmCloseOpen, setIsConfirmCloseOpen] = useState(false); //confirmation modal
   const [changesMade, setChangesMade] = useState(false); // Track if changes were made
@@ -51,50 +55,117 @@ export default function EditExpense({
     setChangesMade(true);
   };
 
-  const saveChanges = (event) => {
+  const saveChanges = async(event) => {
     event.preventDefault();
+    setUploading(true)
 
-    const totalSharePercentage = expensesData.participants.reduce((total, participant) => {
-      return total + (participant.sharePercentage || 0)
-    }, 0)
+    //receipt management
+    try{
+      console.log("Checking for receiptManagementRef");
+      //Trigger receipt upload vai ref to ReceiptManagement
+      if (receiptManagementRef.current){
+        console.log("receiptManagementRef found, uploading receipts...");
+        try{
+          await receiptManagementRef.current.uploadReceiptsToFirebase()
+          console.log("Receipts uploaded successfully");
+        }catch(uploadError){
+          console.error("Error uploading receipts:", uploadError);
+          throw uploadError;
+        }        
+      }else{
+        console.log("No receiptManagementRef found, skipping receipt upload");
+      }
 
-    const hasZeroSharePercentage = expensesData.participants.some(participant => participant.sharePercentage === 0)
+      const totalSharePercentage = expensesData.participants.reduce((total, participant) => {
+        return total + (participant.sharePercentage || 0)
+      }, 0)
 
-    if(!hasZeroSharePercentage && totalSharePercentage < 100) {
-      showNotification("The total share percentage is less than 100%. Please adjust the shares.",'error')
-      return;
-    } 
+      const hasZeroSharePercentage = expensesData.participants.some(participant => participant.sharePercentage === 0)
 
-    if(totalSharePercentage > 100) {
-      showNotification("Total share percentage cannot exceed 100%. Please adjust the shares.",'error')
-      return;
+      if(!hasZeroSharePercentage && totalSharePercentage < 100) {
+        showNotification("The total share percentage is less than 100%. Please adjust the shares.",'error')
+        return;
+      } 
+
+      if(totalSharePercentage > 100) {
+        showNotification("Total share percentage cannot exceed 100%. Please adjust the shares.",'error')
+        return;
+      }
+
+      const { updatedShares } = calculateAmountsToPay(
+        expensesData.participants,
+        parseFloat(expensesData.amount)
+      );
+
+      let updatedExpensesData = {
+        ...expensesData,
+        participants: Object.values(updatedShares)
+      };
+
+      updateExpenseInList(updatedExpensesData);
+      closeEditExpense();
+      showNotification(`Expense ${expensesData.name} was updated successfully`,'success');
+    }catch (error){
+      console.error("Error in EditExpense", error)
+      showNotification('Failed to edit expense','error')
+    }finally{
+      setUploading(false)
     }
-
-    const { updatedShares } = calculateAmountsToPay(
-      expensesData.participants,
-      parseFloat(expensesData.amount)
-    );
-
-    let updatedExpensesData = {
-      ...expensesData,
-      participants: Object.values(updatedShares)
-    };
-
-    updateExpenseInList(updatedExpensesData);
-    closeEditExpense();
-    showNotification(`Expense ${expensesData.name} was updated successfully`,'success');
   };
 
   const handleDelete = () => {
     setIsModalOpen(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     const expenseName = expensesData.name;
-    deleteExpenseInList(expense.id); // Call deleteGroup with the group's ID
-    closeEditExpense(); // Close the form after deletion
-    setIsModalOpen(false); // This closes the modal
-    showNotification(`Expense ${expenseName} was deleted`);
+    try {
+      // Query for associated receipts
+      const q = query(collection(db, 'receipts'), where('expenseId', '==', expense.id));
+      const querySnapshot = await getDocs(q);
+  
+      if (querySnapshot.empty) {
+        console.log('No associated receipts found for this expense.');
+      } else {
+        // Delete associated receipts from Firestore and Firebase Storage
+        const deleteReceiptsPromises = querySnapshot.docs.map(async (receiptDoc) => {
+          const receiptData = receiptDoc.data();
+          const receiptId = receiptDoc.id;
+          const fileUrl = receiptData.fileUrl;
+  
+          try {
+            // Delete the receipt from Firestore
+            const receiptRef = doc(db, 'receipts', receiptId);
+            await deleteDoc(receiptRef);
+            console.log(`Deleted Firestore document for receipt: ${receiptId}`);
+
+            // Parse the file path from the full file URL
+            const filePath = decodeURIComponent(fileUrl.split("/o/")[1].split("?")[0]);
+  
+            // Delete the receipt from Firebase Storage
+            const storageRef = firebaseRef(storage, filePath); // Use file path, not full URL
+            await deleteObject(storageRef);
+            console.log(`Deleted file from Firebase Storage: ${filePath}`);
+          } catch (receiptError) {
+            console.error(`Error deleting receipt with ID: ${receiptId}`, receiptError);
+            throw receiptError; // Rethrow to capture in the main try-catch block
+          }
+        });
+  
+        // Wait for all receipt deletions to complete
+        await Promise.all(deleteReceiptsPromises);
+      }
+  
+      // Delete the expense itself
+      deleteExpenseInList(expense.id); // Call deleteGroup with the group's ID
+      closeEditExpense(); // Close the form after deletion
+      setIsModalOpen(false); // This closes the modal
+      showNotification(`Expense ${expenseName} was deleted`);
+  
+    } catch (error) {
+      console.error('Error deleting expense and associated receipts:', error);
+      showNotification('Failed to delete expense and associated receipts', 'error');
+    }
   };
 
   const handleClose = () => {
@@ -264,10 +335,11 @@ export default function EditExpense({
             </label>
 
             <div className="mb-4">
-              <p className="flex flex-col text-sm md:pt-4">Attachments</p>
-              <p className="border border-gray-300 border-dashed rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500 text-sm">
-                Placeholder to add receipt
-              </p>
+                <ReceiptManagement                 
+                  expenseId={expensesData.id}
+                  ref={receiptManagementRef}
+                  isEditable={true}
+                />              
             </div>
 
             <div className="mb-4 border-b md:pt-4 md:mb-auto border-border">
@@ -327,9 +399,9 @@ export default function EditExpense({
               </button>
               <button
                 type="submit"
-                className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
-              >
-                Save
+                disabled={uploading}
+              > 
+                {uploading ? 'Uploading...': 'Save'} 
               </button>
             </div>
           </div>
