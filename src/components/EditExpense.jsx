@@ -292,6 +292,7 @@ export default function EditExpense({
                 <ReceiptManagement                 
                   expenseId={expensesData.id}
                   ref={receiptManagementRef}
+                  isEditable={true}
                 />              
             </div>
 
