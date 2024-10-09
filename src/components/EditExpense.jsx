@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from "../App";
 import PropTypes from "prop-types";
 import SearchBar from "./SearchBar";
@@ -6,6 +6,7 @@ import ExpenseCategorySelection from "./ExpenseCategorySelection";
 import ConfirmationModal from "./ConfirmationModal";
 import ExpenseParticipant from "./ExpenseParticipant";
 import { calculateAmountsToPay } from "../helpers/CalculateAmountsToPay";
+import ReceiptManagement from "./ReceiptManagement";
 
 export default function EditExpense({
   closeEditExpense,
@@ -13,7 +14,7 @@ export default function EditExpense({
   currentGroup,
 }) {
   const { updateExpenseInList, deleteExpenseInList, showNotification } = useContext(AppContext);
-
+  const receiptManagementRef =useRef()
   const [expensesData, setExpensesData] = useState({
     name: "",
     amount: "",
@@ -23,7 +24,7 @@ export default function EditExpense({
     id: "",
     participants: [],
   });
-
+  const [uploading, setUploading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmCloseOpen, setIsConfirmCloseOpen] = useState(false); //confirmation modal
   const [changesMade, setChangesMade] = useState(false); // Track if changes were made
@@ -51,38 +52,62 @@ export default function EditExpense({
     setChangesMade(true);
   };
 
-  const saveChanges = (event) => {
+  const saveChanges = async(event) => {
     event.preventDefault();
+    setUploading(true)
 
-    const totalSharePercentage = expensesData.participants.reduce((total, participant) => {
-      return total + (participant.sharePercentage || 0)
-    }, 0)
+    //receipt management
+    try{
+      console.log("Checking for receiptManagementRef");
+      //Trigger receipt upload vai ref to ReceiptManagement
+      if (receiptManagementRef.current){
+        console.log("receiptManagementRef found, uploading receipts...");
+        try{
+          await receiptManagementRef.current.uploadReceiptsToFirebase()
+          console.log("Receipts uploaded successfully");
+        }catch(uploadError){
+          console.error("Error uploading receipts:", uploadError);
+          throw uploadError;
+        }        
+      }else{
+        console.log("No receiptManagementRef found, skipping receipt upload");
+      }
 
-    const hasZeroSharePercentage = expensesData.participants.some(participant => participant.sharePercentage === 0)
+      const totalSharePercentage = expensesData.participants.reduce((total, participant) => {
+        return total + (participant.sharePercentage || 0)
+      }, 0)
 
-    if(!hasZeroSharePercentage && totalSharePercentage < 100) {
-      showNotification("The total share percentage is less than 100%. Please adjust the shares.",'error')
-      return;
-    } 
+      const hasZeroSharePercentage = expensesData.participants.some(participant => participant.sharePercentage === 0)
 
-    if(totalSharePercentage > 100) {
-      showNotification("Total share percentage cannot exceed 100%. Please adjust the shares.",'error')
-      return;
+      if(!hasZeroSharePercentage && totalSharePercentage < 100) {
+        showNotification("The total share percentage is less than 100%. Please adjust the shares.",'error')
+        return;
+      } 
+
+      if(totalSharePercentage > 100) {
+        showNotification("Total share percentage cannot exceed 100%. Please adjust the shares.",'error')
+        return;
+      }
+
+      const { updatedShares } = calculateAmountsToPay(
+        expensesData.participants,
+        parseFloat(expensesData.amount)
+      );
+
+      let updatedExpensesData = {
+        ...expensesData,
+        participants: Object.values(updatedShares)
+      };
+
+      updateExpenseInList(updatedExpensesData);
+      closeEditExpense();
+      showNotification(`Expense ${expensesData.name} was updated successfully`,'success');
+    }catch (error){
+      console.error("Error in EditExpense", error)
+      showNotification('Failed to edit expense','error')
+    }finally{
+      setUploading(false)
     }
-
-    const { updatedShares } = calculateAmountsToPay(
-      expensesData.participants,
-      parseFloat(expensesData.amount)
-    );
-
-    let updatedExpensesData = {
-      ...expensesData,
-      participants: Object.values(updatedShares)
-    };
-
-    updateExpenseInList(updatedExpensesData);
-    closeEditExpense();
-    showNotification(`Expense ${expensesData.name} was updated successfully`,'success');
   };
 
   const handleDelete = () => {
@@ -264,10 +289,10 @@ export default function EditExpense({
             </label>
 
             <div className="mb-4">
-              <p className="flex flex-col text-sm md:pt-4">Attachments</p>
-              <p className="border border-gray-300 border-dashed rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500 text-sm">
-                Placeholder to add receipt
-              </p>
+                <ReceiptManagement                 
+                  expenseId={expensesData.id}
+                  ref={receiptManagementRef}
+                />              
             </div>
 
             <div className="mb-4 border-b md:pt-4 md:mb-auto border-border">
@@ -327,9 +352,9 @@ export default function EditExpense({
               </button>
               <button
                 type="submit"
-                className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
-              >
-                Save
+                disabled={uploading}
+              > 
+                {uploading ? 'Uploading...': 'Save'} 
               </button>
             </div>
           </div>
