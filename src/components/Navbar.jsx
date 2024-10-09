@@ -56,7 +56,9 @@ export default function Navbar() {
   }
 
   //filter main user from friends list for display
-  const displayedFriends = friends.filter(friend => friend.id !== mainUser.id)
+  // Ensure mainUser has an id before using it for filtering
+  const displayedFriends = mainUser && mainUser.id ? friends.filter(friend => friend.id !== mainUser.id) : friends;
+
 
 // Screen size change effect
 useEffect(() => {

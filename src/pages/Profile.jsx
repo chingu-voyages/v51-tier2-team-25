@@ -26,7 +26,7 @@ export default function Profile() {
       ...prevUser,
       [name]:value,
     }))
-    console.log("mainUser",mainUser)
+    // console.log("mainUser",mainUser)
   }
 
   const handleSubmit = (e) =>{
@@ -39,9 +39,7 @@ export default function Profile() {
     //Save user to localStorage
     localStorage.setItem('mainUserData', JSON.stringify(updatedUser))
     setMainUser(updatedUser)
-
     addMainUserToFriends()
-
     setIsEditable(false)
   }
 
@@ -66,9 +64,8 @@ export default function Profile() {
     setFriends([])
     setExpenses([])
     setIsModalOpen(false); // This closes the modal
-    // toast(`Expense ${expenseName} was deleted`);
-  };
-  
+    setIsEditable(true)
+  };  
 
   return(
     <>
@@ -148,7 +145,7 @@ export default function Profile() {
           onCancel={() => setIsModalOpen(false)}
           title="Delete Profile?"
           message={"WARNING - This action will delete your profile, all groups, friends, and expenses." }
-          confirmButtonText="Delete Expense"
+          confirmButtonText="Delete profile"
         />
 
         <div className='flex flex-col flex-grow w-full space-y-2'>
@@ -161,14 +158,14 @@ export default function Profile() {
               <button 
                 type="button" 
                 onClick={handleDelete}
-                className="px-3 py-2 mt-4 text-sm rounded-md bg-red-button text-red-button-text hover:bg-red-button-hover">
+                className={`px-3 py-2 mt-4 text-sm rounded-md ${mainUser?.id ? 'bg-red-button text-red-button-text hover:bg-red-button-hover' :'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+                disabled={!mainUser?.id}
+              >
                 Delete account
               </button>
             </div>
-        </div>
-       
-      </div>
-      
+        </div>       
+      </div>      
     </>
   )
 }
