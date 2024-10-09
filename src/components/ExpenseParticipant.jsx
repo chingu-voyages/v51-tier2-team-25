@@ -134,8 +134,8 @@ export default function ExpenseParticipant({
             </div>
             <div className="w-6/12 text-center">
               <label>
-                {participantsShares[member.id]?.amountToPay >= 0
-                  ? participantsShares[member.id].amountToPay
+                {participantsShares[member.id]?.amountToPay.toFixed(2) >= 0
+                  ? participantsShares[member.id].amountToPay.toFixed(2)
                   : 0}
               </label>
             </div>

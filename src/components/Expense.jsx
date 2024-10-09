@@ -43,7 +43,7 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                             {allPaid ? (
                                 <p className="text-sm"><span className="font-bold">Fully paid</span> on {fullyPaidDate}</p>
                             ) : (
-                                <p className="text-sm">${unpaidAmount} left</p>
+                                <p className="text-sm">${unpaidAmount.toFixed(2)} left</p>
                             )}        
                             {allPaid ? (
                                 <p>${expense.amount} paid by {expense.participants.length} members</p>
@@ -91,7 +91,7 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                                         <p>{participant.sharePercentage}%</p>
                                     </div>
                                     <div className="flex justify-end">
-                                        <p>${participant.amountToPay}</p>
+                                        <p>${participant.amountToPay.toFixed(2)}</p>
                                     </div>
                                     <div className="flex justify-end">
                                         <div
