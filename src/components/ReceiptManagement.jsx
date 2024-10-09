@@ -36,7 +36,8 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
       ...prev,
       ...acceptedFiles.map((file) =>
         Object.assign(file, {  
-          preview:URL.createObjectURL(file) 
+          preview:URL.createObjectURL(file),
+          newFile: true
         })
       )
     ])
@@ -52,10 +53,10 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
     multiple: true, // Allows multiple files to be selected
   });
 
-  // // Function to remove an image
-  // const handleFileRemove = (index) => {
-  //   setSelectedImages((prev) => prev.filter((_, i) => i !== index));
-  // };
+  // // Function to remove an image before upload
+  const handleFileRemove = (index) => {
+    setSelectedImages((prev) => prev.filter((_, i) => i !== index));
+  };
 
   // Cleanup preview URLs on component unmount to avoid memory leaks
   useEffect(() => {
@@ -63,6 +64,8 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
       selectedImages.forEach((file) => URL.revokeObjectURL(file.preview));
     };
   }, [selectedImages]);
+
+
 
   // Upload receipts to Firebase Storage & store URLs in Firestore
   const uploadReceiptsToFirebase = async () => {
@@ -73,6 +76,7 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
       console.log('Starting to upload receipts:', selectedImages.length, 'files');
 
       for (const file of selectedImages) {
+        if (file.fileUrl) continue; //skip already uploaded files
         const fileId = uuidv4();
 
         // Check file size (limit to 5MB)
@@ -122,6 +126,10 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
     return uploadedFiles;
   }; 
 
+  useImperativeHandle(ref, () => ({
+    uploadReceiptsToFirebase,
+  }));
+
   //Delete receipt from firestore/firebase
   const handleDeleteReceipt = async(receiptId, fileUrl)=>{
     if (!isEditable) return;
@@ -149,51 +157,69 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
     }
   }
   
-  useImperativeHandle(ref, () => ({
-    uploadReceiptsToFirebase,
-  }));
+
   
   const renderPreviewsWithDelete = () => (
-    <div className="w-full h-auto p-2 mt-1 text-center text-gray-500 border border-gray-300 border-dashed rounded-md">
-      <p>Drag & drop more receipt images or click to select</p>
-      <div className="grid grid-cols-1 gap-2">
-        {selectedImages.map((receipt) => (
+    <>
+      <div 
+        {...getRootProps()} 
+        className="flex flex-col flex-grow w-full h-auto p-2 mt-1 text-center text-gray-500 "
+      >
+        <input {...getInputProps()} />
+        <p>Drag & drop more receipt images or click to select</p>
+      </div>
+      <div className="flex flex-wrap w-full gap-4 mt-4">
+        {selectedImages.map((receipt,index) => (
           <div
-            key={receipt.fileId}
-            className="flex flex-col items-center w-full h-[104px] p-3 text-sm text-center text-gray-500 border border-gray-300 border-dashed rounded-md"
+            key={receipt.fileId || receipt.preview}
+            className="flex flex-col items-center flex-grow p-3 text-sm text-center text-gray-500 "
           >
             <img src={receipt.fileUrl || receipt.preview} alt="Receipt" className="h-12 pb-3 rounded-med" />
             <p className="pb-1 text-xs text-gray-600">
               <span className="font-bold">Receipt</span> attached
             </p>
-            {isEditable && (
-              <div className="flex gap-4">
-              <button
-                type="button"
-                className="text-xs text-gray-600"
-                onClick={() => handleDeleteReceipt(receipt.fileId, receipt.fileUrl)}
-              >
-                Delete
-              </button>
-            </div>
+            <div className="flex gap-4">
+              {receipt.newFile ? (
+                <button
+                  type="button"
+                  className="text-xs text-gray-600"
+                  onClick={() => handleFileRemove(index)}
+                >
+                  Remove
+                </button>
+              ) : (
+              isEditable && (
+                <button
+                  type="button"
+                  className="text-xs text-gray-600"
+                  onClick={() => handleDeleteReceipt(receipt.fileId, receipt.fileUrl)}
+                >
+                  Delete
+                </button>
+              )            
             )}
-            
+            </div>
           </div>
         ))}
       </div>
-    </div>
+    </>
+    
   );
 
   // Instructions to show when no images/files are selected
   const inputSection = () => (
     <div
       {...getRootProps()}
-      className="w-full h-auto p-2 mt-1 text-center text-gray-500 border border-gray-300 border-dashed rounded-md"
+      className="flex flex-col w-full h-auto p-2 mt-1 text-center text-gray-500 "
     >
       <input {...getInputProps()} />
-      <p>Upload receipt image or drag and drop</p>
-      <p>.png, .jpeg, .heic, .pdf, up to 5MB</p>
-      <p>PDF supports only one page</p>
+      <img 
+        src='../../images/Upload.svg'
+        className="h-6 text-center"
+      ></img>
+      <p className="text-sm text-gray-800 font-outfit">Upload receipt image or drag and drop</p>
+      <p className="text-xs text-gray-600 font-outfit">.png, .jpeg, .heic, .pdf, up to 5MB</p>
+      <p className="text-xs text-gray-400 font-outfit">PDF supports only one page</p>
     </div>
   );
 
@@ -201,18 +227,15 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
     <>
       <p className="flex flex-col mb-4 text-sm">Attachments</p>
       {uploading ? (
-        <div className="flex items-center">Uploading...</div>
+        <div className="flex items-center border border-gray-300 border-dashed rounded-md">Uploading...</div>
       ) : (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center border border-gray-300 border-dashed rounded-md">
           {selectedImages.length > 0 ? renderPreviewsWithDelete() : inputSection()}
         </div>
       )}
     </>
   );
 });
-
-
-
 
 ReceiptManagement.propTypes = {
   expenseId: PropTypes.string.isRequired,
