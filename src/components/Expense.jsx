@@ -24,10 +24,6 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
     const userIsPaid = hasUser ? hasUser.isPaid : false;
     const userAmountToPay = hasUser ? hasUser.amountToPay : 0;
 
-    const totalAmountToPay = expense.participants.reduce((total, participant) => {
-        return total + (participant.isPaid ? 0 : participant.amountToPay);
-    }, 0);
-
     return (
         <div>
             <div
@@ -53,7 +49,7 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                                 ) : hasUser && userIsPaid ? (
                                     <p className="border rounded-lg border-purple-200 bg-purple-100 text-purple-800">You already <span className="font-bold">paid</span></p>
                                 ) : !hasUser ? (
-                                    <p className="border rounded-lg border-lime-200 bg-lime-100 text-lime-800">Get <span className="font-bold">US${totalAmountToPay.toFixed(2)}</span></p>
+                                    <p className="border rounded-lg border-lime-200 bg-lime-100 text-lime-800">Get <span className="font-bold">US${expense.amount}</span></p>
                                 ) : null}
                             </div>
                         </div>
@@ -143,6 +139,12 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                                     </div>
                                 </React.Fragment>
                             ))}
+                        </div>
+                        <div className="pt-3 mt-3 text-sm border-t grid grid-cols-4">
+                            <p className="col-span-2">Total</p>
+                            <div className="flex justify-end">
+                            <p>${parseFloat(expense.amount).toFixed(2)}</p>
+                            </div>
                         </div>
                     </div>
                 )}
