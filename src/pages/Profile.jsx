@@ -26,7 +26,7 @@ export default function Profile() {
       ...prevUser,
       [name]:value,
     }))
-    console.log("mainUser",mainUser)
+    // console.log("mainUser",mainUser)
   }
 
   const handleSubmit = (e) =>{
