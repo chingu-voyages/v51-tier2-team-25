@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 
 export default function RootLayout() {
   return (
-    <div className="flex flex-col min-h-screen md:flex-row">
+    <div className="flex flex-col min-h-screen md:flex-row tracking-wide">
       <Navbar />
       <main className="flex-grow bg-blue-background">
         <div className="flex justify-center w-full ">
