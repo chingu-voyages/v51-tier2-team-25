@@ -7,6 +7,9 @@ import ConfirmationModal from "./ConfirmationModal";
 import ExpenseParticipant from "./ExpenseParticipant";
 import { calculateAmountsToPay } from "../helpers/CalculateAmountsToPay";
 import ReceiptManagement from "./ReceiptManagement";
+import { ref as firebaseRef,deleteObject } from 'firebase/storage'
+import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore'
+import { db, storage } from '../../firebase'; 
 
 export default function EditExpense({
   closeEditExpense,
@@ -114,12 +117,55 @@ export default function EditExpense({
     setIsModalOpen(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     const expenseName = expensesData.name;
-    deleteExpenseInList(expense.id); // Call deleteGroup with the group's ID
-    closeEditExpense(); // Close the form after deletion
-    setIsModalOpen(false); // This closes the modal
-    showNotification(`Expense ${expenseName} was deleted`);
+    try {
+      // Query for associated receipts
+      const q = query(collection(db, 'receipts'), where('expenseId', '==', expense.id));
+      const querySnapshot = await getDocs(q);
+  
+      if (querySnapshot.empty) {
+        console.log('No associated receipts found for this expense.');
+      } else {
+        // Delete associated receipts from Firestore and Firebase Storage
+        const deleteReceiptsPromises = querySnapshot.docs.map(async (receiptDoc) => {
+          const receiptData = receiptDoc.data();
+          const receiptId = receiptDoc.id;
+          const fileUrl = receiptData.fileUrl;
+  
+          try {
+            // Delete the receipt from Firestore
+            const receiptRef = doc(db, 'receipts', receiptId);
+            await deleteDoc(receiptRef);
+            console.log(`Deleted Firestore document for receipt: ${receiptId}`);
+
+            // Parse the file path from the full file URL
+            const filePath = decodeURIComponent(fileUrl.split("/o/")[1].split("?")[0]);
+  
+            // Delete the receipt from Firebase Storage
+            const storageRef = firebaseRef(storage, filePath); // Use file path, not full URL
+            await deleteObject(storageRef);
+            console.log(`Deleted file from Firebase Storage: ${filePath}`);
+          } catch (receiptError) {
+            console.error(`Error deleting receipt with ID: ${receiptId}`, receiptError);
+            throw receiptError; // Rethrow to capture in the main try-catch block
+          }
+        });
+  
+        // Wait for all receipt deletions to complete
+        await Promise.all(deleteReceiptsPromises);
+      }
+  
+      // Delete the expense itself
+      deleteExpenseInList(expense.id); // Call deleteGroup with the group's ID
+      closeEditExpense(); // Close the form after deletion
+      setIsModalOpen(false); // This closes the modal
+      showNotification(`Expense ${expenseName} was deleted`);
+  
+    } catch (error) {
+      console.error('Error deleting expense and associated receipts:', error);
+      showNotification('Failed to delete expense and associated receipts', 'error');
+    }
   };
 
   const handleClose = () => {

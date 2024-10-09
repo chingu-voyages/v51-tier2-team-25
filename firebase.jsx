@@ -13,21 +13,21 @@ const firebaseConfig = {
 
 let app, db, storage;
 
-console.log("Storage Bucket:", import.meta.env.VITE_FIREBASE_STORAGE_BUCKET);
+// console.log("Storage Bucket:", import.meta.env.VITE_FIREBASE_STORAGE_BUCKET);
 
 
 try {
   console.log("Initializing Firebase...");
   app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-  console.log("Firebase initialized successfully");
+  // console.log("Firebase initialized successfully");
 
-  console.log("Initializing Firestore...");
+  // console.log("Initializing Firestore...");
   db = getFirestore(app);
-  console.log("Firestore initialized successfully");
+  // console.log("Firestore initialized successfully");
 
-  console.log("Initializing Firebase Storage...");
+  // console.log("Initializing Firebase Storage...");
   storage = getStorage(app);
-  console.log("Firebase Storage initialized successfully");
+  // console.log("Firebase Storage initialized successfully");
 
 
 } catch (error) {
