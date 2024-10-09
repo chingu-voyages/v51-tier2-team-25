@@ -111,14 +111,14 @@ export default function Groups() {
               <div className="flex flex-col">
                 <p className="text-xs text-gray-500">Allotted budget</p>
                 <p className="text-sm text-gray-950">
-                  $ {currentGroup?.allottedBudget}
+                  US$ {currentGroup?.allottedBudget}
                 </p>
               </div>
 
               <div className="flex flex-col">
                 <p className="text-xs text-gray-500">Remaining</p>
                 <p className="text-sm text-gray-950">
-                  $ {currentGroup?.remainingBudget}
+                  US$ {currentGroup?.remainingBudget}
                 </p>
                 
               </div>
