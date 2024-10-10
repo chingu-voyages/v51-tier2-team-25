@@ -1,7 +1,7 @@
 import React, { useState, useContext,useEffect } from "react";
 import PropTypes from 'prop-types';
 import { AppContext } from "../App";
-
+import Avvvatars from 'avvvatars-react'
 
 export default function Expense({expense, showButtons, openReceipt, openEditExpense}) {
     const [isExpenseOpen, setIsExpenseOpen] = useState(false);
@@ -45,9 +45,9 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                         <div className="flex text-sm">
                             <div className="text-center w-28">
                                 {hasUser && !userIsPaid ? (
-                                    <p className="border rounded-lg border-red-200 bg-red-100 text-red-800">Owe <span className="font-bold">US${userAmountToPay.toFixed(2)}</span></p>
+                                    <p className="text-red-800 bg-red-100 border border-red-200 rounded-lg">Owe <span className="font-bold">US${userAmountToPay.toFixed(2)}</span></p>
                                 ) : hasUser && userIsPaid ? (
-                                    <p className="border rounded-lg border-purple-200 bg-purple-100 text-purple-800">You already <span className="font-bold">paid</span></p>
+                                    <p className="text-purple-800 bg-purple-100 border border-purple-200 rounded-lg">You already <span className="font-bold">paid</span></p>
                                 ) : !hasUser ? (
                                     <p className="border rounded-lg border-lime-200 bg-lime-100 text-lime-800">Get <span className="font-bold">US${expense.amount}</span></p>
                                 ) : null}
@@ -96,10 +96,13 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                             {expense.participants.map((participant) => (
                                 <React.Fragment key={participant.id}>
                                     <div className="flex">
-                                        <img
-                                            src="../../images/profilePlaceHolder.png"
-                                            className="w-4 h-4 mr-2 border border-none rounded-full"
-                                            alt="Profile"
+                                        <Avvvatars 
+                                            value={participant.userName}
+                                            style="shape" 
+                                            size={24}
+                                            border={true}
+                                            borderColor="#D8DBE5"
+                                            borderSize={1}
                                         />
                                         <p>{participant.name}</p>
                                     </div>
@@ -140,7 +143,7 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                                 </React.Fragment>
                             ))}
                         </div>
-                        <div className="pt-3 mt-3 text-sm border-t grid grid-cols-4">
+                        <div className="grid grid-cols-4 pt-3 mt-3 text-sm border-t">
                             <p className="col-span-2">Total</p>
                             <div className="flex justify-end">
                             <p>${parseFloat(expense.amount).toFixed(2)}</p>

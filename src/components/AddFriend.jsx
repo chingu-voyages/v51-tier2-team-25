@@ -7,9 +7,9 @@ import { useNavigate } from "react-router-dom";
 export default function AddFriend({ closeAddFriendModal }) {
   const { addFriendToList, friends, showNotification } = useContext(AppContext);
   const navigate = useNavigate();
+
   // Initialize state for newFriendData
   const [newFriendData, setNewFriendData] = useState({
-    avatar:"",
     name: "",
     userName: "",
     id: uuidv4(),
@@ -18,8 +18,8 @@ export default function AddFriend({ closeAddFriendModal }) {
   // Handle input changes and updates form data state
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setNewFriendData((prevnewFriendData) => ({
-      ...prevnewFriendData,
+    setNewFriendData((prevNewFriendData) => ({
+      ...prevNewFriendData,
       [name]: value,
     }));
   };
@@ -37,6 +37,7 @@ export default function AddFriend({ closeAddFriendModal }) {
     }
 
     addFriendToList(newFriendData);
+    
     closeAddFriendModal();
     showNotification("New friend added",'success');
     // Check screen size to conditionally navigate

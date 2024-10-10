@@ -67,10 +67,11 @@ export default function Groups() {
     <>
       <div className="flex flex-col max-w-[785px] w-full gap-6 font-geologica mx-3 mt-6">
         <div className="p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
-          <div className="relative flex flex-col justify-between w-full md:flex-row">
-            <div className="relative self-center min-w-max">
+          <div className="relative flex flex-col md:flex-row">
+            <div className="relative self-center w-32">
               <img
-                className="w-24 h-24 mb-5 rounded-full border-border"
+                className="object-cover w-24 h-24 mb-5 rounded-full border-border"
+                alt='Group Avatar'
                 src={currentGroup?.avatar|| "../../images/placeholder.jpg"}
               />
               <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-1/2 bottom-3 rounded-xl">
