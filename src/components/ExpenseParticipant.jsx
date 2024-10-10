@@ -125,6 +125,9 @@ export default function ExpenseParticipant({
                   value={member.userName}
                   style="shape" 
                   size={24}
+                  border={true}
+                  borderColor="#D8DBE5"
+                  borderSize={1}
                 />
               )}
               {/* <div className="border rounded-full h-7 w-7">

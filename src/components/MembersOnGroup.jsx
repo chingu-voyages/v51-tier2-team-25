@@ -56,6 +56,9 @@ export default function MembersOnGroup({ groupMembers, deleteMemberFromGroup,}){
                   value={member.userName}
                   style="shape"
                   size={24}
+                  border={true}
+                  borderColor="#D8DBE5"
+                  borderSize={1}
                 />
               )}
               <p className="truncate">{member.userName}</p>

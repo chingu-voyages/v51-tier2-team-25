@@ -18,7 +18,7 @@ const AvatarManagement = ({avatar, onAvatarChange, showText=true}) =>{
     <>
       <div className='flex items-end mb-4'>
         {avatar ? (
-          <img src={avatar} alt="Avatar" className="object-cover w-24 h-24 border border-gray-300 rounded-full" />
+          <img src={avatar} alt="Avatar" className="object-cover w-24 h-24 border-2 rounded-full border-border" />
         ) : (
           <img src="../../images/placeholder.jpg" alt="Placeholder Avatar " className="object-cover w-24 h-24 border border-gray-300 rounded-full"/>
         )}

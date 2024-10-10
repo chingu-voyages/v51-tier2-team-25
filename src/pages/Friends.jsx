@@ -79,6 +79,10 @@ export default function Friends() {
               <Avvvatars 
                 value={currentFriend?.userName}
                 style="shape" 
+                size={96}
+                border={true}
+                borderColor="#D8DBE5"
+                borderSize={1}
               />
               <p className='text-sm font-medium text-gray-950'>Name</p>
               <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border rounded-md border-border'>{currentFriend?.name}</p>

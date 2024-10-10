@@ -174,12 +174,11 @@ useEffect(() => {
                         value={friend.userName}
                         style="shape" 
                         size={24}
+                        border={true}
+                        borderColor="#D8DBE5"
+                        borderSize={1}
                       />
-                      {/* <img
-                        src="../../images/profilePlaceHolder.png"
-                        className="w-6 h-6 mr-2 border border-none rounded-full"
-                      /> */}
-
+                      
                       <NavLink className="block md:font-extralight" to={`/friend/${friend.id}`}>
                         {friend.userName}
                       </NavLink>
