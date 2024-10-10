@@ -2,12 +2,14 @@ import { useContext, useState, useEffect } from 'react'
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from '../App';
 import ConfirmationModal from "../components/ConfirmationModal";
+import AvatarManagement from '../components/AvatarManagement';
 
 export default function Profile() {
 
   const { mainUser, setMainUser, addMainUserToFriends, setGroups, setFriends, setExpenses}= useContext(AppContext)
   const [isEditable, setIsEditable] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
 
   //Load user info from localstorage
   useEffect(()=>{
@@ -26,7 +28,18 @@ export default function Profile() {
       ...prevUser,
       [name]:value,
     }))
-    console.log("mainUser",mainUser)
+    // console.log("mainUser",mainUser)
+  }
+  const handleAvatarChange = (newAvatar) => {
+    setMainUser(prev => {
+      const updatedUser = {
+        ...prev,
+        avatar: newAvatar
+      }
+      localStorage.setItem('mainUserData', JSON.stringify(updatedUser))
+      return updatedUser
+    })
+    
   }
 
   const handleSubmit = (e) =>{
@@ -39,9 +52,7 @@ export default function Profile() {
     //Save user to localStorage
     localStorage.setItem('mainUserData', JSON.stringify(updatedUser))
     setMainUser(updatedUser)
-
     addMainUserToFriends()
-
     setIsEditable(false)
   }
 
@@ -58,6 +69,7 @@ export default function Profile() {
 
     //reset all state to initial
     setMainUser({
+      avatar:'',
       name:'',
       userName:'',
       id:null
@@ -66,8 +78,8 @@ export default function Profile() {
     setFriends([])
     setExpenses([])
     setIsModalOpen(false); // This closes the modal
-    // toast(`Expense ${expenseName} was deleted`);
-  };
+    setIsEditable(true)
+  };  
   
 
   return(
@@ -77,8 +89,12 @@ export default function Profile() {
           <form className='flex justify-between w-full gap-4' onSubmit={handleSubmit}>
             <div className='flex flex-col flex-grow w-1/2 space-y-2'>
               <p className='pl-2 text-sm text-button'>Personal information</p>
-              <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
-                <img src="../../images/placeholder.jpg" className="h-24 mb-4 rounded-full"/>
+              <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50 ">
+                <AvatarManagement 
+                  avatar={mainUser.avatar}
+                  onAvatarChange={handleAvatarChange}
+                  showText={true}
+                />        
 
                 <label className='text-sm font-medium text-gray-950'>
                   Name 
@@ -148,7 +164,7 @@ export default function Profile() {
           onCancel={() => setIsModalOpen(false)}
           title="Delete Profile?"
           message={"WARNING - This action will delete your profile, all groups, friends, and expenses." }
-          confirmButtonText="Delete Expense"
+          confirmButtonText="Delete profile"
         />
 
         <div className='flex flex-col flex-grow w-full space-y-2'>
@@ -161,14 +177,14 @@ export default function Profile() {
               <button 
                 type="button" 
                 onClick={handleDelete}
-                className="px-3 py-2 mt-4 text-sm rounded-md bg-red-button text-red-button-text hover:bg-red-button-hover">
+                className={`px-3 py-2 mt-4 text-sm rounded-md ${mainUser?.id ? 'bg-red-button text-red-button-text hover:bg-red-button-hover' :'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+                disabled={!mainUser?.id}
+              >
                 Delete account
               </button>
             </div>
-        </div>
-       
-      </div>
-      
+        </div>       
+      </div>      
     </>
   )
 }

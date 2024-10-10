@@ -7,6 +7,7 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
     const [isExpenseOpen, setIsExpenseOpen] = useState(false);
     const { handleToggleIsPaid } = useContext(AppContext);
     const [fullyPaidDate, setFullyPaidDate] = useState(null);
+    const storedUser = JSON.parse(localStorage.getItem('mainUserData'))
 
     const peopleRemainingToPay = expense.participants.filter(participant => !participant.isPaid).length;
     const unpaidAmount = expense.participants.filter(p => !p.isPaid).reduce((total, participant) => total + participant.amountToPay, 0);
@@ -19,11 +20,15 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
         }
     }, [allPaid, fullyPaidDate]);
 
+    const hasUser = expense.participants.find(participant => participant.id === storedUser.id)
+    const userIsPaid = hasUser ? hasUser.isPaid : false;
+    const userAmountToPay = hasUser ? hasUser.amountToPay : 0;
+
     return (
         <div>
             <div
                 key={expense.id}
-                className={`p-4 my-2 border border-gray-300 rounded-md font-light text-gray-600 ${
+                className={`p-4 my-2 border border-gray-300 rounded-md font-light text-gray-600 tracking-wide ${
                 allPaid ? "" : "bg-zinc-50"
                 }`}
                 style={ allPaid ? { background:"linear-gradient(90deg, #F0F9F3 0%, #FAFAFA 100%)" } : {} }
@@ -31,11 +36,22 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                 <div className="flex items-center justify-between" onClick={()=> setIsExpenseOpen(!isExpenseOpen)}>
                     <div className='flex flex-col gap-2'>
                         <div className="flex gap-2">
-                            <p className="text-sm font-bold text-gray-900">{expense.name}</p>
+                            <p className="text-sm font-medium text-gray-900 ">{expense.name}</p>
                             <div className="flex w-3 h-4">
                                 {isExpenseOpen ? <img src="../../images/CloseArrow.svg" alt="Close icon" /> : <img src="../../images/OpenArrow.svg" alt="Open icon" />}
                             </div>
                             <p className="px-1 text-xs border rounded-md bg-light-indigo border-border">{expense.category}</p>
+                        </div>
+                        <div className="flex text-sm">
+                            <div className="text-center w-28">
+                                {hasUser && !userIsPaid ? (
+                                    <p className="border rounded-lg border-red-200 bg-red-100 text-red-800">Owe <span className="font-bold">US${userAmountToPay.toFixed(2)}</span></p>
+                                ) : hasUser && userIsPaid ? (
+                                    <p className="border rounded-lg border-purple-200 bg-purple-100 text-purple-800">You already <span className="font-bold">paid</span></p>
+                                ) : !hasUser ? (
+                                    <p className="border rounded-lg border-lime-200 bg-lime-100 text-lime-800">Get <span className="font-bold">US${expense.amount}</span></p>
+                                ) : null}
+                            </div>
                         </div>
                     </div>
                     <div className='flex gap-4 text-sm'>
@@ -43,7 +59,7 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                             {allPaid ? (
                                 <p className="text-sm"><span className="font-bold">Fully paid</span> on {fullyPaidDate}</p>
                             ) : (
-                                <p className="text-sm">${unpaidAmount} left</p>
+                                <p className="text-sm">US${unpaidAmount.toFixed(2)} left</p>
                             )}        
                             {allPaid ? (
                                 <p>${expense.amount} paid by {expense.participants.length} members</p>
@@ -71,7 +87,7 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                                 <p className="font-medium">Share</p>
                             </div>
                             <div className="flex justify-end mb-1">
-                                <p className="font-medium">Owe</p>
+                                <p className="font-medium">Owe (US$)</p>
                             </div>
                             <div className="flex justify-end mb-1">
                                 <p className="font-medium">State</p>
@@ -91,7 +107,7 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                                         <p>{participant.sharePercentage}%</p>
                                     </div>
                                     <div className="flex justify-end">
-                                        <p>${participant.amountToPay}</p>
+                                        <p>${participant.amountToPay.toFixed(2)}</p>
                                     </div>
                                     <div className="flex justify-end">
                                         <div
@@ -123,6 +139,12 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                                     </div>
                                 </React.Fragment>
                             ))}
+                        </div>
+                        <div className="pt-3 mt-3 text-sm border-t grid grid-cols-4">
+                            <p className="col-span-2">Total</p>
+                            <div className="flex justify-end">
+                            <p>${parseFloat(expense.amount).toFixed(2)}</p>
+                            </div>
                         </div>
                     </div>
                 )}

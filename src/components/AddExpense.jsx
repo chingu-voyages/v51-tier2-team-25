@@ -328,6 +328,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
                 <ReceiptManagement                 
                   expenseId={expensesData.id}
                   ref={receiptManagementRef}
+                  isEditable={false}
                 />              
             </div>
             

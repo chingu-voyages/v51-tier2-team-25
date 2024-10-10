@@ -9,6 +9,7 @@ export default function AddFriend({ closeAddFriendModal }) {
   const navigate = useNavigate();
   // Initialize state for newFriendData
   const [newFriendData, setNewFriendData] = useState({
+    avatar:"",
     name: "",
     userName: "",
     id: uuidv4(),

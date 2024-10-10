@@ -87,9 +87,9 @@ export default function ExpenseParticipant({
     <>
       <ul className="flex flex-col items-start">
         <div className="flex w-full my-1">
-          <h3 className="w-4/12 text-center text-sm">Member</h3>
-          <h3 className="w-2/12 text-center text-sm">Share</h3>
-          <h3 className="w-6/12 text-center text-sm">How much will you pay</h3>
+          <h3 className="w-4/12 text-sm text-center">Member</h3>
+          <h3 className="w-2/12 text-sm text-center">Share</h3>
+          <h3 className="w-6/12 text-sm text-center">How much will you pay</h3>
         </div>
 
         {participants.map((member) => (
@@ -103,7 +103,7 @@ export default function ExpenseParticipant({
             onMouseEnter={() => setCurrentlyActiveMember(member.id)}
             onMouseLeave={() => setCurrentlyActiveMember(null)}
           >
-            <div className="flex items-center w-4/12 truncate justify-evenly">
+            <div className="flex items-center w-4/12 truncate justify-start gap-2">
               <button
                 type="button"
                 className={`w-6 h-6 flex items-center justify-center rounded-md  text-black  ${
@@ -134,8 +134,8 @@ export default function ExpenseParticipant({
             </div>
             <div className="w-6/12 text-center">
               <label>
-                {participantsShares[member.id]?.amountToPay >= 0
-                  ? participantsShares[member.id].amountToPay
+                {participantsShares[member.id]?.amountToPay.toFixed(2) >= 0
+                  ? participantsShares[member.id].amountToPay.toFixed(2)
                   : 0}
               </label>
             </div>
