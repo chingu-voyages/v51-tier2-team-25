@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import PropTypes from 'prop-types'; 
 
-const AvatarManagement = ({avatar, onAvatarChange}) =>{
+const AvatarManagement = ({avatar, onAvatarChange, showText=true}) =>{
   const avatarInput = useRef(null)
 
   const handleAvatarChange = (e) =>{
@@ -18,9 +18,9 @@ const AvatarManagement = ({avatar, onAvatarChange}) =>{
     <>
       <div className='flex items-end mb-4'>
         {avatar ? (
-          <img src={avatar} alt="Avatar" className="h-24 rounded-full" />
+          <img src={avatar} alt="Avatar" className="object-cover w-24 h-24 border border-gray-300 rounded-full" />
         ) : (
-          <img src="../../images/placeholder.jpg" alt="Placeholder Avatar "className="h-24 rounded-full"/>
+          <img src="../../images/placeholder.jpg" alt="Placeholder Avatar " className="object-cover w-24 h-24 border border-gray-300 rounded-full"/>
         )}
 
         <button
@@ -29,9 +29,10 @@ const AvatarManagement = ({avatar, onAvatarChange}) =>{
           className="flex items-center h-6 gap-1 p-1 -ml-6 text-xs text-gray-600 border rounded-lg border-input-border bg-zinc-50"
         >
           <img src="../../images/Image.svg" className='h-3'/>
-          Select Photo
+          {showText && <span>Select Photo</span>}          
         </button>
       </div>
+
       <input 
         type='file'
         name='avatar'
@@ -46,6 +47,7 @@ const AvatarManagement = ({avatar, onAvatarChange}) =>{
 AvatarManagement.propTypes = {
   avatar: PropTypes.string, 
   onAvatarChange: PropTypes.func.isRequired, 
+  showText: PropTypes.bool
   
 };
 

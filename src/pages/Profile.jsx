@@ -89,10 +89,11 @@ export default function Profile() {
           <form className='flex justify-between w-full gap-4' onSubmit={handleSubmit}>
             <div className='flex flex-col flex-grow w-1/2 space-y-2'>
               <p className='pl-2 text-sm text-button'>Personal information</p>
-              <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
+              <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50 ">
                 <AvatarManagement 
                   avatar={mainUser.avatar}
                   onAvatarChange={handleAvatarChange}
+                  showText={true}
                 />        
 
                 <label className='text-sm font-medium text-gray-950'>
