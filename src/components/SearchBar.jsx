@@ -20,7 +20,11 @@ const customStyles = {
   }),
   singleValue: (provided) => ({
     ...provided,
-    fontSize: '0.75rem', // Smaller font size for the selected option
+    fontSize: '0.75rem', 
+  }),
+  input: (provided) => ({
+    ...provided,
+    fontSize: '0.75rem', 
   }),
 };
 
