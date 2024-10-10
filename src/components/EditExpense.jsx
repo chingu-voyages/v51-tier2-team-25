@@ -193,26 +193,44 @@ export default function EditExpense({
       ),
     }));
   };
+
   const addOrUpdateParticipant = (newParticipant) => {
     if (newParticipant) {
       const isParticipantIncluded = expensesData.participants.some(
         (participant) => participant.id === newParticipant.id
       );
-
+  
       setExpensesData((prevData) => {
         const updatedParticipants = isParticipantIncluded
           ? prevData.participants.map(
               (participant) =>
                 participant.id === newParticipant.id
-                  ? newParticipant // Update the existing participant
-                  : participant // Keep other participants unchanged
+                  ? { ...participant, ...newParticipant }  
+                  : participant 
             )
-          : [...prevData.participants, newParticipant]; // Add the new participant
-
-        return { ...prevData, participants: updatedParticipants };
+          : [
+              ...prevData.participants, 
+              { ...newParticipant, sharePercentage: newParticipant.sharePercentage || 0 } 
+            ];
+        
+        const { updatedShares } = calculateAmountsToPay(
+          updatedParticipants,
+          parseFloat(prevData.amount)
+        );
+  
+        const participantsWithUpdatedAmounts = updatedParticipants.map(participant => ({
+          ...participant,
+          amountToPay: updatedShares[participant.id]?.amountToPay || 0, 
+        }));
+  
+        return {
+          ...prevData,
+          participants: participantsWithUpdatedAmounts, 
+        };
       });
     }
   };
+  
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
@@ -400,6 +418,7 @@ export default function EditExpense({
               <button
                 type="submit"
                 disabled={uploading}
+                className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
               > 
                 {uploading ? 'Uploading...': 'Save'} 
               </button>
