@@ -162,7 +162,7 @@ const ParticipantHistogram = ({ group }) => {
         <div className="flex justify-end">
           <div className="flex flex-col w-full px-[6px] py-[4px] mb-6 rounded-md border border-input-border max-w-[175px] max-h-[40px]">
             <div className="flex items-center w-[175px] ">
-              <span className="block w-[15px] h-[2px] mr-2 border-b-2 border-dashed border-red-average w-full my-2"></span>
+              <span className="block w-[20px] h-[2px] mr-2 border-b-2 border-dashed border-red-average w-full my-2"></span>
               <span className="font-geologica text-xs text-modal-text leading-[14px]">
                 Average owed (US ${averageOwed.toFixed(2)})
               </span>
