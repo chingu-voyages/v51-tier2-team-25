@@ -133,25 +133,14 @@ function App() {
       return updatedGroups;
     });
   }
+  
   function deleteFriend(friendId) {
-    //remove friend from friends list
     setFriends((prevFriends) => {
       const updatedFriends = prevFriends.filter((friend) => friend.id !== friendId);
       localStorage.setItem("friendsData", JSON.stringify(updatedFriends)); // Update local storage
       return updatedFriends;
     });
 
-    // //update expense by removing friend as participant
-    setExpenses(prevExpenses =>{
-      const updatedExpenses = prevExpenses.map(expense =>{
-        const updatedParticipants = expense.participants.filter(participant=> participant.id !== friendId)
-        return{...expense, participants: updatedParticipants}
-      })
-      localStorage.setItem("expensesData", JSON.stringify(updatedExpenses))
-      return updatedExpenses
-    })
-
-    // //update group by removing friend from groups
     setGroups(prevGroups =>{
       const updatedGroups = prevGroups.map(group=>{
         const updatedMembers = group.members ? group.members.filter(member => member.id !== friendId) : [];
