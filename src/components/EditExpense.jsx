@@ -400,6 +400,7 @@ export default function EditExpense({
               <button
                 type="submit"
                 disabled={uploading}
+                className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
               > 
                 {uploading ? 'Uploading...': 'Save'} 
               </button>

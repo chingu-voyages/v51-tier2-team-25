@@ -103,7 +103,7 @@ export default function ExpenseParticipant({
             onMouseEnter={() => setCurrentlyActiveMember(member.id)}
             onMouseLeave={() => setCurrentlyActiveMember(null)}
           >
-            <div className="flex items-center w-4/12 truncate justify-evenly">
+            <div className="flex items-center w-4/12 truncate justify-start gap-2">
               <button
                 type="button"
                 className={`w-6 h-6 flex items-center justify-center rounded-md  text-black  ${
