@@ -2,12 +2,14 @@ import { useContext, useState, useEffect } from 'react'
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from '../App';
 import ConfirmationModal from "../components/ConfirmationModal";
+import AvatarManagement from '../components/AvatarManagement';
 
 export default function Profile() {
 
   const { mainUser, setMainUser, addMainUserToFriends, setGroups, setFriends, setExpenses}= useContext(AppContext)
   const [isEditable, setIsEditable] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
 
   //Load user info from localstorage
   useEffect(()=>{
@@ -27,6 +29,17 @@ export default function Profile() {
       [name]:value,
     }))
     // console.log("mainUser",mainUser)
+  }
+  const handleAvatarChange = (newAvatar) => {
+    setMainUser(prev => {
+      const updatedUser = {
+        ...prev,
+        avatar: newAvatar
+      }
+      localStorage.setItem('mainUserData', JSON.stringify(updatedUser))
+      return updatedUser
+    })
+    
   }
 
   const handleSubmit = (e) =>{
@@ -56,6 +69,7 @@ export default function Profile() {
 
     //reset all state to initial
     setMainUser({
+      avatar:'',
       name:'',
       userName:'',
       id:null
@@ -66,6 +80,7 @@ export default function Profile() {
     setIsModalOpen(false); // This closes the modal
     setIsEditable(true)
   };  
+  
 
   return(
     <>
@@ -74,8 +89,12 @@ export default function Profile() {
           <form className='flex justify-between w-full gap-4' onSubmit={handleSubmit}>
             <div className='flex flex-col flex-grow w-1/2 space-y-2'>
               <p className='pl-2 text-sm text-button'>Personal information</p>
-              <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
-                <img src="../../images/placeholder.jpg" className="h-24 mb-4 rounded-full"/>
+              <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50 ">
+                <AvatarManagement 
+                  avatar={mainUser.avatar}
+                  onAvatarChange={handleAvatarChange}
+                  showText={true}
+                />        
 
                 <label className='text-sm font-medium text-gray-950'>
                   Name 

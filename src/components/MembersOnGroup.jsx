@@ -21,7 +21,7 @@ export default function MembersOnGroup({
     noMembersMessage
   ) : (
     <div className="flex flex-col items-center">
-      <h3 className="text-sm mb-2">Member</h3>
+      <h3 className="mb-2 text-sm">Member</h3>
       <ul className="flex flex-col">
         {groupMembers.map((member) => (
           <li
@@ -43,8 +43,8 @@ export default function MembersOnGroup({
               >
                 <IoMdClose />
               </button>
-              <div className="border rounded-full h-7 w-7">
-                <img src="/images/Profile.svg" />
+              <div >
+                <img src={member.avatar || "/images/Profile.svg"} className="border rounded-full h-7 w-7"/>
               </div>
               <p className="truncate">{member.userName}</p>
             </div>
