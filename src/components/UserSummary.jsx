@@ -48,7 +48,7 @@ export default function UserSummary() {
 
           <div className='flex items-center w-1/3 mt-12 border rounded-md border-border bg-zinc-50'>
             <div className='flex flex-col justify-center w-full gap-1 px-3 py-6'>
-              <p className='text-xs text-gray-600 font-light'>You&apos;re going to get</p>
+              <p className='text-xs text-gray-600 font-light'>You&apos;re going to receive</p>
               <p className='text-xl font-semibold text-green'>US$ {totalToGet.toFixed(2)}</p>
             </div>            
             <img src="../../images/VectorGreen.svg" className="w-[67px] mr-6 h-[43px]"></img>
