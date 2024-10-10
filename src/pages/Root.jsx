@@ -7,13 +7,11 @@ export default function RootLayout() {
   return (
     <div className="flex flex-col min-h-screen md:flex-row tracking-wide">
       <Navbar />
-      <main className="flex-grow bg-blue-background">
-        <div className="flex justify-center w-full ">
-          <Outlet
-            className="w-full"
-          />
+      <main className="flex-grow flex flex-col bg-blue-background">
+        <div className="flex flex-grow justify-center w-full ">
+          <Outlet className="w-full" />
         </div>
-        <Footer/>
+        <Footer />
       </main>
       <Toaster />
     </div>
