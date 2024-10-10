@@ -51,12 +51,24 @@ export default function Friends() {
   //   // console.log('Friend not found')
   // }
 
-  const handleDelete =() =>{        
-    setIsModalOpen(true)
-  }
+  const handleDelete = () => {
+    const isParticipantInAnyExpense = friendExpenses.some((expense) =>
+      expense.participants.some((participant) => participant.id === friendId)
+    );
+
+    if (isParticipantInAnyExpense) {
+      showNotification(
+        `You need to remove ${currentFriend?.name} from all expenses before deleting them.`,
+        "error"
+      );
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
   const confirmDelete = () => {
     deleteFriend(friendId)   
-    setIsModalOpen(false); // This closes the modal
+    setIsModalOpen(false); 
     navigate("/");
     showNotification(`Friend ${currentFriend?.name} was deleted`,'success');
   };
