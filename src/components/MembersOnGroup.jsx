@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useState,useContext } from "react";
 import { IoMdClose } from "react-icons/io";
+import Avvvatars from 'avvvatars-react'
+import { AppContext } from "../App";
 
 /* eslint-disable react/prop-types */
-export default function MembersOnGroup({
-  groupMembers,
-  deleteMemberFromGroup,
-}) {
+export default function MembersOnGroup({ groupMembers, deleteMemberFromGroup,}){
+  const { mainUser }= useContext(AppContext)
   const [activeMember, setActiveMember] = useState(null);
+
   const noMembersMessage = (
     <div className="flex items-center md:m-2 ">
-      <img src="../../images/Profile.svg" className="m-2" />
+      <img src="../../images/Profile.svg" alt="Profile Placeholder"className="m-2" />
       <p className="text-xs text-gray-500">
         There is no one added to expense yet. Try searching and adding from your
         friend list or quickly add someone by entering their user name
@@ -39,13 +40,27 @@ export default function MembersOnGroup({
                 className={`w-6 h-6 flex items-center justify-center rounded-md  text-black  ${
                   activeMember === member.id ? "bg-red-600 text-white" : ""
                 }`}
-                onClick={() => deleteMemberFromGroup(member)}
+                onClick={() => {
+                  if(member.id !== mainUser.id){
+                    deleteMemberFromGroup(member)
+                  }
+                }}
+                disabled={member.id === mainUser.id}
               >
                 <IoMdClose />
               </button>
-              <div >
-                <img src={member.avatar || "/images/Profile.svg"} className="border rounded-full h-7 w-7"/>
-              </div>
+              {member.id === mainUser.id ? (                
+                <img src={member.avatar || "/images/Profile.svg"} alt="Profile Avatar"className="w-6 h-6 border rounded-full"/>              
+              ) : (
+                <Avvvatars 
+                  value={member.userName}
+                  style="shape"
+                  size={24}
+                  border={true}
+                  borderColor="#D8DBE5"
+                  borderSize={1}
+                />
+              )}
               <p className="truncate">{member.userName}</p>
             </div>
           </li>
@@ -54,3 +69,4 @@ export default function MembersOnGroup({
     </div>
   );
 }
+
