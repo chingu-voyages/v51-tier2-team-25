@@ -8,11 +8,11 @@ export default function RootLayout() {
   return (
     <div className="flex flex-col min-h-screen md:flex-row tracking-wide">
       <Navbar />
-      <main className="relative flex-grow bg-blue-background">
+      <main className="relative flex-grow flex flex-col bg-blue-background">
         <div className="absolute w-full">
          <Banner />
         </div>
-        <div className="flex justify-center w-full ">
+        <div className="flex-grow flex justify-center w-full ">
           <Outlet
             className="w-full"
           />
