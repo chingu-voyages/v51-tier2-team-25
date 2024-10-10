@@ -4,6 +4,7 @@ import { AppContext } from "../App";
 import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "../components/ConfirmationModal";
 import Expense from "../components/Expense";
+import Avvvatars from 'avvvatars-react'
 
 export default function Friends() {
 
@@ -22,12 +23,6 @@ export default function Friends() {
     expense.participants.some(participant=> participant.id === friendId))
   },[expenses, friendId])
 
-
-  
-    // const openReceipt = () =>{
-    //   //**TODO */
-    //   console.log("Receipt Open")
-    // }    
   const currentTitle = useMemo(()=>{
     const generateTitle = (expense) =>{
       const group= groups.find(group => group.id === expense.groupId)
@@ -80,7 +75,11 @@ export default function Friends() {
           <div className='flex flex-col flex-grow w-1/2 space-y-2'>
             <p className='pl-2 text-sm text-button'>Personal information</p>
             <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
-              <img src="../../images/placeholder.jpg" className="h-24 mb-4 rounded-full"/>
+              {/* <img src="../../images/placeholder.jpg" className="h-24 mb-4 rounded-full"/> */}
+              <Avvvatars 
+                value={currentFriend?.userName}
+                style="shape" 
+              />
               <p className='text-sm font-medium text-gray-950'>Name</p>
               <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border rounded-md border-border'>{currentFriend?.name}</p>
               <p className='text-sm font-medium text-gray-950'>Email</p>

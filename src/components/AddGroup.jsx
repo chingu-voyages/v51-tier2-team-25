@@ -177,10 +177,13 @@ export default function AddGroup({
         >
           <div className="flex flex-col">
             <div className="flex flex-col md:items-start md:flex-row">
-              <AvatarManagement 
-                avatar={groupsData.avatar}
-                onAvatarChange={handleAvatarChange}
-              /> 
+              <div className='w-32'>
+                <AvatarManagement 
+                  avatar={groupsData.avatar}
+                  onAvatarChange={handleAvatarChange}
+                  showText={false} 
+                /> 
+              </div>
 
               <div className="relative flex flex-col">
                 <label className="text-sm">

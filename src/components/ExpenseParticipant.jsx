@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { IoMdClose } from "react-icons/io";
 import { calculateAmountsToPay } from "../helpers/CalculateAmountsToPay";
+import Avvvatars from 'avvvatars-react'
+import { AppContext } from "../App";
 
 /* eslint-disable react/prop-types */
 export default function ExpenseParticipant({
@@ -8,6 +10,7 @@ export default function ExpenseParticipant({
   expensesData,
   addOrUpdateParticipants,
 }) {
+  const { mainUser }= useContext(AppContext)
   const { participants } = expensesData;
   const [currentlyActiveMember, setCurrentlyActiveMember] = useState(null);
   const [participantsShares, setParticipantsShares] = useState({});
@@ -103,7 +106,7 @@ export default function ExpenseParticipant({
             onMouseEnter={() => setCurrentlyActiveMember(member.id)}
             onMouseLeave={() => setCurrentlyActiveMember(null)}
           >
-            <div className="flex items-center w-4/12 truncate justify-start gap-2">
+            <div className="flex items-center justify-start w-4/12 gap-2 truncate">
               <button
                 type="button"
                 className={`w-6 h-6 flex items-center justify-center rounded-md  text-black  ${
@@ -115,9 +118,18 @@ export default function ExpenseParticipant({
               >
                 <IoMdClose />
               </button>
-              <div className="border rounded-full h-7 w-7">
+              {member.id === mainUser.id ? (                
+                <img src={member.avatar || "/images/Profile.svg"} alt="Profile Avatar"className="w-6 h-6 border rounded-full"/>              
+              ) : (
+                <Avvvatars 
+                  value={member.userName}
+                  style="shape" 
+                  size={24}
+                />
+              )}
+              {/* <div className="border rounded-full h-7 w-7">
                 <img src="/images/Profile.svg" />
-              </div>
+              </div> */}
               <p>{member.userName}</p>
             </div>
 
