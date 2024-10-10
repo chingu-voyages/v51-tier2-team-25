@@ -1,16 +1,16 @@
 import { useContext, useState, useEffect, useMemo} from "react";
 import {useParams } from "react-router-dom";
 import { AppContext } from "../App";
-import EditExpense from "../components/EditExpense";
 import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "../components/ConfirmationModal";
+import Expense from "../components/Expense";
 
 export default function Friends() {
 
   const { friends, expenses, groups, deleteFriend, showNotification } = useContext(AppContext)
   const { friendId } = useParams()
-  const [isEditing, setIsEditing] = useState(false);
-  const [selectedExpense, setSelectedExpense] = useState(null);
+  // const [isEditing, setIsEditing] = useState(false);
+  // const [selectedExpense, setSelectedExpense] = useState(null);
   const [title, setTitle] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -22,42 +22,34 @@ export default function Friends() {
     expense.participants.some(participant=> participant.id === friendId))
   },[expenses, friendId])
 
-    const openEditExpense = (expense) => {
-      setSelectedExpense(expense);
-      setIsEditing(true);
-    };
-  
-    const closeEditExpense = () => {
-      setIsEditing(false);
-      setSelectedExpense(null);
-    };
-  
-    const openReceipt = () =>{
-      //**TODO */
-      console.log("Receipt Open")
-    }    
-    const currentTitle = useMemo(()=>{
-      const generateTitle = (expense) =>{
-        const group= groups.find(group => group.id === expense.groupId)
-        return group ? group.name : 'Unknown Group'
-      }
 
-      return friendExpenses.map(expense => generateTitle(expense))
-    }, [friendExpenses, groups])
-
-    useEffect(()=>{
-      if(friendExpenses.length > 0){        
-        setTitle(currentTitle)
-      }
-    }, [currentTitle, friendExpenses.length])
   
-  if(!friendId){
-    // console.log('friendId undefined')
-    return
-  }
-  if(!currentFriend){
-    // console.log('Friend not found')
-  }
+    // const openReceipt = () =>{
+    //   //**TODO */
+    //   console.log("Receipt Open")
+    // }    
+  const currentTitle = useMemo(()=>{
+    const generateTitle = (expense) =>{
+      const group= groups.find(group => group.id === expense.groupId)
+      return group ? group.name : 'Unknown Group'
+    }
+
+    return friendExpenses.map(expense => generateTitle(expense))
+  }, [friendExpenses, groups])
+
+  useEffect(()=>{
+    if(friendExpenses.length > 0){        
+      setTitle(currentTitle)
+    }
+  }, [currentTitle, friendExpenses.length])
+  
+  // if(!friendId){
+  //   // console.log('friendId undefined')
+  //   return
+  // }
+  // if(!currentFriend){
+  //   // console.log('Friend not found')
+  // }
 
   const handleDelete =() =>{        
     setIsModalOpen(true)
@@ -120,39 +112,18 @@ export default function Friends() {
             friendExpenses.map((expense, index) => (
               <div key={expense.id}>
                 <p>{title[index]}</p>
-                <div key={expense.id} className="flex items-center justify-between p-4 my-2 border border-gray-300 rounded-md bg-zinc-50">
-                  <div className='flex flex-col gap-2'>
-                    <div className="flex gap-2 bg-zinc-50">
-                      <p className="text-sm font-bold">{expense.name}</p>
-                      <p className="px-1 text-xs border rounded-md bg-light-indigo border-border">{expense.category}</p>
-                    </div>
-                    <p className="text-sm">Placeholder for leftover budget</p>
-                  </div>
-                  <div className='flex gap-4 text-sm'>
-                    <div className='flex flex-col gap-2'>
-                                
-                      <p>Placeholder people remaining</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openReceipt}><img src="../../images/Ticket.svg" alt="Ticket" /></button>
-                      <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openEditExpense(expense)}><img src="../../images/Edit.svg" alt="Edit" /></button>
-                    </div>   
-                  </div>
-                </div>              
+                  <Expense 
+                    key={expense.id} 
+                    expense={expense} 
+                    showButtons={false} 
+                  />
               </div>
             ))
           ):(
             <p>No expenses for this friend</p>
           )}
         </div>
-
-        {isEditing && selectedExpense && currentFriend &&(
-        <EditExpense 
-          expense={selectedExpense} 
-          closeEditExpense={closeEditExpense}
-          currentGroup={currentFriend}
-        />
-      )}
+  
       </div>
       {isModalOpen && (
         <ConfirmationModal
