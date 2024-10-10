@@ -1,14 +1,15 @@
-import { useContext, useState, useEffect, useRef } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from '../App';
 import ConfirmationModal from "../components/ConfirmationModal";
+import AvatarManagement from '../components/AvatarManagement';
 
 export default function Profile() {
 
   const { mainUser, setMainUser, addMainUserToFriends, setGroups, setFriends, setExpenses}= useContext(AppContext)
   const [isEditable, setIsEditable] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const avatarInput = useRef(null)
+  
 
   //Load user info from localstorage
   useEffect(()=>{
@@ -28,6 +29,17 @@ export default function Profile() {
       [name]:value,
     }))
     // console.log("mainUser",mainUser)
+  }
+  const handleAvatarChange = (newAvatar) => {
+    setMainUser(prev => {
+      const updatedUser = {
+        ...prev,
+        avatar: newAvatar
+      }
+      localStorage.setItem('mainUserData', JSON.stringify(updatedUser))
+      return updatedUser
+    })
+    
   }
 
   const handleSubmit = (e) =>{
@@ -68,19 +80,7 @@ export default function Profile() {
     setIsModalOpen(false); // This closes the modal
     setIsEditable(true)
   };  
-  const handleAvatarChange = (e) =>{
-    const file = e.target.files[0]
-    if (file){
-      const reader = new FileReader()
-      reader.onload = () =>{
-        setMainUser(prev =>({
-          ...prev,
-          avatar: reader.result,
-        }))
-      }
-      reader.readAsDataURL(file)
-    }
-  }
+  
 
   return(
     <>
@@ -90,29 +90,10 @@ export default function Profile() {
             <div className='flex flex-col flex-grow w-1/2 space-y-2'>
               <p className='pl-2 text-sm text-button'>Personal information</p>
               <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
-                <div className='flex items-end mb-4'>
-                  {mainUser.avatar ? (
-                    <img src={mainUser.avatar} alt="Avatar" className="h-24 rounded-full" />
-                  ) : (
-                    <img src="../../images/placeholder.jpg" alt="Placeholder Avatar "className="h-24 rounded-full"/>
-                  )}
-                  <button
-                    type='button'
-                    onClick={()=> avatarInput.current.click()}
-                    className="flex items-center h-6 gap-1 p-1 -ml-6 text-xs text-gray-600 border rounded-lg border-input-border bg-zinc-50"
-                  >
-                    <img src="../../images/Image.svg" className='h-3'/>
-                    Select Photo
-                  </button>
-                </div>
-                <input 
-                  type='file'
-                  name='avatar'
-                  accept='image/*'
-                  ref={avatarInput}
-                  onChange={handleAvatarChange}
-                  style={{display:'none'}}                    
-                />                
+                <AvatarManagement 
+                  avatar={mainUser.avatar}
+                  onAvatarChange={handleAvatarChange}
+                />        
 
                 <label className='text-sm font-medium text-gray-950'>
                   Name 
