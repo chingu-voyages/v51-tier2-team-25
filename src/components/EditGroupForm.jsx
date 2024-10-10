@@ -7,6 +7,7 @@ import AddMember from "./AddMember";
 import MembersOnGroup from "./MembersOnGroup";
 import { Link } from "react-router-dom";
 import ConfirmationModal from "./ConfirmationModal";
+import AvatarManagement from '../components/AvatarManagement';
 
 export default function EditGroupForm({
   tempGroupData,
@@ -55,6 +56,18 @@ export default function EditGroupForm({
       [name]: value,
     }));
   };
+
+  const handleAvatarChange = (newAvatar) => {
+    setTempGroupData(prev => {
+      const updatedGroup = {
+        ...prev,
+        avatar: newAvatar
+      }
+      localStorage.setItem('tempGroupData', JSON.stringify(updatedGroup))
+      return updatedGroup
+    })
+    
+  }
 
   // Handle form submission
   const handleSubmit = (e) => {
@@ -131,12 +144,16 @@ export default function EditGroupForm({
             className="flex flex-col flex-1 gap-6 border-none"
             onSubmit={handleSubmit}
           >
-            <div className="flex flex-col">
-              <div className="flex flex-col md:items-start md:flex-row">
-                <img
-                  src="../../images/placeholder.jpg"
-                  className="border border-none rounded-full w-[80px] h-[80px] mr-4 mb-4 md:mb-0 self-center "
-                />
+            <div className="flex flex-col ">
+              <div className="flex items-center">
+                <div className='w-32'>
+                  <AvatarManagement 
+                    avatar={tempGroupData.avatar}
+                    onAvatarChange={handleAvatarChange} 
+                    showText={false}                 
+                  /> 
+                </div>
+                
                 <div className="relative flex flex-col">
                   <label className="text-sm">
                     Group name*

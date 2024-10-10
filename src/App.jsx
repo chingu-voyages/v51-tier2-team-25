@@ -28,6 +28,7 @@ function App() {
   }  
 
   const [mainUser, setMainUser] = useState({
+    avatar:"",
     name:"",
     userName:"",
     id:null,

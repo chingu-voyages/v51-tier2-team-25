@@ -5,6 +5,7 @@ import AddMember from "./AddMember";
 import MembersOnGroup from "./MembersOnGroup";
 import GroupTypeSelection from "./GroupTypeSelection";
 import { Link, useNavigate } from "react-router-dom";
+import AvatarManagement from '../components/AvatarManagement';
 
 // eslint-disable-next-line react/prop-types
 
@@ -35,6 +36,7 @@ export default function AddGroup({
     temporaryGroupData
       ? temporaryGroupData
       : {
+          avatar:"",
           name: "",
           id: generateGroupId(),
           description: "",
@@ -93,6 +95,17 @@ export default function AddGroup({
       [name]: value,
     }));
   };
+
+  const handleAvatarChange = (newAvatar) => {
+    setGroupsData(prev => {
+      const updatedGroup = {
+        ...prev,
+        avatar: newAvatar
+      }
+      localStorage.setItem('groupsData', JSON.stringify(updatedGroup))
+      return updatedGroup
+    })
+  }
 
   const addNewGroup = (event) => {
     event.preventDefault();
@@ -164,10 +177,11 @@ export default function AddGroup({
         >
           <div className="flex flex-col">
             <div className="flex flex-col md:items-start md:flex-row">
-              <img
-                src="../../images/placeholder.jpg"
-                className="border border-none rounded-full w-[80px] h-[80px] mr-4 mb-4 md:mb-0 self-center "
-              />
+              <AvatarManagement 
+                avatar={groupsData.avatar}
+                onAvatarChange={handleAvatarChange}
+              /> 
+
               <div className="relative flex flex-col">
                 <label className="text-sm">
                   Group name*
@@ -274,6 +288,7 @@ export default function AddGroup({
     </div>
   );
 }
+
 //Add proptypes validation for eslint
 AddGroup.propTypes = {
   closeAddGroupModal: PropTypes.func.isRequired,

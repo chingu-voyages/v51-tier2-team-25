@@ -71,7 +71,7 @@ export default function Groups() {
             <div className="relative self-center min-w-max">
               <img
                 className="w-24 h-24 mb-5 rounded-full border-border"
-                src="../../images/placeholder.jpg"
+                src={currentGroup?.avatar|| "../../images/placeholder.jpg"}
               />
               <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-1/2 bottom-3 rounded-xl">
                 {currentGroup?.groupType}
@@ -100,7 +100,7 @@ export default function Groups() {
             <div className="flex items-center w-1/2">
               <img
                 className="w-8 h-8 rounded-full"
-                src="../../images/placeholder.jpg"
+                src= "../../images/placeholder.jpg"
               />
               <p className="pl-2 text-sm text-gray-500">
                 {currentGroup?.members.length} members
