@@ -173,6 +173,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
         participants: [...prevData.participants, selectedParticipant],
       }));
       setSelectedParticipant(null);
+      setResetSearchBar(prev=>!prev) //toggle resetSearchbar
     }
   };
 
