@@ -167,7 +167,7 @@ export default function Profile() {
           confirmButtonText="Delete profile"
         />
 
-        <div className='flex flex-col flex w-full space-y-2'>
+        <div className='flex flex-col flex-grow w-full space-y-2'>
             <p className='pl-2 text-sm text-button'>Delete account</p>
             <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
               <p className="text-sm leading-5 text-gray-950 font-geologica">
