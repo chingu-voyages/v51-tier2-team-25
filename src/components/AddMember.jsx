@@ -7,6 +7,7 @@ import { AppContext } from "../App";
 export default function AddMember({ 
   addMemberToGroup, 
   groupMembers,
+  resetSearchBar
 }) {
   const {showNotification} = useContext(AppContext)
   const [newMember, setNewMember] = useState("");
@@ -19,19 +20,16 @@ export default function AddMember({
     if (newMember === "") {
       return;
     }
-    const isMemberAllreadyIncluded = groupMembers.some(
+    const isMemberAlreadyIncluded = groupMembers.some(
       (member) =>
         member.userName.toLowerCase() === newMember.userName.toLowerCase()
     );
 
-    if (isMemberAllreadyIncluded) {
+    if (isMemberAlreadyIncluded) {
       showNotification("Member is already in the group");
       return;
     }
-
-    addMemberToGroup(newMember);
-
-    
+    addMemberToGroup(newMember);    
   };
 
   return (
@@ -39,7 +37,10 @@ export default function AddMember({
       <p className="my-4 text-sm ">Add members</p>
       <div className="flex items-center justify-end">
         <div className="flex-grow mr-2">
-          <SearchBar handleMemberSelected={handleMemberSelected} />
+          <SearchBar 
+            handleMemberSelected={handleMemberSelected}
+            resetSearchBar={resetSearchBar}
+          />
         </div>
 
         <button

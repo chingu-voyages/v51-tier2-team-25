@@ -15,9 +15,10 @@ export default function AddGroup({
 }) {
 
   const { addGroupToList, mainUser, showNotification } = useContext(AppContext);
-
   const modalRef = useRef()
   const navigate = useNavigate()
+  const [resetSearchBar, setResetSearchBar] = useState(false); 
+
   //Maybe move this to a helper function also maybe use uuid library?
   const generateGroupId = () => {
     return Math.floor(10000 + Math.random() * 900000);
@@ -142,6 +143,7 @@ export default function AddGroup({
       ...prevData,
       members: [...prevData.members, newMember],
     }));
+    setResetSearchBar((prev) => !prev); // Toggle
   }
 
   function deleteMemberFromGroup(memberToDelete) {
@@ -244,6 +246,7 @@ export default function AddGroup({
             <AddMember
               addMemberToGroup={addMemberToGroup}
               groupMembers={groupsData.members}
+              resetSearchBar={resetSearchBar}
             />
             <div className="flex items-center justify-between pb-4 mt-4 mb-4 border-b border-border">
               <Link
