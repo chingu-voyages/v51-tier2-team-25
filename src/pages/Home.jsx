@@ -27,9 +27,7 @@ export default function Home() {
             Statistics
           </NavLink>
         </div>       
-
         <Outlet />
-        
       </div>
     </>
 }

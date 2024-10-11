@@ -13,7 +13,6 @@ import Statistics from "./pages/Statistics.jsx";
 import ExpensesUser from './pages/ExpensesUser.jsx';
 import toast from "react-hot-toast";
 
-
 export const AppContext = createContext([]);
 
 function App() {
@@ -364,7 +363,6 @@ function App() {
   ]);
 
   return (
-
     <AppContext.Provider
       value={{
         mainUser,

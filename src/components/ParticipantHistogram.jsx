@@ -44,6 +44,8 @@ const ParticipantHistogram = ({ group }) => {
     }
   }, [chartRef]);
 
+  const allBalancesPaid = owedValues.every(value => value === 0);
+
   const data = {
     labels: participantNames,
     datasets: [
@@ -158,11 +160,17 @@ const ParticipantHistogram = ({ group }) => {
 
   return (
     <div className="flex flex-col items-center w-full bg-gray-histogram max-w-[785px] max-h-[495px] pt-[24px] pb-[24px] rounded-md border border-border">
-      <div className="flex flex-col w-full max-w-[644px] max-h-[447px]">
+      {allBalancesPaid ? (
+          <div className="flex text-center text-sm font-geologica text-gray-600">
+            <img src="../../images/checkmark.png" className="w-[18px] h-[18px] mr-2 mt-[-2px]"/>
+          All balances have been paid.
+        </div>
+      ):(
+        <div className="flex flex-col w-full max-w-[644px] max-h-[447px]">
         <div className="flex justify-end">
           <div className="flex flex-col w-full px-[6px] py-[4px] mb-6 rounded-md border border-input-border max-w-[175px] max-h-[40px]">
             <div className="flex items-center w-[175px] ">
-              <span className="block w-[15px] h-[2px] mr-2 border-b-2 border-dashed border-red-average w-full my-2"></span>
+              <span className="block w-[30px] h-[2px] mr-1 border-b-2 border-dashed border-red-average my-2"></span>
               <span className="font-geologica text-xs text-modal-text leading-[14px]">
                 Average owed (US ${averageOwed.toFixed(2)})
               </span>
@@ -175,6 +183,8 @@ const ParticipantHistogram = ({ group }) => {
           ref={chartRef}
         />
       </div>
+        )}
+        {!allBalancesPaid && (
       <div className="flex space-x-2 mt-4">
         <button onClick={downloadImage} className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo">
           Export as PNG
@@ -183,6 +193,7 @@ const ParticipantHistogram = ({ group }) => {
           Export as PDF
         </button>
       </div>
+        )}
     </div>
   );
 };
