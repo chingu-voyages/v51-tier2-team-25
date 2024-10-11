@@ -18,6 +18,8 @@ export default function AddGroup({
   const modalRef = useRef()
   const navigate = useNavigate()
   const [resetSearchBar, setResetSearchBar] = useState(false); 
+  
+
 
   //Maybe move this to a helper function also maybe use uuid library?
   const generateGroupId = () => {
@@ -35,7 +37,9 @@ export default function AddGroup({
   // Initialize state for groupsData
   const [groupsData, setGroupsData] = useState(
     temporaryGroupData
-      ? temporaryGroupData
+      ? {...temporaryGroupData,
+        members:[]
+      }
       : {
           avatar:"",
           name: "",
@@ -97,16 +101,20 @@ export default function AddGroup({
     }));
   };
 
-  const handleAvatarChange = (newAvatar) => {
+  const handleAvatarChange = (newAvatar, memberId) => {
     setGroupsData(prev => {
+      const updatedMembers = prev.members.map(member => 
+        member.id === memberId ? { ...member, avatar: newAvatar } : member
+      );
       const updatedGroup = {
         ...prev,
-        avatar: newAvatar
-      }
-      localStorage.setItem('groupsData', JSON.stringify(updatedGroup))
-      return updatedGroup
-    })
-  }
+        members: updatedMembers,
+      };
+      localStorage.setItem('groupsData', JSON.stringify(updatedGroup));
+      return updatedGroup;
+    });
+  };
+  
 
   const addNewGroup = (event) => {
     event.preventDefault();
@@ -138,12 +146,14 @@ export default function AddGroup({
 
   //update groupsData by adding new member to members array
   function addMemberToGroup(newMember) {
-    // const updatedMembers = [...groupsData.members, newMember];
     setGroupsData((prevData) => ({
       ...prevData,
-      members: [...prevData.members, newMember],
+      members: [...prevData.members, {
+        ...newMember,
+        avatar: newMember.avatar || "/images/Profile.svg" // Ensure avatar is included
+      }],
     }));
-    setResetSearchBar((prev) => !prev); // Toggle
+    setResetSearchBar((prev) => !prev);
   }
 
   function deleteMemberFromGroup(memberToDelete) {
@@ -156,14 +166,18 @@ export default function AddGroup({
   }
 
   function createTemporaryGroupData() {
-    localStorage.setItem(
-      "temporaryGroupData",
-      JSON.stringify({
-        ...groupsData,
-        members: groupsData.members,
-      })
-    );
+    const updatedGroupData = {
+      ...groupsData,
+      members: groupsData.members.map(member => ({
+        ...member,
+        avatar: member.avatar || "/images/Profile.svg" // Ensure avatar is included
+      })),
+    };
+  
+    // Store the updated data in localStorage
+    localStorage.setItem("temporaryGroupData", JSON.stringify(updatedGroupData));
   }
+  
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
@@ -249,18 +263,18 @@ export default function AddGroup({
               resetSearchBar={resetSearchBar}
             />
             <div className="flex items-center justify-between pb-4 mt-4 mb-4 border-b border-border">
-              <Link
+            <Link
                 to="/"
                 onClick={(e) => {
                   e.preventDefault();
-                  createTemporaryGroupData();
-                  closeAddGroupModal();
+                  createTemporaryGroupData();                  
                   openLinkAddFriendModal();
                 }}
                 className="p-0 text-sm text-gray-400 underline hover:text-black "
               >
                 Add new friends to your friend list
               </Link>
+
             </div>
 
             <div className="pb-6 mt-2 overflow-y-auto md:pb-12">

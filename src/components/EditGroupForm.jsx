@@ -13,7 +13,7 @@ export default function EditGroupForm({
   tempGroupData,
   setTempGroupData,
   closeEditGroupFormModal,
-  openAddFriendModal,
+  openLinkAddFriendModal,
 }) {
   const { updateGroup, deleteGroup, showNotification } = useContext(AppContext);
   const navigate = useNavigate();
@@ -24,13 +24,22 @@ export default function EditGroupForm({
     ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
 
   useEffect(() => {
-    // This ensures the form is pre-filled with the group data when opened
-    if (tempGroupData) {
-      setTempGroupData({
-        ...tempGroupData,
-      });
+    const savedGroupData = JSON.parse(localStorage.getItem("tempGroupData"));
+    if (savedGroupData) {
+      setTempGroupData(savedGroupData);
     }
-  }, [tempGroupData]);
+  }, [setTempGroupData]);
+
+  useEffect(() => {
+    // Only update state if tempGroupData changes and save it to localStorage
+    setTempGroupData((prevData) => {
+      if (JSON.stringify(prevData) !== JSON.stringify(tempGroupData)) {
+        localStorage.setItem("tempGroupData", JSON.stringify(tempGroupData));
+        return { ...tempGroupData };
+      }
+      return prevData;
+    });
+  }, [tempGroupData, setTempGroupData]);
 
   // Handle input changes in the temporary state
   const handleChange = (e) => {
@@ -57,17 +66,33 @@ export default function EditGroupForm({
     }));
   };
 
-  const handleAvatarChange = (newAvatar) => {
-    setTempGroupData(prev => {
-      const updatedGroup = {
-        ...prev,
-        avatar: newAvatar
-      }
-      localStorage.setItem('tempGroupData', JSON.stringify(updatedGroup))
-      return updatedGroup
-    })
-    
-  }
+  // Handle avatar change for both group and members
+  const handleAvatarChange = (newAvatar, memberId = null) => {
+    if (memberId) {
+      // Update specific member's avatar
+      setTempGroupData((prev) => {
+        const updatedMembers = prev.members.map((member) =>
+          member.id === memberId ? { ...member, avatar: newAvatar } : member
+        );
+        const updatedGroup = {
+          ...prev,
+          members: updatedMembers,
+        };
+        localStorage.setItem("tempGroupData", JSON.stringify(updatedGroup));
+        return updatedGroup;
+      });
+    } else {
+      // Update group avatar
+      setTempGroupData((prev) => {
+        const updatedGroup = {
+          ...prev,
+          avatar: newAvatar,
+        };
+        localStorage.setItem("tempGroupData", JSON.stringify(updatedGroup));
+        return updatedGroup;
+      });
+    }
+  };
 
   // Handle form submission
   const handleSubmit = (e) => {
@@ -114,22 +139,39 @@ export default function EditGroupForm({
     showNotification(`Group ${groupName} was deleted`, 'success');
   };
 
-  function addMemberToGroup(newMember) {
-    // const memberWithId = { ...newMember, id: generateGroupId() };
-    setTempGroupData((prevData) => ({
-      ...prevData,
-      members: [...prevData.members, newMember],
-    }));
-  }
+    // Add member to the group
+    const addMemberToGroup = (newMember) => {
+      console.log("Adding member w/avatar:", newMember)
+      setTempGroupData((prevData) => {
+        const updatedGroup = {
+          ...prevData,
+          members: [
+            ...prevData.members,
+            {
+              ...newMember,
+              avatar: newMember.avatar || "/images/Profile.svg", // Ensure avatar is included
+            },
+          ],
+        };
+        localStorage.setItem("tempGroupData", JSON.stringify(updatedGroup));
+        return updatedGroup;
+      });
+    };
+  
 
-  function deleteMemberFromGroup(memberToDelete) {
-    setTempGroupData((prevData) => ({
-      ...prevData,
-      members: prevData.members.filter(
-        (member) => member.id !== memberToDelete.id
-      ),
-    }));
-  }
+  // Delete member from the group
+  const deleteMemberFromGroup = (memberToDelete) => {
+    setTempGroupData((prevData) => {
+      const updatedGroup = {
+        ...prevData,
+        members: prevData.members.filter(
+          (member) => member.id !== memberToDelete.id
+        ),
+      };
+      localStorage.setItem("tempGroupData", JSON.stringify(updatedGroup));
+      return updatedGroup;
+    });
+  };
 
   return (
     <div>
@@ -218,20 +260,23 @@ export default function EditGroupForm({
                 groupMembers={tempGroupData.members}
               />
               <div className="flex items-center justify-between pb-4 mt-4 mb-4 border-b border-border">
-                <Link
-                  onClick={() => {
-                    closeEditGroupFormModal();
-                    openAddFriendModal();
-                  }}
-                  className="p-0 text-sm text-gray-400 underline hover:text-black"
-                >
-                  Add new friends to your friend list
-                </Link>
+              <Link
+                to="/"
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeEditGroupFormModal();
+                  openLinkAddFriendModal();  // Open the add friend modal
+                }}
+                className="p-0 text-sm text-gray-400 underline hover:text-black"
+              >
+                Add new friends to your friend list
+              </Link>
               </div>
               <div className="pb-6 mt-2 overflow-y-auto md:pb-12">
                 <MembersOnGroup
                   groupMembers={tempGroupData.members}
                   deleteMemberFromGroup={deleteMemberFromGroup}
+                  handleAvatarChange={handleAvatarChange}
                 />
               </div>
 
@@ -255,7 +300,7 @@ export default function EditGroupForm({
                   onClick={handleDelete}
                   className="block p-2 mr-2 text-white bg-red-500 border-none rounded-lg md:hidden hover:bg-red-600"
                 >
-                  <img src="../../images/Delete.svg" className="w-4 h-4" />
+                  <img src="../../images/Delete.svg" alt="delete" className="w-4 h-4" />
                 </button>
                 <button
                   type="submit"
@@ -273,12 +318,8 @@ export default function EditGroupForm({
         onConfirm={confirmDelete}
         onCancel={() => setIsModalOpen(false)}
         title="Delete Group?"
-        message={(
-          <>
-            Are you sure you want to delete the <span className="font-bold">{tempGroupData.name}</span> group? 
-            All open expenses will be removed, and any money accumulated so far will be refunded to the respective members.
-          </>
-        )}
+        message={`Are you sure you want to delete the ${tempGroupData.name} group? 
+            All open expenses will be removed, and any money accumulated so far will be refunded to the respective members.`}
         confirmButtonText="Delete Group"
       />
     </div>
@@ -289,5 +330,5 @@ EditGroupForm.propTypes = {
   tempGroupData: PropTypes.object.isRequired,
   setTempGroupData: PropTypes.func.isRequired,
   closeEditGroupFormModal: PropTypes.func.isRequired,
-  openAddFriendModal: PropTypes.func.isRequired,
+  openLinkAddFriendModal: PropTypes.func.isRequired,
 };

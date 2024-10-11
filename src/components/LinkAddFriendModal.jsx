@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../App";
 import { v4 as uuidv4 } from "uuid";
 import PropTypes from "prop-types";
@@ -16,11 +16,28 @@ export default function LinkAddFriendModal({ closeLinkAddFriendModal }) {
   // Handle input changes and updates form data state
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setNewFriendData((prevnewFriendData) => ({
-      ...prevnewFriendData,
+    setNewFriendData((prevNewFriendData) => ({
+      ...prevNewFriendData,
       [name]: value,
     }));
   };
+  // Fetch avatar whenever userName changes
+  useEffect(() => {
+    if (newFriendData.userName) {
+      const apiKey = import.meta.env.VITE_AVATAR_API_KEY;
+      const apiUrl = `https://api.multiavatar.com/${newFriendData.userName}.svg?apikey=${apiKey}`;
+
+      fetch(apiUrl)
+        .then((response) => response.text())
+        .then((avatarSvg) => {
+          setNewFriendData((prevNewFriendData) => ({
+            ...prevNewFriendData,
+            avatar: `data:image/svg+xml;utf8,${encodeURIComponent(avatarSvg)}`,
+          }));
+        })
+        .catch((error) => console.error('Error fetching avatar:', error));
+    }
+  }, [newFriendData.userName]);
 
   const addNewFriend = (event) => {
     event.preventDefault();
@@ -34,6 +51,7 @@ export default function LinkAddFriendModal({ closeLinkAddFriendModal }) {
       return;
     }
 
+    console.log("Adding new friend with avatar:", newFriendData);
     addFriendToList(newFriendData);
     closeLinkAddFriendModal();
     showNotification("New friend added",'success');

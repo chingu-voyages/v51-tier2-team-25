@@ -38,18 +38,26 @@ export default function AddFriend({ closeAddFriendModal }) {
             avatar: `data:image/svg+xml;utf8,${encodeURIComponent(avatarSvg)}`,
 
           }));
-
         })
         .catch((error) => console.error('Error fetching avatar:', error));
     }
   }, [newFriendData.userName]);
 
-  // useEffect(() => {
-  //   console.log("newFriendData updated: ", newFriendData);
-  // }, [newFriendData]);
+  useEffect(() => {
+    console.log("newFriendData updated: ", newFriendData);
+  }, [newFriendData]);
 
   const addNewFriend = (event) => {
     event.preventDefault();
+
+      // Ensure avatar is set before adding the friend
+    if (!newFriendData.avatar) {
+      showNotification("Avatar is not generated yet. Please wait.", 'error');
+      return;
+    }
+
+    console.log("Adding new friend: ", newFriendData);
+    
     //validate userName
     const isUserNameTaken = friends.some(
       (friend) =>
@@ -60,10 +68,20 @@ export default function AddFriend({ closeAddFriendModal }) {
       return;
     }
 
-    addFriendToList(newFriendData);
+    addFriendToList(newFriendData);    
     
+    localStorage.setItem("friendsList", JSON.stringify([...friends, newFriendData]))
+    
+    // const temporaryGroupData = JSON.parse(localStorage.getItem("temporaryGroupData")) || {};
+    // const updatedTemporaryGroupData = {
+    //   ...temporaryGroupData,
+    //   members: [...(temporaryGroupData.members || []), newFriendData],
+    // };
+    // localStorage.setItem("temporaryGroupData", JSON.stringify(updatedTemporaryGroupData));
+
     closeAddFriendModal();
     showNotification("New friend added",'success');
+    
     // Check screen size to conditionally navigate
     if (window.innerWidth < 768) {
       // If small screen, navigate to mobile-friends page
