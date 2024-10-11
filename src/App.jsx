@@ -30,7 +30,15 @@ function App() {
     const storedMainUser = localStorage.getItem("mainUser");
     return storedMainUser
       ? JSON.parse(storedMainUser)
-      : { avatar: "", name: "", userName: "", id: null };
+      : { 
+          avatar: "", 
+          name: "", 
+          userName: "", 
+          id: null,
+          paypal:"",
+          venmo:"",
+          cashapp:"",
+        };
   });
 
   const [groups, setGroups] = useState(()=>{
