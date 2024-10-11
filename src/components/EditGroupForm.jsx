@@ -30,7 +30,7 @@ export default function EditGroupForm({
         ...tempGroupData,
       });
     }
-  }, []);
+  }, [tempGroupData]);
 
   // Handle input changes in the temporary state
   const handleChange = (e) => {

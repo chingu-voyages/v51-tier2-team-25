@@ -36,8 +36,7 @@ export default function AddFriend({ closeAddFriendModal }) {
           setNewFriendData((prevNewFriendData) => ({
             ...prevNewFriendData,
             avatar: `data:image/svg+xml;utf8,${encodeURIComponent(avatarSvg)}`,
-          }));
-          console.log(newFriendData)
+          }));          
         })
         .catch((error) => console.error('Error fetching avatar:', error));
     }

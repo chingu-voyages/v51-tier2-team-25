@@ -28,7 +28,7 @@ export default function ExpenseParticipant({
     setParticipantsShares(initialShares)
 
     participants.forEach(participant => addOrUpdateParticipants(participant));
-  }, []);
+  }, [participants, addOrUpdateParticipants]);
 
   const noParticipantsMessage = (
     <div className="flex items-center m-2">
