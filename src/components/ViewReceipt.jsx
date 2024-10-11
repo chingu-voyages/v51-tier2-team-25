@@ -17,7 +17,7 @@ const ViewReceipt = ({ closeReceipt, fileUrls }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
-      <div className="relative p-4 bg-white rounded-md shadow-lg h-96 w-80">
+      <div className="relative p-4 bg-white rounded-md h-96 w-80">
 
         <div className="flex flex-col justify-between gap-4 overflow-hidden pb-14">
           {fileUrls && fileUrls.length > 0 ? (
