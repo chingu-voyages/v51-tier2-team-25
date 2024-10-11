@@ -26,7 +26,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     name: "",
     amount: "",
     date: generateDate(),
-    category: null,
+    category: "",
     description: "",
     id: uuidv4(),
     groupId: currentGroup.id,
