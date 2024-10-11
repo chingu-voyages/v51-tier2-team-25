@@ -43,13 +43,13 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                             <p className="px-1 text-xs border rounded-md bg-light-indigo border-border">{expense.category}</p>
                         </div>
                         <div className="flex text-sm">
-                            <div className="text-center w-28">
+                            <div className="text-center">
                                 {hasUser && !userIsPaid ? (
-                                    <p className="text-red-800 bg-red-100 border border-red-200 rounded-lg">Owe <span className="font-bold">US${userAmountToPay.toFixed(2)}</span></p>
+                                    <p className="px-2 text-red-800 bg-red-100 border border-red-200 rounded-lg">Owe <span className="font-bold">US${userAmountToPay.toFixed(2)}</span></p>
                                 ) : hasUser && userIsPaid ? (
-                                    <p className="text-purple-800 bg-purple-100 border border-purple-200 rounded-lg">You already <span className="font-bold">paid</span></p>
+                                    <p className="px-2 text-purple-800 bg-purple-100 border border-purple-200 rounded-lg">You already <span className="font-bold">paid</span></p>
                                 ) : !hasUser ? (
-                                    <p className="border rounded-lg border-lime-200 bg-lime-100 text-lime-800">Get <span className="font-bold">US${expense.amount}</span></p>
+                                    <p className=" px-2 border rounded-lg border-lime-200 bg-lime-100 text-lime-800">Receive in total <span className="font-bold">US${expense.amount}</span></p>
                                 ) : null}
                             </div>
                         </div>
