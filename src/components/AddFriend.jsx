@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../App";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,7 @@ export default function AddFriend({ closeAddFriendModal }) {
 
   // Initialize state for newFriendData
   const [newFriendData, setNewFriendData] = useState({
+    avatar:"",
     name: "",
     userName: "",
     id: uuidv4(),
@@ -23,6 +24,24 @@ export default function AddFriend({ closeAddFriendModal }) {
       [name]: value,
     }));
   };
+
+  useEffect(()=>{
+    if (newFriendData.userName) {
+      const apiKey = import.meta.env.VITE_AVATAR_API_KEY
+      const apiUrl = `https://api.multiavatar.com/${newFriendData.userName}.svg?apikey=${apiKey}`;
+
+      fetch(apiUrl)
+        .then((response) => response.text())
+        .then((avatarSvg) => {
+          setNewFriendData((prevNewFriendData) => ({
+            ...prevNewFriendData,
+            avatar: `data:image/svg+xml;utf8,${encodeURIComponent(avatarSvg)}`,
+          }));
+          console.log(newFriendData)
+        })
+        .catch((error) => console.error('Error fetching avatar:', error));
+    }
+  }, [newFriendData.userName]);
 
   const addNewFriend = (event) => {
     event.preventDefault();

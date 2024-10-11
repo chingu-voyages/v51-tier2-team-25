@@ -26,12 +26,12 @@ function App() {
     setToastId(newToastId)
   }  
 
-  const [mainUser, setMainUser] = useState({
-    avatar:"",
-    name:"",
-    userName:"",
-    id:null,
-  })
+  const [mainUser, setMainUser] = useState(() => {
+    const storedMainUser = localStorage.getItem("mainUser");
+    return storedMainUser
+      ? JSON.parse(storedMainUser)
+      : { avatar: "", name: "", userName: "", id: null };
+  });
 
   const [groups, setGroups] = useState(
     JSON.parse(localStorage.getItem("groupsData")) || []
@@ -48,6 +48,12 @@ function App() {
   //members added from group to expense
   const [participantData, setParticipantData] = useState({name:"", id:""})
 
+  //save mainUser to localStorage when it changes
+  useEffect(() => {
+    if (mainUser.id) {
+      localStorage.setItem("mainUser", JSON.stringify(mainUser));
+    }
+  }, [mainUser]);
 
 
   const addMainUserToFriends = useCallback(() => {

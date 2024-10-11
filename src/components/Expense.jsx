@@ -1,7 +1,7 @@
 import React, { useState, useContext,useEffect } from "react";
 import PropTypes from 'prop-types';
 import { AppContext } from "../App";
-import Avvvatars from 'avvvatars-react'
+
 
 export default function Expense({expense, showButtons, openReceipt, openEditExpense}) {
     const [isExpenseOpen, setIsExpenseOpen] = useState(false);
@@ -96,14 +96,7 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                             {expense.participants.map((participant) => (
                                 <React.Fragment key={participant.id}>
                                     <div className="flex">
-                                        <Avvvatars 
-                                            value={participant.userName}
-                                            style="shape" 
-                                            size={24}
-                                            border={true}
-                                            borderColor="#D8DBE5"
-                                            borderSize={1}
-                                        />
+                                    <img src={participant.avatar} className='h-24 mb-4 border-border'/>
                                         <p>{participant.name}</p>
                                     </div>
                                     <div className="flex justify-center">
