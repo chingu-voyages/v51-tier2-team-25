@@ -34,7 +34,7 @@ const ParticipantHistogram = ({ group }) => {
   const participantNames = Object.values(owedAmounts).map((o) => o.name);
   const owedValues = Object.values(owedAmounts).map((o) => o.totalOwed);
   const chartRef = useRef();
-  const { downloadImage, downloadPDF } = histogramDownloader(chartRef);
+  const {downloadParticipantPDF } = histogramDownloader(chartRef, group);
 
   useEffect(() => {
     if (chartRef.current) {
@@ -169,7 +169,7 @@ const ParticipantHistogram = ({ group }) => {
         <div className="flex flex-col w-full max-w-[644px] max-h-[447px]">
         <div className="flex justify-end">
           <div className="flex flex-col w-full px-[6px] py-[4px] mb-6 rounded-md border border-input-border max-w-[175px] max-h-[40px]">
-            <div className="flex items-center w-[175px] ">
+            <div className="flex items-center w-[178px] ">
               <span className="block w-[30px] h-[2px] mr-1 border-b-2 border-dashed border-red-average my-2"></span>
               <span className="font-geologica text-xs text-modal-text leading-[14px]">
                 Average owed (US ${averageOwed.toFixed(2)})
@@ -186,10 +186,7 @@ const ParticipantHistogram = ({ group }) => {
         )}
         {!allBalancesPaid && (
       <div className="flex space-x-2 mt-4">
-        <button onClick={downloadImage} className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo">
-          Export as PNG
-        </button>
-        <button onClick={downloadPDF} className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo">
+        <button onClick={downloadParticipantPDF} className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo">
           Export as PDF
         </button>
       </div>
