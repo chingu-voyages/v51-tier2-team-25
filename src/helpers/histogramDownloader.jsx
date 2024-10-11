@@ -24,15 +24,15 @@ const downloadParticipantPDF = async () => {
     pdf.setFont("Helvetica", "bold");
     pdf.setTextColor("#464646");
     pdf.setFontSize(10);
-    pdf.text(`${group.name}`, 10, 105);
+    pdf.text(`${group.name}`, 13, 107);
     pdf.setDrawColor(200);
-    pdf.line(10, 110, 200, 110);
+    pdf.line(13, 110, 195, 110);
     pdf.setFont("Helvetica", "normal");
     pdf.setFontSize(10);
     let yPosition = 115;
     
     group.expenses.forEach((expense) => {
-      pdf.text(`Expense: ${expense.name || 'N/A'}`, 10, yPosition);
+      pdf.text(`Expense: ${expense.name || 'N/A'}`, 13, yPosition);
       yPosition += 5;
            
       expense.participants.forEach((participant) => {
