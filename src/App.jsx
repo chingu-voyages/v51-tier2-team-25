@@ -33,9 +33,10 @@ function App() {
       : { avatar: "", name: "", userName: "", id: null };
   });
 
-  const [groups, setGroups] = useState(
-    JSON.parse(localStorage.getItem("groupsData")) || []
-  );
+  const [groups, setGroups] = useState(()=>{
+    const storedGroups = localStorage.getItem("groupsData");
+    return storedGroups ? JSON.parse(storedGroups) : [];
+  });
   const [friends, setFriends] = useState(
     JSON.parse(localStorage.getItem("friendsData")) || []
   );

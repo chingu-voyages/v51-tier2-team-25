@@ -99,6 +99,7 @@ export default function EditExpense({
 
       let updatedExpensesData = {
         ...expensesData,
+        category: expensesData.category || "",
         participants: Object.values(updatedShares)
       };
 
@@ -432,12 +433,7 @@ export default function EditExpense({
         onConfirm={confirmDelete}
         onCancel={() => setIsModalOpen(false)}
         title="Delete Expense?"
-        message={
-          <>
-            Are you sure you want to delete the expense <span className="font-bold">{expensesData.name}</span>?
-            Any money accumulated so far will be refunded to the respective members.
-          </>
-        }
+        message={`Are you sure you want to delete the expense ${expensesData.name}? Any money accumulated so far will be refunded to the respective members.`}
         confirmButtonText="Delete Expense"
       />
 

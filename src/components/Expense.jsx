@@ -49,7 +49,7 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                                 ) : hasUser && userIsPaid ? (
                                     <p className="px-2 text-purple-800 bg-purple-100 border border-purple-200 rounded-lg">You already <span className="font-bold">paid</span></p>
                                 ) : !hasUser ? (
-                                    <p className=" px-2 border rounded-lg border-lime-200 bg-lime-100 text-lime-800">Receive in total <span className="font-bold">US${expense.amount}</span></p>
+                                    <p className="px-2 border rounded-lg border-lime-200 bg-lime-100 text-lime-800">Receive in total <span className="font-bold">US${expense.amount}</span></p>
                                 ) : null}
                             </div>
                         </div>

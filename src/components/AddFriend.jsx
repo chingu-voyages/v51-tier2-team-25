@@ -36,6 +36,7 @@ export default function AddFriend({ closeAddFriendModal }) {
           setNewFriendData((prevNewFriendData) => ({
             ...prevNewFriendData,
             avatar: `data:image/svg+xml;utf8,${encodeURIComponent(avatarSvg)}`,
+
           }));
 
         })
