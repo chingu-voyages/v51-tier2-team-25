@@ -21,21 +21,22 @@ const downloadParticipantPDF = async () => {
     const imageUrl = chart.toBase64Image();
     pdf.addImage(imageUrl, "PNG", 10, 10, 180, 90);
     // console.log(pdf.getFontList());
-    pdf.setFont("Helvetica");
+    pdf.setFont("Helvetica", "bold");
     pdf.setTextColor("#464646");
     pdf.setFontSize(10);
-    pdf.text(`Group: ${group.name}`, 10, 105);
-    pdf.setFontSize(8);
+    pdf.text(`${group.name}`, 10, 105);
+    pdf.setDrawColor(200);
+    pdf.line(10, 110, 200, 110);
+    pdf.setFont("Helvetica", "normal");
+    pdf.setFontSize(10);
     let yPosition = 115;
     
-    group.expenses.forEach((expense, index) => {
-      pdf.text(`Expense ${index + 1}: ${expense.description || 'N/A'}`, 10, yPosition);
+    group.expenses.forEach((expense) => {
+      pdf.text(`Expense: ${expense.name || 'N/A'}`, 10, yPosition);
       yPosition += 5;
-      pdf.text("Participants:", 15, yPosition);
-      yPosition += 5;
-      
+           
       expense.participants.forEach((participant) => {
-        pdf.text(`- ${participant.name}: $${participant.amountToPay}`, 20, yPosition);
+        pdf.text(`${participant.name}: $${participant.amountToPay}`, 20, yPosition);
         yPosition += 5;
       });
       
