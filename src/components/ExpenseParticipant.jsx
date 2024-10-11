@@ -17,18 +17,25 @@ export default function ExpenseParticipant({
 
   useEffect(() => {
     const initialShares = participants.reduce((acc, participant) => {
-      acc[participant.id]= {
+      acc[participant.id] = {
         ...participant,
         sharePercentage: participant.sharePercentage || 0,
         amountToPay: participant.amountToPay || 0,
         isPaid: participant.isPaid || false,
+      };
+      return acc;
+    }, {});
+  
+    setParticipantsShares((prevShares) => {
+      if (JSON.stringify(prevShares) !== JSON.stringify(initialShares)) {
+        return initialShares;
       }
-      return acc
-    }, {})
-    setParticipantsShares(initialShares)
-
-    participants.forEach(participant => addOrUpdateParticipants(participant));
-  }, []);
+      return prevShares; // Don't update state if it hasn't changed
+    });
+  
+    // Remove this line if not needed here
+    // participants.forEach(participant => addOrUpdateParticipants(participant));
+  }, [participants]);
 
   const noParticipantsMessage = (
     <div className="flex items-center m-2">

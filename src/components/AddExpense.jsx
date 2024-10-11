@@ -26,7 +26,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     name: "",
     amount: "",
     date: generateDate(),
-    category: null,
+    category: "",
     description: "",
     id: uuidv4(),
     groupId: currentGroup.id,
@@ -173,6 +173,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
         participants: [...prevData.participants, selectedParticipant],
       }));
       setSelectedParticipant(null);
+      setResetSearchBar(prev=>!prev) //toggle resetSearchbar
     }
   };
 
@@ -323,7 +324,6 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
               />
             </label>
 
-            {/* TODO PLACEHOLDER */}
             <div className="mb-4">
                 <ReceiptManagement                 
                   expenseId={expensesData.id}

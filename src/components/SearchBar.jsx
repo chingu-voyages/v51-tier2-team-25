@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import Select from "react-select";
-import { useContext, useImperativeHandle, useState, useEffect } from "react";
+import { useContext, useImperativeHandle, useState, useEffect} from "react";
 import { AppContext } from "../App";
 
 const customStyles = {
@@ -34,11 +34,11 @@ export default function SearchBar({
   purpose="member", //sets default purpose of search bar to add member to group
   groupMembers=[],
   resetSearchBar,
-  customPlaceholder
+  customPlaceholder,
 }) {  
   //using react select library for component
   const { friends, mainUser } = useContext(AppContext);
-
+ 
   const filteredFriends = friends.filter(friend => friend.id !== mainUser.id)
   
   //options based on purpose of SearchBar
@@ -112,7 +112,7 @@ export default function SearchBar({
         classNamePrefix="select"
         isDisabled={isDisabled}
         isLoading={isLoading}
-        isClearable={isClearable}
+        // isClearable={isClearable}
         isRtl={isRtl}
         isSearchable={isSearchable}
         name="color"
