@@ -1,6 +1,6 @@
 import { useState,useContext } from "react";
 import { IoMdClose } from "react-icons/io";
-import Avvvatars from 'avvvatars-react'
+
 import { AppContext } from "../App";
 
 /* eslint-disable react/prop-types */
@@ -52,14 +52,7 @@ export default function MembersOnGroup({ groupMembers, deleteMemberFromGroup,}){
               {member.id === mainUser.id ? (                
                 <img src={member.avatar || "/images/Profile.svg"} alt="Profile Avatar"className="w-6 h-6 border rounded-full"/>              
               ) : (
-                <Avvvatars 
-                  value={member.userName}
-                  style="shape"
-                  size={24}
-                  border={true}
-                  borderColor="#D8DBE5"
-                  borderSize={1}
-                />
+                <img src={member?.avatar} className='w-6 h-6 border-border'/>               
               )}
               <p className="truncate">{member.userName}</p>
             </div>
