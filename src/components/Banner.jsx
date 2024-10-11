@@ -21,7 +21,7 @@ export default function Banner() {
     return (
         <div>
             {isBannerVisible && (
-                <div className="h-[25px] bg-button text-white text-sm flex items-center justify-between p-4 font-light gap-2">
+                <div className="h-[25px] bg-button text-white text-sm flex items-center justify-center p-4 font-light gap-2">
                     <p><span className="font-bold">Welcome back!</span> Since it has been some time since your last login, would you like to be reintroduced to the app?</p>
                     <div className="flex items-center">
                         <span
