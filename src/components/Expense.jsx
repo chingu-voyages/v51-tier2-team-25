@@ -95,7 +95,7 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
 
                             {expense.participants.map((participant) => (
                                 <React.Fragment key={participant.id}>
-                                    <div className="flex">
+                                    <div className="flex items-center gap-2">
                                         <Avvvatars 
                                             value={participant.userName}
                                             style="shape" 
