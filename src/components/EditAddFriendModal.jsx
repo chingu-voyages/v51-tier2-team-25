@@ -60,7 +60,7 @@ export default function EditAddFriendModal({
       return;
     }
   
-    console.log("Adding new friend with avatar:", newFriendData); // Log avatar data
+    //console.log("Adding new friend with avatar:", newFriendData); // Log avatar data
     addFriendToList(newFriendData); // Ensure avatar is passed
     closeAddFriendModal();
     openEditGroupFormModal();

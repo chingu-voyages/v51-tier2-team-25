@@ -56,7 +56,7 @@ export default function AddFriend({ closeAddFriendModal }) {
       return;
     }
 
-    console.log("Adding new friend: ", newFriendData);
+    //console.log("Adding new friend: ", newFriendData);
     
     //validate userName
     const isUserNameTaken = friends.some(

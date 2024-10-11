@@ -51,7 +51,7 @@ export default function LinkAddFriendModal({ closeLinkAddFriendModal }) {
       return;
     }
 
-    console.log("Adding new friend with avatar:", newFriendData);
+    //console.log("Adding new friend with avatar:", newFriendData);
     addFriendToList(newFriendData);
     closeLinkAddFriendModal();
     showNotification("New friend added",'success');

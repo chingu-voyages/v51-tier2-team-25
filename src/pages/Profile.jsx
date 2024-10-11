@@ -38,8 +38,7 @@ export default function Profile() {
       }
       localStorage.setItem('mainUserData', JSON.stringify(updatedUser))
       return updatedUser
-    })
-    
+    })    
   }
 
   const handleSubmit = (e) =>{

@@ -95,8 +95,8 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
 
                             {expense.participants.map((participant) => (
                                 <React.Fragment key={participant.id}>
-                                    <div className="flex">
-                                        <img src={participant.avatar} className='h-24 mb-4 border-border'/>
+                                    <div className="flex items-center">
+                                        <img src={participant.avatar} className='w-6 h-6 mr-4 rounded-full border-border'/>
                                         <p>{participant.name}</p>
                                     </div>
                                     <div className="flex justify-center">

@@ -141,7 +141,7 @@ export default function EditGroupForm({
 
     // Add member to the group
     const addMemberToGroup = (newMember) => {
-      console.log("Adding member w/avatar:", newMember)
+      //console.log("Adding member w/avatar:", newMember)
       setTempGroupData((prevData) => {
         const updatedGroup = {
           ...prevData,
