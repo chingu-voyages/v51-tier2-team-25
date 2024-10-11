@@ -38,28 +38,9 @@ export default function Friends() {
       setTitle(currentTitle)
     }
   }, [currentTitle, friendExpenses.length])
-  
-  // if(!friendId){
-  //   // console.log('friendId undefined')
-  //   return
-  // }
-  // if(!currentFriend){
-  //   // console.log('Friend not found')
-  // }
 
   const handleDelete = () => {
-    const isParticipantInAnyExpense = friendExpenses.some((expense) =>
-      expense.participants.some((participant) => participant.id === friendId)
-    );
-
-    if (isParticipantInAnyExpense) {
-      showNotification(
-        `You need to remove ${currentFriend?.name} from all expenses before deleting them.`,
-        "error"
-      );
-    } else {
       setIsModalOpen(true);
-    }
   };
 
   const confirmDelete = () => {
