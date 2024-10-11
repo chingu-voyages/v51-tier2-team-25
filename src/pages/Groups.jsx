@@ -144,7 +144,7 @@ export default function Groups() {
                 tempGroupData={tempGroupData} 
                 setTempGroupData={setTempGroupData}
                 closeEditGroupFormModal={closeEditGroupFormModal}
-                openAddFriendModal={openAddFriendModal}
+                openLinkAddFriendModal={openAddFriendModal}
               />
             )}
             {isAddFriendModalOpen && (

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState,useEffect } from "react";
 import { AppContext } from "../App";
 import { v4 as uuidv4 } from "uuid";
 import PropTypes from "prop-types";
@@ -17,9 +17,8 @@ export default function EditAddFriendModal({
     userName: "",
     id: uuidv4(),
   });
-
-  // Handle input changes and updates form data state
-  const handleChange = (event) => {
+   // Handle input changes and updates form data state
+   const handleChange = (event) => {
     const { name, value } = event.target;
     setNewFriendData((prevnewFriendData) => ({
       ...prevnewFriendData,
@@ -27,23 +26,47 @@ export default function EditAddFriendModal({
     }));
   };
 
+  // Fetch avatar whenever userName changes
+  useEffect(() => {
+    if (newFriendData.userName) {
+      const apiKey = import.meta.env.VITE_AVATAR_API_KEY;
+      const apiUrl = `https://api.multiavatar.com/${newFriendData.userName}.svg?apikey=${apiKey}`;
+
+      fetch(apiUrl)
+        .then((response) => response.text())
+        .then((avatarSvg) => {
+          setNewFriendData((prevNewFriendData) => ({
+            ...prevNewFriendData,
+            avatar: `data:image/svg+xml;utf8,${encodeURIComponent(avatarSvg)}`,
+          }));
+        })
+        .catch((error) => console.error('Error fetching avatar:', error));
+    }
+  }, [newFriendData.userName]);
+
+  
+
+ 
+
   const addNewFriend = (event) => {
     event.preventDefault();
-    //validate userName
+    // Validate userName and add friend
     const isUserNameTaken = friends.some(
       (friend) =>
         friend.userName.toLowerCase() === newFriendData.userName.toLowerCase()
     );
     if (isUserNameTaken) {
-      showNotification("User name is taken choose another user name",'error');
+      showNotification("User name is taken, choose another user name", 'error');
       return;
     }
-
-    addFriendToList(newFriendData);
+  
+    console.log("Adding new friend with avatar:", newFriendData); // Log avatar data
+    addFriendToList(newFriendData); // Ensure avatar is passed
     closeAddFriendModal();
     openEditGroupFormModal();
     showNotification("New friend added", 'success');
   };
+  
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-gray-800 bg-opacity-75">

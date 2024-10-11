@@ -169,7 +169,7 @@ export default function Profile() {
 
         <div className='flex flex-col flex-grow w-full space-y-2'>
             <p className='pl-2 text-sm text-button'>Delete account</p>
-            <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
+            <div className="flex flex-col p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
               <p className="text-sm leading-5 text-gray-950 font-geologica">
                 Once your account has been deleted, all of its resources and data will be permanently removed. 
                 Before deleting your account, please download any data or information you wish to retain.
@@ -177,7 +177,7 @@ export default function Profile() {
               <button 
                 type="button" 
                 onClick={handleDelete}
-                className={`px-3 py-2 mt-4 text-sm rounded-md ${mainUser?.id ? 'bg-red-button text-red-button-text hover:bg-red-button-hover' :'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+                className={`px-3 py-2 mt-4 text-sm rounded-md self-start ${mainUser?.id ? 'bg-red-button text-red-button-text hover:bg-red-button-hover' :'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
                 disabled={!mainUser?.id}
               >
                 Delete account

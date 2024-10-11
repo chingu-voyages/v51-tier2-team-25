@@ -8,6 +8,18 @@ export default function MembersOnGroup({ groupMembers, deleteMemberFromGroup,}){
   const { mainUser }= useContext(AppContext)
   const [activeMember, setActiveMember] = useState(null);
 
+  const renderAvatar = (member) => {
+    if (!member.avatar) {
+      return <img src="/images/Profile.svg" alt="Profile Avatar" className="w-6 h-6 border rounded-full" />;
+    }
+    
+    if (member.avatar.startsWith('data:image/svg+xml')) {
+      return <div className="w-6 h-6 border rounded-full" dangerouslySetInnerHTML={{ __html: decodeURIComponent(member.avatar.split(',')[1]) }} />;
+    }
+    
+    return <img src={member.avatar} alt="Profile Avatar" className="w-6 h-6 border rounded-full" />;
+  };
+
   const noMembersMessage = (
     <div className="flex items-center md:m-2 ">
       <img src="../../images/Profile.svg" alt="Profile Placeholder"className="m-2" />
@@ -49,11 +61,7 @@ export default function MembersOnGroup({ groupMembers, deleteMemberFromGroup,}){
               >
                 <IoMdClose />
               </button>
-              {member.id === mainUser.id ? (                
-                <img src={member.avatar || "/images/Profile.svg"} alt="Profile Avatar"className="w-6 h-6 border rounded-full"/>              
-              ) : (
-                <img src={member?.avatar} className='w-6 h-6 border-border'/>               
-              )}
+              {renderAvatar(member)}
               <p className="truncate">{member.userName}</p>
             </div>
           </li>

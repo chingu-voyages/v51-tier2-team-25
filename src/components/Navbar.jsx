@@ -37,6 +37,7 @@ export default function Navbar() {
     }
     setIsAddFriendModalOpen(true);
   }
+
   function closeAddFriendModal() {
     setIsAddFriendModalOpen(false);
   }
@@ -196,7 +197,7 @@ useEffect(() => {
       {isLinkAddFriendModalOpen && (
         <LinkAddFriendModal
           closeLinkAddFriendModal={closeLinkAddFriendModal}
-          openAddGroupModal={openAddFriendModal}
+          openAddGroupModal={closeLinkAddFriendModal}
         />
       )}
     </aside>
