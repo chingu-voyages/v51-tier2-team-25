@@ -34,7 +34,7 @@ const ParticipantHistogram = ({ group }) => {
   const participantNames = Object.values(owedAmounts).map((o) => o.name);
   const owedValues = Object.values(owedAmounts).map((o) => o.totalOwed);
   const chartRef = useRef();
-  const { downloadImage, downloadPDF } = histogramDownloader(chartRef);
+  const {downloadParticipantPDF } = histogramDownloader(chartRef, group);
 
   useEffect(() => {
     if (chartRef.current) {
@@ -186,10 +186,7 @@ const ParticipantHistogram = ({ group }) => {
         )}
         {!allBalancesPaid && (
       <div className="flex space-x-2 mt-4">
-        <button onClick={downloadImage} className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo">
-          Export as PNG
-        </button>
-        <button onClick={downloadPDF} className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo">
+        <button onClick={downloadParticipantPDF} className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo">
           Export as PDF
         </button>
       </div>

@@ -26,7 +26,7 @@ ChartJS.register(
 
 const ExpenseHistogram = ({ groups }) => {
   const chartRef = useRef();
-  const { downloadImage, downloadPDF } = histogramDownloader(chartRef);
+  const { downloadGroupPDF } = histogramDownloader(chartRef);
 
   useEffect(() => {
     if (chartRef.current) {
@@ -169,10 +169,7 @@ const ExpenseHistogram = ({ groups }) => {
         />
       </div>
       <div className="flex space-x-2 mt-4">
-        <button onClick={downloadImage} className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo">
-          Export as PNG
-        </button>
-        <button onClick={downloadPDF} className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo">
+        <button onClick={downloadGroupPDF} className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo">
           Export as PDF
         </button>
       </div>
