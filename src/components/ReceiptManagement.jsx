@@ -176,7 +176,7 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
           >
             <img src={receipt.fileUrl || receipt.preview} alt="Receipt" className="h-12 pb-3 rounded-med" />
             <p className="pb-1 text-xs text-gray-600">
-              <span className="font-bold">Receipt</span> attached
+              <span className="font-bold">receipt</span> attached
             </p>
             <div className="flex gap-4">
               {receipt.newFile ? (
@@ -194,7 +194,7 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
                   className="text-xs text-gray-600"
                   onClick={() => handleDeleteReceipt(receipt.fileId, receipt.fileUrl)}
                 >
-                  Delete
+                  Delete Attachment
                 </button>
               )            
             )}

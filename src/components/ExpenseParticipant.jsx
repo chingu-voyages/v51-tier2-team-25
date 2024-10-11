@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { IoMdClose } from "react-icons/io";
 import { calculateAmountsToPay } from "../helpers/CalculateAmountsToPay";
-import Avvvatars from 'avvvatars-react'
+
 import { AppContext } from "../App";
 
 /* eslint-disable react/prop-types */
@@ -120,19 +120,9 @@ export default function ExpenseParticipant({
               </button>
               {member.id === mainUser.id ? (                
                 <img src={member.avatar || "/images/Profile.svg"} alt="Profile Avatar"className="w-6 h-6 border rounded-full"/>              
-              ) : (
-                <Avvvatars 
-                  value={member.userName}
-                  style="shape" 
-                  size={24}
-                  border={true}
-                  borderColor="#D8DBE5"
-                  borderSize={1}
-                />
+              ) : ( 
+                <img src={member?.avatar} className='w-6 h-6 border-border'/>  
               )}
-              {/* <div className="border rounded-full h-7 w-7">
-                <img src="/images/Profile.svg" />
-              </div> */}
               <p>{member.userName}</p>
             </div>
 

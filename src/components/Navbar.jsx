@@ -5,7 +5,7 @@ import { AppContext } from "../App";
 import AddFriend from "./AddFriend.jsx";
 import LinkAddFriendModal from "./LinkAddFriendModal.jsx";
 import toast from "react-hot-toast";
-import Avvvatars from 'avvvatars-react'
+
 
 export default function Navbar() {
   // TESTING ONLY to clear local storage -REMOVE
@@ -170,14 +170,7 @@ useEffect(() => {
                       key={friend.id}
                       className="flex items-center p-3 gap-2 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]"
                     >
-                      <Avvvatars 
-                        value={friend.userName}
-                        style="shape" 
-                        size={24}
-                        border={true}
-                        borderColor="#D8DBE5"
-                        borderSize={1}
-                      />
+                    <img src={friend.avatar} className='w-6 h-6 border-border'/>  
                       
                       <NavLink className="block md:font-extralight" to={`/friend/${friend.id}`}>
                         {friend.userName}
