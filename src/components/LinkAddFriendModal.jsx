@@ -7,6 +7,7 @@ export default function LinkAddFriendModal({ closeLinkAddFriendModal }) {
   const { addFriendToList, friends, showNotification } = useContext(AppContext);
   // Initialize state for newFriendData
   const [newFriendData, setNewFriendData] = useState({
+    avatar:'',
     name: "",
     userName: "",
     id: uuidv4(),
