@@ -1,11 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from "../App";
-import toast from "react-hot-toast";
 import PropTypes from "prop-types";
 import AddMember from "./AddMember";
 import MembersOnGroup from "./MembersOnGroup";
 import GroupTypeSelection from "./GroupTypeSelection";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import AvatarManagement from '../components/AvatarManagement';
 
 // eslint-disable-next-line react/prop-types
 
@@ -13,7 +13,13 @@ export default function AddGroup({
   closeAddGroupModal,
   openLinkAddFriendModal,
 }) {
-  const { addGroupToList } = useContext(AppContext);
+
+  const { addGroupToList, mainUser, showNotification } = useContext(AppContext);
+  const modalRef = useRef()
+  const navigate = useNavigate()
+  const [resetSearchBar, setResetSearchBar] = useState(false); 
+  
+
 
   //Maybe move this to a helper function also maybe use uuid library?
   const generateGroupId = () => {
@@ -31,17 +37,34 @@ export default function AddGroup({
   // Initialize state for groupsData
   const [groupsData, setGroupsData] = useState(
     temporaryGroupData
-      ? temporaryGroupData
+      ? {...temporaryGroupData,
+        members:[]
+      }
       : {
+          avatar:"",
           name: "",
           id: generateGroupId(),
           description: "",
           allottedBudget: "",
+          remainingBudget: "",
           members: [],
           groupType: "",
           expenses: [],
         }
   );
+
+  //Close modals when click outside of modal
+  useEffect(()=>{  
+    const handleClickOutside = (e) =>{      
+      if (modalRef.current && !modalRef.current.contains(e.target)){
+        closeAddGroupModal()
+      }    
+    }
+      document.body.addEventListener('mousedown',handleClickOutside)
+      return () => {
+        document.body.removeEventListener('mousedown',handleClickOutside)
+      }    
+  }, [closeAddGroupModal])
 
   //render groupID to be visible on form
   const renderGroupId = () => {
@@ -58,7 +81,7 @@ export default function AddGroup({
 
     //check if value is empty or contains only spaces
     if (value.trim() === "" && value.length > 0) {
-      toast.error("Input cannot be empty or contain only spaces");
+      showNotification("Input cannot be empty or contain only spaces",'error');
       return;
     }
 
@@ -67,7 +90,7 @@ export default function AddGroup({
       const newValue = parseFloat(value);
 
       if (!isNaN(newValue) && newValue > 1000000) {
-        toast.error("Alloted budget cannot exceed $1,000,000");
+        showNotification("Alloted budget cannot exceed $1,000,000",'error');
         return;
       }
     }
@@ -78,40 +101,59 @@ export default function AddGroup({
     }));
   };
 
+  const handleAvatarChange = (newAvatar, memberId) => {
+    setGroupsData(prev => {
+      const updatedMembers = prev.members.map(member => 
+        member.id === memberId ? { ...member, avatar: newAvatar } : member
+      );
+      const updatedGroup = {
+        ...prev,
+        members: updatedMembers,
+      };
+      localStorage.setItem('groupsData', JSON.stringify(updatedGroup));
+      return updatedGroup;
+    });
+  };
+  
+
   const addNewGroup = (event) => {
     event.preventDefault();
 
     const budgetRegex = /^(0|[1-9]\d*)(\.\d+)?$/;
 
     if (!budgetRegex.test(groupsData.allottedBudget)) {
-      toast.error("Allotted budget must be a valid number");
+      showNotification("Allotted budget must be a valid number", 'error');
       return;
     }
 
     if (groupsData.groupType === "") {
-      toast.error("Please select a Group type");
+      showNotification("Please select a Group type", 'error');
       return;
     }
 
-    //get stored data from local storage or initialize array
-    let storedGroupData = JSON.parse(localStorage.getItem("groupsData")) || [];
-    //append new form data to array
-    storedGroupData.push(groupsData);
-    //save updated array to local storage
-    localStorage.setItem("groupsData", JSON.stringify(storedGroupData));
-    addGroupToList(groupsData);
-    closeAddGroupModal();
-    toast.success("New group added");
+    const newGroupData = {
+      ...groupsData,
+      remainingBudget: Number(groupsData.allottedBudget), 
+      members: [...groupsData.members, mainUser]
+    };
+
+    addGroupToList(newGroupData);
+    navigate(`/group/${groupsData.id}`)
+    closeAddGroupModal();    
+    showNotification("New group added",'success');
     localStorage.removeItem("temporaryGroupData");
   };
 
   //update groupsData by adding new member to members array
   function addMemberToGroup(newMember) {
-    // const updatedMembers = [...groupsData.members, newMember];
     setGroupsData((prevData) => ({
       ...prevData,
-      members: [...prevData.members, newMember],
+      members: [...prevData.members, {
+        ...newMember,
+        avatar: newMember.avatar || "/images/Profile.svg" // Ensure avatar is included
+      }],
     }));
+    setResetSearchBar((prev) => !prev);
   }
 
   function deleteMemberFromGroup(memberToDelete) {
@@ -124,18 +166,22 @@ export default function AddGroup({
   }
 
   function createTemporaryGroupData() {
-    localStorage.setItem(
-      "temporaryGroupData",
-      JSON.stringify({
-        ...groupsData,
-        members: groupsData.members,
-      })
-    );
+    const updatedGroupData = {
+      ...groupsData,
+      members: groupsData.members.map(member => ({
+        ...member,
+        avatar: member.avatar || "/images/Profile.svg" // Ensure avatar is included
+      })),
+    };
+  
+    // Store the updated data in localStorage
+    localStorage.setItem("temporaryGroupData", JSON.stringify(updatedGroupData));
   }
+  
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
-      <div className="relative w-full max-w-[535px] sm:w-11/12 md:w-10/12 lg:w-3/4 xl:w-[535px] h-auto rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-4 font-geologica">
+      <div ref={modalRef} className="relative w-full max-w-[535px] sm:w-11/12 md:w-10/12 lg:w-3/4 xl:w-[535px] h-auto rounded-md px-6 pt-6 bg-zinc-50 flex flex-col m-4 font-geologica">
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-border">
           <h1 className="p-0 text-md">New Group</h1>
           <p className="p-0 text-xs text-gray-400">*Mandatory fields</p>
@@ -146,16 +192,20 @@ export default function AddGroup({
           className="flex flex-col flex-1 gap-6 border-none "
         >
           <div className="flex flex-col">
-            <div className="flex md:items-start flex-col md:flex-row">
-              <img
-                src="../../images/placeholder.jpg"
-                className="border border-none rounded-full w-[80px] h-[80px] mr-4 mb-4 md:mb-0 self-center "
-              />
+            <div className="flex flex-col md:items-start md:flex-row">
+              <div className='w-32'>
+                <AvatarManagement 
+                  avatar={groupsData.avatar}
+                  onAvatarChange={handleAvatarChange}
+                  showText={false} 
+                /> 
+              </div>
+
               <div className="relative flex flex-col">
                 <label className="text-sm">
                   Group name*
                   <input
-                    className="w-full p-2 md:mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                    className="w-full p-2 text-left border rounded-md md:mt-1 text-input-text border-input-border h-9"
                     type="text"
                     name="name"
                     value={groupsData.name}
@@ -164,15 +214,15 @@ export default function AddGroup({
                     required
                   />
                 </label>
-                <p className="text-xs text-gray-400 mb-4 md:mb-0">30 character max.</p>
+                <p className="mb-4 text-xs text-gray-400 md:mb-0">30 character max.</p>
                 {renderGroupId()}
               </div>
 
               <div className="relative flex flex-col">
-                <label className="md:ml-2 text-sm">
+                <label className="text-sm md:ml-2">
                   Allotted budget
                   <input
-                    className="w-full p-2 md:mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                    className="w-full p-2 text-left border rounded-md md:mt-1 text-input-text border-input-border h-9"
                     type="number"
                     step={0.01}
                     min={0.01}
@@ -185,11 +235,11 @@ export default function AddGroup({
                     required
                   />
                 </label>
-                <p className="md:ml-2 text-xs text-gray-400 mb-4 md:mb-0">$1,000,000 max.</p>
+                <p className="mb-4 text-xs text-gray-400 md:ml-2 md:mb-0">$1,000,000 max.</p>
               </div>
             </div>
 
-            <label className="flex flex-col md:pt-4 text-sm">
+            <label className="flex flex-col text-sm md:pt-4">
               Group description*
               <textarea
                 className="w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border"
@@ -210,23 +260,24 @@ export default function AddGroup({
             <AddMember
               addMemberToGroup={addMemberToGroup}
               groupMembers={groupsData.members}
+              resetSearchBar={resetSearchBar}
             />
             <div className="flex items-center justify-between pb-4 mt-4 mb-4 border-b border-border">
-              <Link
+            <Link
                 to="/"
                 onClick={(e) => {
                   e.preventDefault();
-                  createTemporaryGroupData();
-                  closeAddGroupModal();
+                  createTemporaryGroupData();                  
                   openLinkAddFriendModal();
                 }}
                 className="p-0 text-sm text-gray-400 underline hover:text-black "
               >
                 Add new friends to your friend list
               </Link>
+
             </div>
 
-            <div className="md:pb-12 pb-6 mt-2 overflow-y-auto">
+            <div className="pb-6 mt-2 overflow-y-auto md:pb-12">
               <MembersOnGroup
                 groupMembers={groupsData.members}
                 deleteMemberFromGroup={deleteMemberFromGroup}
@@ -257,6 +308,7 @@ export default function AddGroup({
     </div>
   );
 }
+
 //Add proptypes validation for eslint
 AddGroup.propTypes = {
   closeAddGroupModal: PropTypes.func.isRequired,

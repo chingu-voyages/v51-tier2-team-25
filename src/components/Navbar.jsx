@@ -4,6 +4,8 @@ import AddGroup from "./AddGroup.jsx";
 import { AppContext } from "../App";
 import AddFriend from "./AddFriend.jsx";
 import LinkAddFriendModal from "./LinkAddFriendModal.jsx";
+import toast from "react-hot-toast";
+
 
 export default function Navbar() {
   // TESTING ONLY to clear local storage -REMOVE
@@ -13,26 +15,35 @@ export default function Navbar() {
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
   const [isLinkAddFriendModalOpen, setIsLinkAddFriendModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { groups, friends } = useContext(AppContext);
+  const { groups, friends, mainUser } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
 
   function openAddGroupModal() {
+    if(!mainUser || !mainUser.id){
+      toast.error("Please create a profile before adding a group.")
+      return
+    }
     setIsAddGroupModalOpen(true);
   }
   function closeAddGroupModal() {
     setIsAddGroupModalOpen(false);
   }
+
   function openAddFriendModal() {
+    if(!mainUser || !mainUser.id){
+      toast.error("Please create a profile before adding friends.")
+      return
+    }
     setIsAddFriendModalOpen(true);
   }
+
   function closeAddFriendModal() {
     setIsAddFriendModalOpen(false);
   }
   function openLinkAddFriendModal() {
     setIsLinkAddFriendModalOpen(true);
   }
-
   function closeLinkAddFriendModal() {
     setIsLinkAddFriendModalOpen(false);
     setIsAddGroupModalOpen(true);
@@ -46,15 +57,19 @@ export default function Navbar() {
     setIsMenuOpen()
   }
 
+  //filter main user from friends list for display
+  // Ensure mainUser has an id before using it for filtering
+  const displayedFriends = mainUser && mainUser.id ? friends.filter(friend => friend.id !== mainUser.id) : friends;
+
+
 // Screen size change effect
 useEffect(() => {
   const mediaQuery = window.matchMedia("(min-width: 768px)");
 
   function handleScreenResize(event) {
     if (event.matches) {
-      // Check if user is on the MobileGroupsPage
       if (location.pathname === "/mobile-groups" || location.pathname === "/mobile-friends") {
-        navigate("/"); // Redirect to Home if screen is larger
+        navigate("/");
       }
     }
   }
@@ -72,34 +87,33 @@ useEffect(() => {
       <nav className="relative md:w-48">
         <div className="flex justify-between mx-4 my-3 md:m-0">
           <NavLink className="block" to="/">
-              <div className="flex items-center px-3 md:pb-12">
+              <div className="flex items-center px-3 md:mb-12">
                   <img
-                    src="../../images/placeholder.jpg"
-                    className="w-8 h-8 mr-2 border border-none rounded-full"
+                    src="../../images/SliceLogo.svg"
+                    alt="Slice Logo"
+                    className="md:w-[137px] w-[90px] my-1"
                   />
-                  <p className="block text-lg">Brand Name</p>
               </div>
             </NavLink>
-          <img src="../../images/Menu.svg" className="cursor-pointer w-7 md:hidden" onClick={toggleMenu}/>
+          <img src="../../images/Menu.svg" alt="menu" className="cursor-pointer w-7 md:hidden" onClick={toggleMenu}/>
         </div>
-
 
         <div className={`md:block absolute z-10 w-full cursor-pointer md:bg-white bg-[#F0F1F5] ${isMenuOpen ? 'block' : 'hidden'}`}>
           <NavLink className="block" to="/">
             <div className="flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
-              <img src="../../images/Home.svg" className="mr-2" />
+              <img src="../../images/Home.svg" alt="home" className="mr-2" />
               <p className="font-extralight">Home</p>
             </div>
           </NavLink>
           <NavLink className="block" to="/profile">
             <div className="flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
-              <img src="../../images/Profile.svg" className="mr-2" />
+              <img src="../../images/Profile.svg" alt="avatar" className="mr-2" />
               <p className="font-extralight">Profile</p>
             </div>
           </NavLink>
           <NavLink className="block" to={{pathname: "/mobile-groups"}}>
             <div className="md:hidden flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
-              <img src="../../images/Groups.svg" className="mr-2" />
+              <img src="../../images/placeholder.jpg" alt="avatar" className="mr-2" />
               <p className="font-extralight">Groups</p>
             </div>
           </NavLink>
@@ -129,7 +143,7 @@ useEffect(() => {
                       className="flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]"
                     >
                       <img
-                        src="../../images/profilePlaceHolder.png"
+                        src={group.avatar || "../../images/profilePlaceHolder.png"}
                         className="w-6 h-6 mr-2 border border-none rounded-full"
                       />
                       <NavLink className="block md:font-extralight" to={`/group/${group.id}`}>
@@ -150,18 +164,15 @@ useEffect(() => {
                   +
                 </button>
               </div>
-              {friends.length > 0 && (
+              {displayedFriends.length > 0 && (
                 <ul className="">
-                  {friends.map((friend) => (
+                  {displayedFriends.map((friend) => (
                     <li
                       key={friend.id}
-                      className="flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]"
+                      className="flex items-center p-3 gap-2 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]"
                     >
-                      <img
-                        src="../../images/profilePlaceHolder.png"
-                        className="w-6 h-6 mr-2 border border-none rounded-full"
-                      />
-
+                    <img src={friend.avatar} className='w-6 h-6 border-border'/>  
+                      
                       <NavLink className="block md:font-extralight" to={`/friend/${friend.id}`}>
                         {friend.userName}
                       </NavLink>
@@ -186,7 +197,7 @@ useEffect(() => {
       {isLinkAddFriendModalOpen && (
         <LinkAddFriendModal
           closeLinkAddFriendModal={closeLinkAddFriendModal}
-          openAddGroupModal={openAddFriendModal}
+          openAddGroupModal={closeLinkAddFriendModal}
         />
       )}
     </aside>

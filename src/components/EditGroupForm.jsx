@@ -2,19 +2,20 @@ import PropTypes from "prop-types";
 import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../App";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import GroupTypeSelection from "./GroupTypeSelection";
 import AddMember from "./AddMember";
 import MembersOnGroup from "./MembersOnGroup";
-import DeleteGroupModal from "./DeleteGroupModal";
 import { Link } from "react-router-dom";
+import ConfirmationModal from "./ConfirmationModal";
+import AvatarManagement from '../components/AvatarManagement';
 
 export default function EditGroupForm({
-  group,
+  tempGroupData,
+  setTempGroupData,
   closeEditGroupFormModal,
-  openAddFriendModal,
+  openLinkAddFriendModal,
 }) {
-  const { updateGroup, deleteGroup } = useContext(AppContext);
+  const { updateGroup, deleteGroup, showNotification } = useContext(AppContext);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -22,31 +23,23 @@ export default function EditGroupForm({
   const blockInvalidChar = (e) =>
     ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
 
-  // Temporary state for handling input changes
-  const [tempGroupData, setTempGroupData] = useState({
-    name: group.name || "",
-    id: group.id,
-    description: group.description || "",
-    allottedBudget: group.allottedBudget || "",
-    groupType: group.groupType || "",
-    members: group.members || []
-
-  });  
+  useEffect(() => {
+    const savedGroupData = JSON.parse(localStorage.getItem("tempGroupData"));
+    if (savedGroupData) {
+      setTempGroupData(savedGroupData);
+    }
+  }, [setTempGroupData]);
 
   useEffect(() => {
-    // This ensures the form is pre-filled with the group data when opened
-    if (group) {
-      setTempGroupData({
-        name: group.name,
-        id: group.id,
-        description: group.description,
-        allottedBudget: group.allottedBudget,
-        groupType: group.groupType,
-        members: group.members
-
-      });
-    }
-  }, [group]);
+    // Only update state if tempGroupData changes and save it to localStorage
+    setTempGroupData((prevData) => {
+      if (JSON.stringify(prevData) !== JSON.stringify(tempGroupData)) {
+        localStorage.setItem("tempGroupData", JSON.stringify(tempGroupData));
+        return { ...tempGroupData };
+      }
+      return prevData;
+    });
+  }, [tempGroupData, setTempGroupData]);
 
   // Handle input changes in the temporary state
   const handleChange = (e) => {
@@ -54,7 +47,7 @@ export default function EditGroupForm({
     const newValue = value.trim();
 
     if (newValue === "" && value !== "") {
-      toast("Input cannot be empty or contain only spaces");
+      showNotification("Input cannot be empty or contain only spaces", 'error');
       return;
     }
 
@@ -62,7 +55,7 @@ export default function EditGroupForm({
       const newValue = parseFloat(value);
 
       if (!isNaN(newValue) && newValue > 1000000) {
-        toast("Alloted budget cannot exceed $1,000,000");
+        showNotification("Alloted budget cannot exceed $1,000,000",'error');
         return;
       }
     }
@@ -73,6 +66,34 @@ export default function EditGroupForm({
     }));
   };
 
+  // Handle avatar change for both group and members
+  const handleAvatarChange = (newAvatar, memberId = null) => {
+    if (memberId) {
+      // Update specific member's avatar
+      setTempGroupData((prev) => {
+        const updatedMembers = prev.members.map((member) =>
+          member.id === memberId ? { ...member, avatar: newAvatar } : member
+        );
+        const updatedGroup = {
+          ...prev,
+          members: updatedMembers,
+        };
+        localStorage.setItem("tempGroupData", JSON.stringify(updatedGroup));
+        return updatedGroup;
+      });
+    } else {
+      // Update group avatar
+      setTempGroupData((prev) => {
+        const updatedGroup = {
+          ...prev,
+          avatar: newAvatar,
+        };
+        localStorage.setItem("tempGroupData", JSON.stringify(updatedGroup));
+        return updatedGroup;
+      });
+    }
+  };
+
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -80,13 +101,26 @@ export default function EditGroupForm({
     const budgetRegex = /^(0|[1-9]\d*)(\.\d+)?$/;
 
     if (!budgetRegex.test(tempGroupData.allottedBudget)) {
-      toast("Allotted budget must be a valid number");
+      showNotification("Allotted budget must be a valid number",'error');
       return;
     }
 
-    updateGroup(tempGroupData); // Call updateGroup from AppContext
+    const totalExpenses = tempGroupData.expenses.reduce((total, expense) => {
+      return total + parseFloat(expense.amount); // Add each expense amount
+    }, 0);
+  
+    const allottedBudget = parseFloat(tempGroupData.allottedBudget);
+    const remainingBudget = allottedBudget - totalExpenses;
+
+    const updatedGroupData = {
+      ...tempGroupData,
+      remainingBudget, // Update with calculated remaining budget
+    };
+  
+    // Call the function to update the group data
+    updateGroup(updatedGroupData);
     closeEditGroupFormModal(); // Close the form after saving changes
-    toast(`Changes saved`);
+    showNotification(`Changes saved`,'success');
   };
 
   const handleDelete = () => {
@@ -98,29 +132,46 @@ export default function EditGroupForm({
 
   const confirmDelete = () => {
     const groupName = tempGroupData.name;
-    deleteGroup(group.id); // Call deleteGroup with the group's ID
+    deleteGroup(tempGroupData.id); // Call deleteGroup with the group's ID
     closeEditGroupFormModal(); // Close the form after deletion
     setIsModalOpen(false); // This closes the modal
     navigate("/");
-    toast(`Group ${groupName} was deleted`);
+    showNotification(`Group ${groupName} was deleted`, 'success');
   };
 
-  function addMemberToGroup(newMember) {
-    // const memberWithId = { ...newMember, id: generateGroupId() };
-    setTempGroupData((prevData) => ({
-      ...prevData,
-      members: [...prevData.members, newMember],
-    }));
-  }
+    // Add member to the group
+    const addMemberToGroup = (newMember) => {
+      console.log("Adding member w/avatar:", newMember)
+      setTempGroupData((prevData) => {
+        const updatedGroup = {
+          ...prevData,
+          members: [
+            ...prevData.members,
+            {
+              ...newMember,
+              avatar: newMember.avatar || "/images/Profile.svg", // Ensure avatar is included
+            },
+          ],
+        };
+        localStorage.setItem("tempGroupData", JSON.stringify(updatedGroup));
+        return updatedGroup;
+      });
+    };
+  
 
-  function deleteMemberFromGroup(memberToDelete) {
-    setTempGroupData((prevData) => ({
-      ...prevData,
-      members: prevData.members.filter(
-        (member) => member.id !== memberToDelete.id
-      ),
-    }));
-  }
+  // Delete member from the group
+  const deleteMemberFromGroup = (memberToDelete) => {
+    setTempGroupData((prevData) => {
+      const updatedGroup = {
+        ...prevData,
+        members: prevData.members.filter(
+          (member) => member.id !== memberToDelete.id
+        ),
+      };
+      localStorage.setItem("tempGroupData", JSON.stringify(updatedGroup));
+      return updatedGroup;
+    });
+  };
 
   return (
     <div>
@@ -135,17 +186,21 @@ export default function EditGroupForm({
             className="flex flex-col flex-1 gap-6 border-none"
             onSubmit={handleSubmit}
           >
-            <div className="flex flex-col">
-              <div className="flex md:items-start flex-col md:flex-row">
-                <img
-                  src="../../images/placeholder.jpg"
-                  className="border border-none rounded-full w-[80px] h-[80px] mr-4 mb-4 md:mb-0 self-center "
-                />
+            <div className="flex flex-col ">
+              <div className="flex items-center">
+                <div className='w-32'>
+                  <AvatarManagement 
+                    avatar={tempGroupData.avatar}
+                    onAvatarChange={handleAvatarChange} 
+                    showText={false}                 
+                  /> 
+                </div>
+                
                 <div className="relative flex flex-col">
                   <label className="text-sm">
                     Group name*
                     <input
-                      className="w-full p-2 md:mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                      className="w-full p-2 text-left border rounded-md md:mt-1 text-input-text border-input-border h-9"
                       type="text"
                       name="name"
                       value={tempGroupData.name}
@@ -154,17 +209,17 @@ export default function EditGroupForm({
                       required
                     />
                   </label>
-                  <p className="text-xs text-gray-400 mb-4 md:mb-0">30 character max.</p>
+                  <p className="mb-4 text-xs text-gray-400 md:mb-0">30 character max.</p>
                   <p className="absolute top-0 p-0 m-0 text-xs text-gray-400 md:right-8 right-1">
                     #{tempGroupData.id}
                   </p>
                 </div>
 
                 <div className="relative flex flex-col">
-                  <label className="md:ml-2 text-sm">
+                  <label className="text-sm md:ml-2">
                     Allotted budget
                     <input
-                      className="w-full p-2 md:mt-1 text-left border rounded-md text-input-text border-input-border h-9"
+                      className="w-full p-2 text-left border rounded-md md:mt-1 text-input-text border-input-border h-9"
                       type="number"
                       step={0.01}
                       min={0.01}
@@ -177,11 +232,11 @@ export default function EditGroupForm({
                       required
                     />
                   </label>
-                  <p className="md:ml-2 text-xs text-gray-400 mb-4 md:mb-0">$1,000,000 max.</p>
+                  <p className="mb-4 text-xs text-gray-400 md:ml-2 md:mb-0">$1,000,000 max.</p>
                 </div>
               </div>
 
-              <label className="flex flex-col md:pt-4 text-sm">
+              <label className="flex flex-col text-sm md:pt-4">
                 Group description*
                 <textarea
                   className="w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border"
@@ -205,20 +260,23 @@ export default function EditGroupForm({
                 groupMembers={tempGroupData.members}
               />
               <div className="flex items-center justify-between pb-4 mt-4 mb-4 border-b border-border">
-                <Link
-                  onClick={() => {
-                    closeEditGroupFormModal();
-                    openAddFriendModal();
-                  }}
-                  className="p-0 text-sm text-gray-400 underline hover:text-black"
-                >
-                  Add new friends to your friend list
-                </Link>
+              <Link
+                to="/"
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeEditGroupFormModal();
+                  openLinkAddFriendModal();  // Open the add friend modal
+                }}
+                className="p-0 text-sm text-gray-400 underline hover:text-black"
+              >
+                Add new friends to your friend list
+              </Link>
               </div>
-              <div className="md:pb-12 pb-6 mt-2 overflow-y-auto">
+              <div className="pb-6 mt-2 overflow-y-auto md:pb-12">
                 <MembersOnGroup
                   groupMembers={tempGroupData.members}
                   deleteMemberFromGroup={deleteMemberFromGroup}
+                  handleAvatarChange={handleAvatarChange}
                 />
               </div>
 
@@ -233,20 +291,20 @@ export default function EditGroupForm({
                 <button
                   type="button"
                   onClick={handleDelete}
-                  className="hidden md:block px-3 py-2 mr-2 text-sm text-white bg-red-500 border-none rounded-lg hover:bg-red-600"
+                  className="hidden px-3 py-2 mr-2 text-sm text-white bg-red-500 border-none rounded-lg md:block hover:bg-red-600"
                 >
                   Delete group
                 </button>
                 <button
                   type="button"
                   onClick={handleDelete}
-                  className="block md:hidden p-2 mr-2 text-white bg-red-500 border-none rounded-lg hover:bg-red-600"
+                  className="block p-2 mr-2 text-white bg-red-500 border-none rounded-lg md:hidden hover:bg-red-600"
                 >
-                  <img src="../../images/Delete.svg" className="w-4 h-4" />
+                  <img src="../../images/Delete.svg" alt="delete" className="w-4 h-4" />
                 </button>
                 <button
                   type="submit"
-                  className="px-3 py-2 text-sm rounded-lg hover:bg-hover border-none bg-button text-light-indigo"
+                  className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
                 >
                   Save
                 </button>
@@ -255,18 +313,22 @@ export default function EditGroupForm({
           </form>
         </div>
       </div>
-      <DeleteGroupModal
+      <ConfirmationModal
         isOpen={isModalOpen}
         onConfirm={confirmDelete}
         onCancel={() => setIsModalOpen(false)}
-        groupName={tempGroupData.name}
+        title="Delete Group?"
+        message={`Are you sure you want to delete the ${tempGroupData.name} group? 
+            All open expenses will be removed, and any money accumulated so far will be refunded to the respective members.`}
+        confirmButtonText="Delete Group"
       />
     </div>
   );
 }
 
 EditGroupForm.propTypes = {
-  group: PropTypes.object.isRequired,
+  tempGroupData: PropTypes.object.isRequired,
+  setTempGroupData: PropTypes.func.isRequired,
   closeEditGroupFormModal: PropTypes.func.isRequired,
-  openAddFriendModal: PropTypes.func.isRequired,
+  openLinkAddFriendModal: PropTypes.func.isRequired,
 };

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import Select from "react-select";
-import { useContext, useImperativeHandle, useState, useEffect } from "react";
+import { useContext, useImperativeHandle, useState, useEffect} from "react";
 import { AppContext } from "../App";
 
 const customStyles = {
@@ -9,20 +9,22 @@ const customStyles = {
     ...provided,
     backgroundColor: state.isFocused ? "#D1D5DB" : "white",
     color: state.isActive ? "black" : "",
-    fontSize: '0.875rem', // Default font size (14px)
-    '@media (max-width: 768px)': {
-      fontSize: '0.75rem', // Change font size for smaller screens
-    },
+    fontSize: '0.75rem', // Default font size (14px)
     "&:active": {
       backgroundColor: "#D1D5DB",
     },
   }),
   placeholder: (provided) => ({
     ...provided,
-    fontSize: '0.875rem',
-    '@media (max-width: 768px)': {
-      fontSize: '0.75rem', // Change font size for smaller screens
-    },
+    fontSize: '0.75rem',
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    fontSize: '0.75rem', 
+  }),
+  input: (provided) => ({
+    ...provided,
+    fontSize: '0.75rem', 
   }),
 };
 
@@ -32,13 +34,15 @@ export default function SearchBar({
   purpose="member", //sets default purpose of search bar to add member to group
   groupMembers=[],
   resetSearchBar,
-  customPlaceholder
+  customPlaceholder,
 }) {  
   //using react select library for component
-  const { friends } = useContext(AppContext);
+  const { friends, mainUser } = useContext(AppContext);
+ 
+  const filteredFriends = friends.filter(friend => friend.id !== mainUser.id)
   
   //options based on purpose of SearchBar
-  const options = (purpose === 'participant' ? groupMembers : friends).map(person =>({
+  const options = (purpose === 'participant' ? groupMembers : filteredFriends).map(person =>({
     value: person.userName,
     label: person.userName,
     id:person.id,
@@ -74,27 +78,29 @@ export default function SearchBar({
   },[groupMembers, friends, isListEmpty])
 
   function addSelectionToForm(optionSelected) {
-    // console.log("Option selected in SearchBar", optionSelected)
     if (!optionSelected) {
-      setSelectedValue(null)
+      setSelectedValue(null);
+      // Notify the parent component that the value was cleared
+      if (purpose === "member" && handleMemberSelected) {
+        handleMemberSelected(null);
+      } else if (purpose === "participant" && handleParticipantAdded) {
+        handleParticipantAdded(null);
+      }
       return;
     }
-
-    const selectedPerson = (purpose==='participant'? groupMembers: friends).find(
-      (person)=> person.userName === optionSelected.value
-    )    
-
-    // console.log("Selected person found in list", selectedPerson)
-    
-    //call appropriate handler based on purpose of prop
-    if(purpose==="member" && handleMemberSelected){
+  
+    const selectedPerson = (purpose === 'participant' ? groupMembers : friends).find(
+      (person) => person.userName === optionSelected.value
+    );
+  
+    // Call appropriate handler based on purpose of prop
+    if (purpose === "member" && handleMemberSelected) {
       handleMemberSelected(selectedPerson);
-    } else if(purpose==="participant" && handleParticipantAdded){
-      handleParticipantAdded(selectedPerson)
+    } else if (purpose === "participant" && handleParticipantAdded) {
+      handleParticipantAdded(selectedPerson);
     }
-
-    setSelectedValue(optionSelected)
-    
+  
+    setSelectedValue(optionSelected);
   }
 
   return (
@@ -106,7 +112,7 @@ export default function SearchBar({
         classNamePrefix="select"
         isDisabled={isDisabled}
         isLoading={isLoading}
-        isClearable={isClearable}
+        // isClearable={isClearable}
         isRtl={isRtl}
         isSearchable={isSearchable}
         name="color"

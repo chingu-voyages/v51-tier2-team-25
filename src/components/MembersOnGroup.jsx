@@ -1,15 +1,28 @@
-import { useState } from "react";
+import { useState,useContext } from "react";
 import { IoMdClose } from "react-icons/io";
 
+import { AppContext } from "../App";
+
 /* eslint-disable react/prop-types */
-export default function MembersOnGroup({
-  groupMembers,
-  deleteMemberFromGroup,
-}) {
+export default function MembersOnGroup({ groupMembers, deleteMemberFromGroup,}){
+  const { mainUser }= useContext(AppContext)
   const [activeMember, setActiveMember] = useState(null);
+
+  const renderAvatar = (member) => {
+    if (!member.avatar) {
+      return <img src="/images/Profile.svg" alt="Profile Avatar" className="w-6 h-6 border rounded-full" />;
+    }
+    
+    if (member.avatar.startsWith('data:image/svg+xml')) {
+      return <div className="w-6 h-6 border rounded-full" dangerouslySetInnerHTML={{ __html: decodeURIComponent(member.avatar.split(',')[1]) }} />;
+    }
+    
+    return <img src={member.avatar} alt="Profile Avatar" className="w-6 h-6 border rounded-full" />;
+  };
+
   const noMembersMessage = (
     <div className="flex items-center md:m-2 ">
-      <img src="../../images/Profile.svg" className="m-2" />
+      <img src="../../images/Profile.svg" alt="Profile Placeholder"className="m-2" />
       <p className="text-xs text-gray-500">
         There is no one added to expense yet. Try searching and adding from your
         friend list or quickly add someone by entering their user name
@@ -21,7 +34,7 @@ export default function MembersOnGroup({
     noMembersMessage
   ) : (
     <div className="flex flex-col items-center">
-      <h3 className="text-sm mb-2">Member</h3>
+      <h3 className="mb-2 text-sm">Member</h3>
       <ul className="flex flex-col">
         {groupMembers.map((member) => (
           <li
@@ -39,13 +52,16 @@ export default function MembersOnGroup({
                 className={`w-6 h-6 flex items-center justify-center rounded-md  text-black  ${
                   activeMember === member.id ? "bg-red-600 text-white" : ""
                 }`}
-                onClick={() => deleteMemberFromGroup(member)}
+                onClick={() => {
+                  if(member.id !== mainUser.id){
+                    deleteMemberFromGroup(member)
+                  }
+                }}
+                disabled={member.id === mainUser.id}
               >
                 <IoMdClose />
               </button>
-              <div className="border rounded-full h-7 w-7">
-                <img src="/public/images/Profile.svg" />
-              </div>
+              {renderAvatar(member)}
               <p className="truncate">{member.userName}</p>
             </div>
           </li>
@@ -54,3 +70,4 @@ export default function MembersOnGroup({
     </div>
   );
 }
+

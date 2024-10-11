@@ -4,9 +4,9 @@ import { AppContext } from "../App";
 import EditGroupForm from "../components/EditGroupForm";
 import AddExpense from "../components/AddExpense";
 import EditAddFriendModal from "../components/EditAddFriendModal";
-import RemainingBudget from "../helpers/RemainingBudget";
 
-const getNavLinkClass = ({ isActive })=> isActive ? "px-2 py-1 text-sm bg-border rounded-t-md text-tab-text" : "px-2 py-1 text-sm text-button"
+const getNavLinkClass = ({ isActive })=> 
+   `${isActive ? "px-2 py-1 text-sm bg-border rounded-t-md text-tab-text" : "px-2 py-1 text-sm text-button"} hover:text-tab-text`
 
 export default function Groups() {
   const { groupId } = useParams(); // Get the groupId from the URL
@@ -18,9 +18,11 @@ export default function Groups() {
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
 
   const currentGroup = groups.find((group) => group.id === Number(groupId));
+  const [tempGroupData, setTempGroupData] = useState(currentGroup);
 
   useEffect(() => {
     if (currentGroup) {
+      setTempGroupData(currentGroup);
       navigate(`expenses`); //auto navigate to expense page when group loads
     }
   }, [currentGroup, navigate]);
@@ -64,12 +66,13 @@ export default function Groups() {
   return (
     <>
       <div className="flex flex-col max-w-[785px] w-full gap-6 font-geologica mx-3 mt-6">
-        <div className="p-6 md:mt-12 border rounded-md border-border bg-zinc-50">
-          <div className="relative flex justify-between w-full flex-col md:flex-row">
-            <div className="relative min-w-max self-center">
+        <div className="p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
+          <div className="relative flex flex-col md:flex-row">
+            <div className="relative self-center w-32">
               <img
-                className="w-24 h-24 rounded-full mb-5 border-border"
-                src="../../images/placeholder.jpg"
+                className="object-cover w-24 h-24 mb-5 rounded-full border-border"
+                alt='Group Avatar'
+                src={currentGroup?.avatar|| "../../images/placeholder.jpg"}
               />
               <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-1/2 bottom-3 rounded-xl">
                 {currentGroup?.groupType}
@@ -98,7 +101,7 @@ export default function Groups() {
             <div className="flex items-center w-1/2">
               <img
                 className="w-8 h-8 rounded-full"
-                src="../../images/placeholder.jpg"
+                src= "../../images/placeholder.jpg"
               />
               <p className="pl-2 text-sm text-gray-500">
                 {currentGroup?.members.length} members
@@ -109,20 +112,20 @@ export default function Groups() {
               <div className="flex flex-col">
                 <p className="text-xs text-gray-500">Allotted budget</p>
                 <p className="text-sm text-gray-950">
-                  $ {currentGroup?.allottedBudget}
+                  US$ {currentGroup?.allottedBudget}
                 </p>
               </div>
 
               <div className="flex flex-col">
                 <p className="text-xs text-gray-500">Remaining</p>
                 <p className="text-sm text-gray-950">
-                  $ <RemainingBudget groupId={Number(groupId)} />
+                  US$ {currentGroup?.remainingBudget.toFixed(2)}
                 </p>
                 
               </div>
 
               <button
-                className="hidden md:block px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
+                className="hidden px-3 py-2 text-sm border-none rounded-lg md:block hover:bg-hover bg-button text-light-indigo"
                 onClick={openAddExpense}
               >
                 New expense
@@ -138,9 +141,10 @@ export default function Groups() {
             )}
             {isEditGroupFormModalOpen && (
               <EditGroupForm
-                group={currentGroup} // Pass the current group's data as props
+                tempGroupData={tempGroupData} 
+                setTempGroupData={setTempGroupData}
                 closeEditGroupFormModal={closeEditGroupFormModal}
-                openAddFriendModal={openAddFriendModal}
+                openLinkAddFriendModal={openAddFriendModal}
               />
             )}
             {isAddFriendModalOpen && (
@@ -151,13 +155,13 @@ export default function Groups() {
             )}
           </div>
           <button
-            className="md:hidden px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo w-full mt-4"
+            className="w-full px-3 py-2 mt-4 text-sm border-none rounded-lg md:hidden hover:bg-hover bg-button text-light-indigo"
             onClick={openAddExpense}
           >
             New expense
           </button>
         </div>        
-        <div className="border rounded-t-md border-b-border">
+        <div className="">
           <NavLink className={getNavLinkClass} to={`expenses`}>
             Expenses
           </NavLink>   

@@ -1,12 +1,15 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useContext, useState } from "react";
 import SearchBar from "./SearchBar";
-import toast from "react-hot-toast";
+import { AppContext } from "../App";
+
 
 export default function AddMember({ 
   addMemberToGroup, 
   groupMembers,
+  resetSearchBar
 }) {
+  const {showNotification} = useContext(AppContext)
   const [newMember, setNewMember] = useState("");
 
   function handleMemberSelected(newMember) {
@@ -17,19 +20,16 @@ export default function AddMember({
     if (newMember === "") {
       return;
     }
-    const isMemberAllreadyIncluded = groupMembers.some(
+    const isMemberAlreadyIncluded = groupMembers.some(
       (member) =>
         member.userName.toLowerCase() === newMember.userName.toLowerCase()
     );
 
-    if (isMemberAllreadyIncluded) {
-      toast("Member is already in the group");
+    if (isMemberAlreadyIncluded) {
+      showNotification("Member is already in the group");
       return;
     }
-
-    addMemberToGroup(newMember);
-
-    
+    addMemberToGroup(newMember);    
   };
 
   return (
@@ -37,7 +37,10 @@ export default function AddMember({
       <p className="my-4 text-sm ">Add members</p>
       <div className="flex items-center justify-end">
         <div className="flex-grow mr-2">
-          <SearchBar handleMemberSelected={handleMemberSelected} />
+          <SearchBar 
+            handleMemberSelected={handleMemberSelected}
+            resetSearchBar={resetSearchBar}
+          />
         </div>
 
         <button

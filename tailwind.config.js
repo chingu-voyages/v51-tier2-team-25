@@ -8,17 +8,19 @@ export default {
         'hover': '#585875',
         'light-indigo': '#F0F1F5',
         'border': '#D8DBE5',
-        'red-button':'#A72828',
+        'red-button-hover':'#A72828',
         'red-button-text':'#FFF1F1',
-	      'red-button-hover':'#D24242',
+	      'red-button':'#D24242',
         'title':'#292929',
         'input-text':'#989898',
         'input-border':'#DCDCDC',
         'modal-text': '#464646', 
         'green':'#247A51',     
         'blue-background':'#E9EAF0',
-        'tab-text':'#2F2F3C'        
-
+        'tab-text':'#2F2F3C',
+        'gray-histogram': '#FAFAFA',
+        'red-average':"#A50F0F",
+        'profile-background':'#F1F1F1'
       },
       fontFamily: {
         sans: ['Outfit', 'sans-serif'],

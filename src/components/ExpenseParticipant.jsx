@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { IoMdClose } from "react-icons/io";
-import toast from "react-hot-toast";
+import { calculateAmountsToPay } from "../helpers/CalculateAmountsToPay";
+
+import { AppContext } from "../App";
 
 /* eslint-disable react/prop-types */
 export default function ExpenseParticipant({
@@ -8,29 +10,32 @@ export default function ExpenseParticipant({
   expensesData,
   addOrUpdateParticipants,
 }) {
+  const { mainUser }= useContext(AppContext)
   const { participants } = expensesData;
   const [currentlyActiveMember, setCurrentlyActiveMember] = useState(null);
   const [participantsShares, setParticipantsShares] = useState({});
-  const [totalSharePercent, setTotalSharePercent]= useState(0)
 
-  useEffect(()=>{
-    //initialize participantShares w/ existing data from participants
-    const initialShares = participants.reduce((acc,participant)=>{
-      acc[participant.id]= {
+  useEffect(() => {
+    const initialShares = participants.reduce((acc, participant) => {
+      acc[participant.id] = {
         ...participant,
         sharePercentage: participant.sharePercentage || 0,
-        amountToPay: participant.amountToPay || 0
+        amountToPay: participant.amountToPay || 0,
+        isPaid: participant.isPaid || false,
+      };
+      return acc;
+    }, {});
+  
+    setParticipantsShares((prevShares) => {
+      if (JSON.stringify(prevShares) !== JSON.stringify(initialShares)) {
+        return initialShares;
       }
-      return acc
-    }, {})
-    setParticipantsShares(initialShares)
-
-    //calc initial total share percentage
-    const initialTotalShare = participants.reduce((total, participant)=> total + (participant.sharePercentage || 0), 0)
-    console.log("initial total share:", initialTotalShare)
-    setTotalSharePercent(initialTotalShare)
-    
-  }, [participants])
+      return prevShares; // Don't update state if it hasn't changed
+    });
+  
+    // Remove this line if not needed here
+    // participants.forEach(participant => addOrUpdateParticipants(participant));
+  }, [participants]);
 
   const noParticipantsMessage = (
     <div className="flex items-center m-2">
@@ -44,42 +49,31 @@ export default function ExpenseParticipant({
 
   function handleSharedValue(event, member) {
     const enteredSharePercentage = parseInt(event.target.value) || 0;
-    if (
-      enteredSharePercentage > 100 ||
-      enteredSharePercentage < 0 ||
-      isNaN(enteredSharePercentage) 
-      // enteredSharePercentage === "e"
-    ) {
-      return;
-    }
 
-    //calc new total share include entered value
-    const currentParticipantShare = participantsShares[member.id]?.sharePercentage || 0
-    const newTotalShare = totalSharePercent - currentParticipantShare + enteredSharePercentage
-
-    if(newTotalShare >100){
-      toast.error("Total share percentage cannot exceed 100%")
-      return
-    }
-
-    const amountToPay = (expensesData.amount * enteredSharePercentage) / 100;
-
-    const updatedParticipant = {
-      ...member,
-      amountToPay: amountToPay,
-      sharePercentage: enteredSharePercentage,
-    };
-
-    setParticipantsShares((prev) => ({
-      ...prev,
-      [member.id]: {
-        ...member,
+    setParticipantsShares((prev) => {
+      const updatedMember = {
+        ...prev[member.id],
         sharePercentage: enteredSharePercentage,
-        amountToPay: amountToPay,
-      },
-    }));
+      };
+    
+      const { updatedShares} = calculateAmountsToPay(
+        [...participants, updatedMember], // Include updated member
+        expensesData.amount
+      );
+    
+      return updatedShares;
+    });
 
-    addOrUpdateParticipants(updatedParticipant);
+    const { updatedShares } = calculateAmountsToPay(participants, expensesData.amount);
+
+    setParticipantsShares(updatedShares);
+
+    addOrUpdateParticipants({
+      ...member,
+      sharePercentage: enteredSharePercentage,
+      amountToPay: participantsShares[member.id]?.amountToPay || 0,
+      isPaid: false,
+    });
   }
 
   function handleInvalidCharacters(event) {
@@ -89,6 +83,12 @@ export default function ExpenseParticipant({
     }
   }
 
+  useEffect(() => {
+    if (expensesData.amount) {
+      const { updatedShares } = calculateAmountsToPay(participants, expensesData.amount);
+      setParticipantsShares(updatedShares);
+    }
+  }, [participants, expensesData.amount]);
   
 
   return participants.length < 1 ? (
@@ -97,9 +97,9 @@ export default function ExpenseParticipant({
     <>
       <ul className="flex flex-col items-start">
         <div className="flex w-full my-1">
-          <h3 className="w-4/12 text-center text-sm">Member</h3>
-          <h3 className="w-2/12 text-center text-sm">Share</h3>
-          <h3 className="w-6/12 text-center text-sm">How much will you pay</h3>
+          <h3 className="w-4/12 text-sm text-center">Member</h3>
+          <h3 className="w-2/12 text-sm text-center">Share</h3>
+          <h3 className="w-6/12 text-sm text-center">How much will you pay</h3>
         </div>
 
         {participants.map((member) => (
@@ -113,7 +113,7 @@ export default function ExpenseParticipant({
             onMouseEnter={() => setCurrentlyActiveMember(member.id)}
             onMouseLeave={() => setCurrentlyActiveMember(null)}
           >
-            <div className="flex items-center w-4/12 truncate justify-evenly">
+            <div className="flex items-center justify-start w-4/12 gap-2 truncate">
               <button
                 type="button"
                 className={`w-6 h-6 flex items-center justify-center rounded-md  text-black  ${
@@ -125,9 +125,11 @@ export default function ExpenseParticipant({
               >
                 <IoMdClose />
               </button>
-              <div className="border rounded-full h-7 w-7">
-                <img src="/public/images/Profile.svg" />
-              </div>
+              {member.id === mainUser.id ? (                
+                <img src={member.avatar || "/images/Profile.svg"} alt="Profile Avatar"className="w-6 h-6 border rounded-full"/>              
+              ) : ( 
+                <img src={member?.avatar} className='w-6 h-6 border-border'/>  
+              )}
               <p>{member.userName}</p>
             </div>
 
@@ -137,15 +139,15 @@ export default function ExpenseParticipant({
                 value={participantsShares[member.id]?.sharePercentage || ""}
                 type="number"
                 placeholder={0}
-                step={5}
+                step={10}
                 className="w-8/12 text-center h-7"
                 onChange={(event) => handleSharedValue(event, member)}
               />
             </div>
             <div className="w-6/12 text-center">
               <label>
-                {participantsShares[member.id]?.amountToPay >= 0
-                  ? participantsShares[member.id].amountToPay
+                {participantsShares[member.id]?.amountToPay.toFixed(2) >= 0
+                  ? participantsShares[member.id].amountToPay.toFixed(2)
                   : 0}
               </label>
             </div>

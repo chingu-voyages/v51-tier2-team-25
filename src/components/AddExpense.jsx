@@ -1,14 +1,17 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import { AppContext } from "../App";
-import toast from "react-hot-toast";
 import PropTypes from "prop-types";
 import SearchBar from "./SearchBar";
 import ExpenseCategorySelection from "./ExpenseCategorySelection";
 import { v4 as uuidv4 } from "uuid";
 import ExpenseParticipant from "./ExpenseParticipant";
+import { calculateAmountsToPay } from "../helpers/CalculateAmountsToPay";
+import ReceiptManagement from "./ReceiptManagement";
 
 export default function AddExpense({ closeAddExpense, currentGroup }) {
-  const { addExpenseToList } = useContext(AppContext);
+  const { addExpenseToList, showNotification } = useContext(AppContext);
+  const receiptManagementRef =useRef()
+  const [uploading, setUploading] = useState(false);
 
   //Generate today's date
   const generateDate = () => {
@@ -23,7 +26,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     name: "",
     amount: "",
     date: generateDate(),
-    category: null,
+    category: "",
     description: "",
     id: uuidv4(),
     groupId: currentGroup.id,
@@ -33,7 +36,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
   //Temp state to hold participant
   const [selectedParticipant, setSelectedParticipant] = useState(null);
   const [resetSearchBar, setResetSearchBar] = useState(false);
-
+  
   // Handle input changes and updates form data state
   const handleChange = (event, selectOptionName) => {
     if (selectOptionName) {
@@ -50,35 +53,111 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
     }
   };
 
-  const addNewExpense = (event) => {
+  const addNewExpense = async(event) => {
+
+    console.log("addNewExpense triggered")    
     event.preventDefault();
+    setUploading(true)
 
-    //get stored data from local storage or initialize array
-    let storedExpenseData =
-      JSON.parse(localStorage.getItem("expensesData")) || [];
+    // Handle receipt upload
+    try{
+      console.log("Checking for receiptManagementRef");
+      //Trigger receipt upload vai ref to ReceiptManagement
+      if (receiptManagementRef.current){
+        console.log("receiptManagementRef found, uploading receipts...");
+        try{
+          await receiptManagementRef.current.uploadReceiptsToFirebase()
+          console.log("Receipts uploaded successfully");
+        }catch(uploadError){
+          console.error("Error uploading receipts:", uploadError);
+          throw uploadError;
+        }        
+      }else{
+        console.log("No receiptManagementRef found, skipping receipt upload");
+      }
 
-    //append new form data to array
-    storedExpenseData.push(expensesData);
+      console.log("Preparing to save expense data...");
 
-    //save updated array to local storage
-    localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
-    addExpenseToList(expensesData);
-    closeAddExpense();
-    toast.success("New expense added");
+      // Calculate total share percentage
+      const totalSharePercentage = expensesData.participants.reduce((total, participant) => {
+        return total + (participant.sharePercentage || 0)
+      }, 0)
 
-    setExpensesData({
-      name: "",
-      amount: "",
-      date: generateDate(),
-      category: "",
-      description: "",
-      id: uuidv4(),
-      groupId: currentGroup.id,
-      participants: [],
-    });
+      const allParticipantsHaveShare = expensesData.participants.every(participant => participant.sharePercentage != undefined)
 
-    setSelectedParticipant(null);
-    setResetSearchBar((prev) => !prev);
+      // Validate share percentages
+      if(allParticipantsHaveShare && totalSharePercentage < 100) {
+        showNotification("The total share percentage is less than 100%. Please adjust the shares.",'error')
+        return;
+      } 
+  
+      if(totalSharePercentage > 100) {
+        showNotification("Total share percentage cannot exceed 100%. Please adjust the shares.",'error')
+        return;
+      }
+      
+      // Prepare participants for the expense data
+      const updatedParticipants = expensesData.participants.map((participant) => ({
+        ...participant,
+        sharePercentage: participant.sharePercentage || 0,
+        isPaid: false,
+      })); 
+
+      // Prepare participants for the expense data
+      const { updatedShares } = calculateAmountsToPay(
+        updatedParticipants,
+        parseFloat(expensesData.amount)
+      );
+
+      let updatedExpensesData = {
+        ...expensesData,
+        participants: Object.values(updatedShares)
+      };
+
+      //get stored data from local storage or initialize array
+      let storedExpenseData = JSON.parse(localStorage.getItem("expensesData")) || [];
+      console.log("Current stored expense data:", storedExpenseData);
+
+      //append new form data to array
+      console.log("Adding new expense to stored data:", expensesData);
+      storedExpenseData.push(updatedExpensesData);
+
+      // Save updated array to local storage
+      console.log("Saving updated expense data to localStorage");
+      localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
+
+      //save updated array to local storage
+      console.log("Adding expense to list");
+      addExpenseToList(updatedExpensesData);
+
+      console.log("Expense added successfully");
+      showNotification("New expense added",'success');
+
+      // Reset form data
+      console.log("Resetting form data");
+      setExpensesData({
+        name: "",
+        amount: "",
+        date: generateDate(),
+        category: "",
+        description: "",
+        id: uuidv4(),
+        groupId: currentGroup.id,
+        participants: [],
+      });
+      setSelectedParticipant(null);
+      setResetSearchBar((prev) => !prev);
+
+      console.log("Closing add expense form");
+      closeAddExpense();
+
+    } catch (error){
+      console.error("Error in addNewExpense:", error);
+      showNotification('Failed to add expense','error')      
+    } finally  {
+        setUploading(false)
+        console.log("addNewExpense completed");
+    }
   };
 
   const addParticipant = () => {
@@ -86,7 +165,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
       const isSelectedParticipantIncluded =
         expensesData.participants.includes(selectedParticipant);
       if (isSelectedParticipantIncluded) {
-        toast("Friend is already included");
+        showNotification("Friend is already included");
         return;
       }
       setExpensesData((prevData) => ({
@@ -94,6 +173,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
         participants: [...prevData.participants, selectedParticipant],
       }));
       setSelectedParticipant(null);
+      setResetSearchBar(prev=>!prev) //toggle resetSearchbar
     }
   };
 
@@ -203,7 +283,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
               </div>
 
               <div className="flex mb-4">
-                <label className="text-sm w-full">
+                <label className="w-full text-sm">
                   Amount*
                   <input
                     className="w-full p-2 mt-1 text-left border rounded-md text-input-text border-input-border h-9"
@@ -233,7 +313,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
               </div>
             </div>
 
-            <label className="flex flex-col text-sm mb-4">
+            <label className="flex flex-col mb-4 text-sm">
               Expense description*
               <textarea
                 className="w-full p-2 mt-1 text-left border rounded-md resize-none text-input-text border-input-border"
@@ -244,11 +324,12 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
               />
             </label>
 
-            {/* TODO PLACEHOLDER */}
             <div className="mb-4">
-              <p className="border border-gray-300 border-dashed rounded-md h-[72px] w-full text-left mt-1 p-2 text-gray-500">
-                placeholder to add receipt
-              </p>
+                <ReceiptManagement                 
+                  expenseId={expensesData.id}
+                  ref={receiptManagementRef}
+                  isEditable={false}
+                />              
             </div>
             
             <div className="pb-2 mb-auto">
@@ -272,7 +353,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
                 </button>
               </div>
 
-              <div className="md:pb-12 pb-6 mt-2 overflow-y-auto">
+              <div className="pb-6 mt-2 overflow-y-auto md:pb-12">
                 <ExpenseParticipant
                   expensesData={expensesData}
                   deleteParticipant={deleteParticipant}
@@ -292,8 +373,9 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
               <button
                 type={"submit"}
                 className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo"
-              >
-                Create expense
+                disabled={uploading}
+              > 
+                {uploading ? 'Uploading...': 'Create expense'} 
               </button>
             </div>
           </div>

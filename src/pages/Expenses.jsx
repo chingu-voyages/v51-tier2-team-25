@@ -2,7 +2,10 @@ import { useContext, useState, useEffect } from "react";
 import { useParams } from "react-router-dom"
 import { AppContext } from "../App";
 import EditExpense from "../components/EditExpense";
-import GetOwePaid from "../helpers/GetOwePaid";
+import Expense from "../components/Expense";
+import ViewReceipt from "../components/ViewReceipt";
+import { collection, query, where, getDocs } from 'firebase/firestore'
+import { db } from '../../firebase';
 
 export default function Expenses() {
   const { groupId } = useParams()
@@ -10,6 +13,8 @@ export default function Expenses() {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [title, setTitle]= useState([])
+  const [isViewingReceipt, setIsViewingReceipt] = useState(false)
+  const [receiptImageUrl, setReceiptImageUrl] = useState(null)
 
   const currentGroup = groups.find(group=> group.id === Number(groupId))
 
@@ -25,11 +30,34 @@ export default function Expenses() {
     setSelectedExpense(null);
   };
 
-  const openReceipt = () =>{
-    //**TODO */
-    console.log("Receipt Open")
-  }
+  const openReceipt = async (expenseId) =>{
+    try{
+      console.log("Fetching receipts for expenseId:", expenseId);
+      setIsViewingReceipt(true)
 
+      // Query Firestore for receipts associated with the expenseId
+      const q = query(collection(db, 'receipts'), where('expenseId', '==', expenseId));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const fileUrls = querySnapshot.docs.map((doc) => {
+          const receiptData = doc.data();
+          console.log("Fetched receipt data:", receiptData);
+          return receiptData.fileUrl; 
+        });
+        console.log("Fetched URL:", fileUrls)
+        setReceiptImageUrl(fileUrls)
+      }else{
+        console.log("No receipts found for this expense.");
+        setReceiptImageUrl([]); // Handle no receipts case
+      }
+    }catch (error) {
+      console.error("Error fetching receipts:", error);
+    }  
+  }
+  const closeReceipt = () =>{
+    setIsViewingReceipt(false)
+  }
   
   const generateTitle = () =>{
     const formattedDate = new Date().toLocaleString('en-US', 
@@ -52,25 +80,13 @@ export default function Expenses() {
         <>
           {title && <p className="text-sm text-button">{title}</p>}
           {filteredExpenses.map((expense)=>(
-            <div key={expense.id} className="flex items-center justify-between p-4 my-2 border border-gray-300 rounded-md bg-zinc-50">
-              <div className='flex flex-col gap-2'>
-                <div className="flex gap-2 bg-zinc-50">
-                  <p className="text-sm font-bold">{expense.name}</p>
-                  <p className="px-1 text-xs border rounded-md bg-light-indigo border-border">{expense.category}</p>
-                </div>
-                <p className="text-sm">Placeholder for leftover budget</p>
-              </div>
-              <div className='flex gap-4 text-sm'>
-                <div className='flex flex-col gap-2'>
-                  <GetOwePaid />             
-                  <p>Placeholder people remaining</p>
-                </div>
-                <div className="flex gap-2">
-                  <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openReceipt}><img src="../../images/Ticket.svg" alt="Ticket" /></button>
-                  <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openEditExpense(expense)}><img src="../../images/Edit.svg" alt="Edit" /></button>
-                </div>   
-              </div>
-            </div>
+            <Expense 
+              key={expense.id} 
+              expense={expense} 
+              showButtons={true} 
+              openReceipt={openReceipt} 
+              openEditExpense={openEditExpense}
+            />
           ))}  
         </>     
       )}
@@ -82,6 +98,13 @@ export default function Expenses() {
           currentGroup={currentGroup}
         />
       )}
+      {isViewingReceipt && (
+        <ViewReceipt 
+          closeReceipt={closeReceipt} 
+          fileUrls={receiptImageUrl}
+        />
+      )}
+
     </div>
   );
 }

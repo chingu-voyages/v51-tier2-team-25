@@ -67,15 +67,17 @@ const ExpenseCategorySelection = ({ handleChange, category }) => {
         options={options} 
         placeholder="Choose a category"
         styles={customStyles}
-        isClearable
+        required
+
       />
     </>
   )
 
 }
-ExpenseCategorySelection.propTypes ={
+ExpenseCategorySelection.propTypes = {
   handleChange: PropTypes.func.isRequired,
-  category: PropTypes.string,
-}
+  category: PropTypes.string.isRequired,
+};
+
 
 export default ExpenseCategorySelection
