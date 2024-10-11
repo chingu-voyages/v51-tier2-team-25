@@ -17,23 +17,23 @@ export default function UserSummary() {
     //You're going to get
     const totalToGet = useMemo(() => {
         return expenses.reduce((total, expense) => {
-        return total + expense.participants.reduce((subTotal, participant) => {
-            if (participant.id !== storedUser.id && !participant.isPaid) {
-            return subTotal + participant.amountToPay;
-            }
-            return subTotal;
-        }, 0);
+          return total + expense.participants.reduce((subTotal, participant) => {
+              if (participant.id !== storedUser.id && !participant.isPaid) {
+              return subTotal + participant.amountToPay;
+              }
+              return subTotal;
+          }, 0);
         }, 0);
     }, [expenses, storedUser])
 
     //You owe
     const totalOwe = useMemo(() => {
         return expenses.reduce((total, expense) => {
-        const userParticipant = expense.participants.find(participant => participant.id === storedUser.id)
-        if (userParticipant && !userParticipant.isPaid) {
-            return total + userParticipant.amountToPay;
-        }
-        return total;
+          const userParticipant = expense.participants.find(participant => participant.id === storedUser.id)
+          if (userParticipant && !userParticipant.isPaid) {
+              return total + userParticipant.amountToPay;
+          }
+          return total;
         }, 0);
     }, [expenses, storedUser]);
 
