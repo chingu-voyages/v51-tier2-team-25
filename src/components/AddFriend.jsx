@@ -37,11 +37,15 @@ export default function AddFriend({ closeAddFriendModal }) {
             ...prevNewFriendData,
             avatar: `data:image/svg+xml;utf8,${encodeURIComponent(avatarSvg)}`,
           }));
-          console.log(newFriendData)
+
         })
         .catch((error) => console.error('Error fetching avatar:', error));
     }
   }, [newFriendData.userName]);
+
+  // useEffect(() => {
+  //   console.log("newFriendData updated: ", newFriendData);
+  // }, [newFriendData]);
 
   const addNewFriend = (event) => {
     event.preventDefault();
