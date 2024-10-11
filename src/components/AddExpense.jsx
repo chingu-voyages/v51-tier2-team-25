@@ -324,7 +324,6 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
               />
             </label>
 
-            {/* TODO PLACEHOLDER */}
             <div className="mb-4">
                 <ReceiptManagement                 
                   expenseId={expensesData.id}

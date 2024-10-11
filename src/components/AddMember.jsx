@@ -7,6 +7,7 @@ import { AppContext } from "../App";
 export default function AddMember({ 
   addMemberToGroup, 
   groupMembers,
+  resetSearchBar
 }) {
   const {showNotification} = useContext(AppContext)
   const [newMember, setNewMember] = useState("");
@@ -38,6 +39,7 @@ export default function AddMember({
         <div className="flex-grow mr-2">
           <SearchBar 
             handleMemberSelected={handleMemberSelected}
+            resetSearchBar={resetSearchBar}
           />
         </div>
 
