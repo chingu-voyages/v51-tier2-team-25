@@ -36,7 +36,7 @@ export default function AddGroup({
   const [groupsData, setGroupsData] = useState(
     temporaryGroupData
       ? {...temporaryGroupData,
-        members:[]
+        members:temporaryGroupData.members || []
       }
       : {
           avatar:"",
@@ -259,9 +259,9 @@ export default function AddGroup({
                 onClick={(e) => {
                   e.preventDefault();
                   createTemporaryGroupData();                  
-                  openLinkAddFriendModal();
+                  openLinkAddFriendModal();                  
                 }}
-                className="p-0 text-sm text-gray-400 underline hover:text-black "
+                className="p-0 text-sm text-gray-400 underline hover:text-black"
               >
                 Add new friends to your friend list
               </Link>
