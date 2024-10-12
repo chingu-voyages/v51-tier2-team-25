@@ -15,9 +15,13 @@ export default function Navbar() {
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
   const [isLinkAddFriendModalOpen, setIsLinkAddFriendModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isHomeHovered, setIsHomeHovered] =useState(false)
+  const [isProfileHovered, setIsProfileHovered] =useState(false)
   const { groups, friends, mainUser } = useContext(AppContext);
+
   const navigate = useNavigate();
   const location = useLocation();
+
 
   function openAddGroupModal() {
     if(!mainUser || !mainUser.id){
@@ -100,14 +104,22 @@ useEffect(() => {
 
         <div className={`md:block absolute z-10 w-full cursor-pointer md:bg-white bg-[#F0F1F5] ${isMenuOpen ? 'block' : 'hidden'}`}>
           <NavLink className="block" to="/">
-            <div className="flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
-              <img src="../../images/Home.svg" alt="home" className="mr-2" />
+            <div className="flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" 
+              onClick={handleNavClick}
+              onMouseEnter={()=>setIsHomeHovered(true)}
+              onMouseLeave={()=>setIsHomeHovered(false)}
+            >
+              <img src={isHomeHovered ? "../../images/DarkHome.svg":"../../images/Home.svg"} alt="home" className="mr-2" />
               <p className="font-extralight">Home</p>
             </div>
           </NavLink>
           <NavLink className="block" to="/profile">
-            <div className="flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
-              <img src="../../images/Profile.svg" alt="avatar" className="mr-2" />
+            <div className="flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" 
+              onClick={handleNavClick}
+              onMouseEnter={()=>setIsProfileHovered(true)}
+              onMouseLeave={()=>setIsProfileHovered(false)}              
+            >
+              <img src={isProfileHovered ? '../../images/DarkProfile.svg' : "../../images/Profile.svg"} alt="avatar" className="mr-2" />
               <p className="font-extralight">Profile</p>
             </div>
           </NavLink>

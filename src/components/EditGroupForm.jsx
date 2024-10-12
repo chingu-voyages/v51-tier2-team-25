@@ -141,7 +141,7 @@ export default function EditGroupForm({
 
     // Add member to the group
     const addMemberToGroup = (newMember) => {
-      console.log("Adding member w/avatar:", newMember)
+      //console.log("Adding member w/avatar:", newMember)
       setTempGroupData((prevData) => {
         const updatedGroup = {
           ...prevData,
@@ -192,7 +192,8 @@ export default function EditGroupForm({
                   <AvatarManagement 
                     avatar={tempGroupData.avatar}
                     onAvatarChange={handleAvatarChange} 
-                    showText={false}                 
+                    showText={false}
+                    isEditable={true}               
                   /> 
                 </div>
                 
@@ -331,4 +332,5 @@ EditGroupForm.propTypes = {
   setTempGroupData: PropTypes.func.isRequired,
   closeEditGroupFormModal: PropTypes.func.isRequired,
   openLinkAddFriendModal: PropTypes.func.isRequired,
+  isEditable: PropTypes.bool
 };
