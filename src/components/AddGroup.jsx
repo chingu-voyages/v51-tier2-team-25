@@ -121,10 +121,13 @@ export default function AddGroup({
       return;
     }
 
+    // Ensure mainUser is always the first member
+  const updatedMembers = [mainUser, ...groupsData.members.filter(member => member.id !== mainUser.id)]
+
     const newGroupData = {
       ...groupsData,
       remainingBudget: Number(groupsData.allottedBudget), 
-      members: [...groupsData.members, mainUser]
+      members: updatedMembers
     };
 
     addGroupToList(newGroupData);
