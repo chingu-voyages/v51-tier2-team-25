@@ -46,7 +46,7 @@ const AvatarManagement = ({avatar, onAvatarChange, showText=true, isEditable=tru
           onClick={()=> avatarInput.current.click()}
           className="flex items-center h-6 gap-1 p-1 -ml-6 text-xs text-gray-600 border rounded-lg border-input-border bg-zinc-50"
         >
-          <img src="../../images/Image.svg" className='h-3'/>
+          <img src="../../images/Image.svg" className='w-3 h-3'/>
           {showText && <span>Select Photo</span>}          
         </button>
 

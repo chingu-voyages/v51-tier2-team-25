@@ -121,10 +121,13 @@ export default function AddGroup({
       return;
     }
 
+    // Ensure mainUser is always the first member
+  const updatedMembers = [mainUser, ...groupsData.members.filter(member => member.id !== mainUser.id)]
+
     const newGroupData = {
       ...groupsData,
       remainingBudget: Number(groupsData.allottedBudget), 
-      members: [...groupsData.members, mainUser]
+      members: updatedMembers
     };
 
     addGroupToList(newGroupData);
@@ -183,7 +186,7 @@ export default function AddGroup({
         >
           <div className="flex flex-col">
             <div className="flex flex-col md:items-start md:flex-row">
-              <div className='w-32'>
+              <div className='object-cover w-32 h-32 rounded-full'>
                 <AvatarManagement 
                   avatar={groupsData.avatar}
                   onAvatarChange={handleAvatarChange}
