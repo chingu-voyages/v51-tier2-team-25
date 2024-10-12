@@ -18,8 +18,6 @@ export default function AddGroup({
   const modalRef = useRef()
   const navigate = useNavigate()
   const [resetSearchBar, setResetSearchBar] = useState(false); 
-  
-
 
   //Maybe move this to a helper function also maybe use uuid library?
   const generateGroupId = () => {
@@ -101,20 +99,12 @@ export default function AddGroup({
     }));
   };
 
-  const handleAvatarChange = (newAvatar, memberId) => {
-    setGroupsData(prev => {
-      const updatedMembers = prev.members.map(member => 
-        member.id === memberId ? { ...member, avatar: newAvatar } : member
-      );
-      const updatedGroup = {
-        ...prev,
-        members: updatedMembers,
-      };
-      localStorage.setItem('groupsData', JSON.stringify(updatedGroup));
-      return updatedGroup;
-    });
-  };
-  
+  const handleAvatarChange = (newAvatar) => {
+    setGroupsData((prev) => ({
+      ...prev,
+      avatar: newAvatar, // Update the avatar in the groupsData state
+    }));
+  };  
 
   const addNewGroup = (event) => {
     event.preventDefault();
@@ -198,6 +188,7 @@ export default function AddGroup({
                   avatar={groupsData.avatar}
                   onAvatarChange={handleAvatarChange}
                   showText={false} 
+                  isEditable={true}
                 /> 
               </div>
 
@@ -313,4 +304,5 @@ export default function AddGroup({
 AddGroup.propTypes = {
   closeAddGroupModal: PropTypes.func.isRequired,
   openLinkAddFriendModal: PropTypes.func.isRequired,
+  isEditable: PropTypes.bool
 };
