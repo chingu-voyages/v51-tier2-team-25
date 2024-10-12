@@ -44,10 +44,10 @@ export default function MobileFriendsPage() {
     return (
         <div className="p-4 max-w-[500px] w-full tracking-wide">
             <MobileSearchBar name="friend" onChange={handleSearch} />
-            <h2 className="text-gray-500 mb-1">Friends</h2>
+            <h2 className="mb-1 text-gray-500">Friends</h2>
             <button
             onClick={openAddFriendModal}  
-            className="w-full p-2 bg-gray-300 text-black rounded-md font-medium hover:bg-gray-400"
+            className="w-full p-2 font-medium text-black bg-gray-300 rounded-md hover:bg-gray-400"
             >
             + New friend
             </button>
@@ -57,18 +57,18 @@ export default function MobileFriendsPage() {
                     {(searchedFriends.length > 0 ? searchedFriends : friends).map((friend) => (
                         <li 
                             key={friend.id}
-                            className="border-2 border-gray-300 rounded-md mt-1 hover:bg-gray-300 bg-white"
+                            className="mt-1 bg-white border-2 border-gray-300 rounded-md hover:bg-gray-300"
                         >
                             <NavLink to={`/friend/${friend.id}`} className="flex items-center p-3">
-                            <img
-                                src="../../images/profilePlaceHolder.png"
-                                className="w-8 mr-2 border border-gray-200 rounded-full"
-                                alt="Friend profile icon"
-                            />
-                            <div>
-                                <h3 className="font-medium">{friend.name}</h3>
-                                <p className="text-xs text-gray-600">- groups in common</p>
-                            </div>
+                                <img
+                                    src="../../images/profilePlaceHolder.png"
+                                    className="w-8 h-8 mr-2 border border-gray-200 rounded-full"
+                                    alt="Friend profile icon"
+                                />
+                                <div>
+                                    <h3 className="font-medium">{friend.name}</h3>
+                                    <p className="text-xs text-gray-600">- groups in common</p>
+                                </div>
                             </NavLink>
                         </li>
                     ))}

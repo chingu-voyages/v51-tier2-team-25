@@ -124,13 +124,13 @@ useEffect(() => {
             </div>
           </NavLink>
           <NavLink className="block" to={{pathname: "/mobile-groups"}}>
-            <div className="md:hidden flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
-              <img src="../../images/placeholder.jpg" alt="avatar" className="mr-2" />
+            <div className="md:hidden flex items-center p-3 rounded-md md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
+              <img src="../../images/placeholder.jpg" alt="avatar" className="w-6 h-6 mr-2 rounded-full" />
               <p className="font-extralight">Groups</p>
             </div>
           </NavLink>
           <NavLink className="block" to={{pathname: "/mobile-friends"}}>
-          <div className="md:hidden flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
+          <div className="md:hidden flex items-center p-3 rounded-md md:hover:bg-light-indigo hover:bg-[#D8DBE5]" onClick={handleNavClick}>
             <img src="../../images/Friends.svg" className="mr-2" />
             <p className="font-extralight">Friends</p>
           </div>

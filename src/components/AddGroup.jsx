@@ -183,7 +183,7 @@ export default function AddGroup({
         >
           <div className="flex flex-col">
             <div className="flex flex-col md:items-start md:flex-row">
-              <div className='w-32'>
+              <div className='object-cover w-32 h-32 rounded-full'>
                 <AvatarManagement 
                   avatar={groupsData.avatar}
                   onAvatarChange={handleAvatarChange}
