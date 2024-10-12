@@ -99,10 +99,15 @@ export default function Groups() {
 
           <div className="flex items-end pt-4">
             <div className="flex items-center w-1/2">
-              <img
-                className="w-8 h-8 rounded-full"
-                src= "../../images/placeholder.jpg"
-              />
+              {currentGroup?.members.map((member, index)=>(
+                <img
+                  key={member.id}
+                  className={`w-8 h-8 rounded-full border-1 object-cover relative -ml-5 first:ml-0`}
+                  style={{ zIndex: index }}
+                  src={member.avatar || "../../images/placeholder.jpg"}
+                  alt={member.name}
+               />
+              ))}              
               <p className="pl-2 text-sm text-gray-500">
                 {currentGroup?.members.length} members
               </p>

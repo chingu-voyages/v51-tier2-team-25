@@ -10,14 +10,14 @@ export default function MembersOnGroup({ groupMembers, deleteMemberFromGroup,}){
 
   const renderAvatar = (member) => {
     if (!member.avatar) {
-      return <img src="/images/Profile.svg" alt="Profile Avatar" className="w-6 h-6 border rounded-full" />;
+      return <img src="/images/Profile.svg" alt="Profile Avatar" className="w-6 h-6 rounded-full" />;
     }
     
     if (member.avatar.startsWith('data:image/svg+xml')) {
       return <div className="w-6 h-6 border rounded-full" dangerouslySetInnerHTML={{ __html: decodeURIComponent(member.avatar.split(',')[1]) }} />;
     }
     
-    return <img src={member.avatar} alt="Profile Avatar" className="w-6 h-6 border rounded-full" />;
+    return <img src={member.avatar} alt="Profile Avatar" className="w-6 h-6 rounded-full" />;
   };
 
   const noMembersMessage = (

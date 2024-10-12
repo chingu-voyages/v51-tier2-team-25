@@ -17,7 +17,7 @@ export default function Home() {
   }, [location, navigate])
 
   return <>
-      <div className="flex flex-col max-w-[785px] w-full gap-4 font-outfit bg-blue-background">
+      <div className="flex flex-col max-w-[785px] w-full gap-4 font-outfit bg-blue-background p-2">
         <UserSummary />
         <div className="">
           <NavLink className={getNavLinkClass} to={`expenses-user`}>

@@ -187,8 +187,8 @@ export default function EditGroupForm({
             onSubmit={handleSubmit}
           >
             <div className="flex flex-col ">
-              <div className="flex items-center">
-                <div className='w-32'>
+              <div className="flex flex-col md:items-start md:flex-row">
+                <div className='object-cover w-32 h-32 rounded-full'>
                   <AvatarManagement 
                     avatar={tempGroupData.avatar}
                     onAvatarChange={handleAvatarChange} 
