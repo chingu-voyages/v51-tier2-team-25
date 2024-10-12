@@ -11,6 +11,9 @@ export default function LinkAddFriendModal({ closeLinkAddFriendModal }) {
     name: "",
     userName: "",
     id: uuidv4(),
+    paypal:"",
+    venmo:"",
+    cashapp:"",
   });
 
   // Handle input changes and updates form data state

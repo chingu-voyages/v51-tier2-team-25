@@ -16,6 +16,7 @@ export default function EditAddFriendModal({
     name: "",
     userName: "",
     id: uuidv4(),
+    
   });
    // Handle input changes and updates form data state
    const handleChange = (event) => {

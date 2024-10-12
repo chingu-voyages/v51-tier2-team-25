@@ -192,7 +192,8 @@ export default function EditGroupForm({
                   <AvatarManagement 
                     avatar={tempGroupData.avatar}
                     onAvatarChange={handleAvatarChange} 
-                    showText={false}                 
+                    showText={false}
+                    isEditable={true}               
                   /> 
                 </div>
                 
@@ -331,4 +332,5 @@ EditGroupForm.propTypes = {
   setTempGroupData: PropTypes.func.isRequired,
   closeEditGroupFormModal: PropTypes.func.isRequired,
   openLinkAddFriendModal: PropTypes.func.isRequired,
+  isEditable: PropTypes.bool
 };

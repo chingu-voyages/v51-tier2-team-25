@@ -13,7 +13,7 @@ export default function Profile() {
 
   //Load user info from localstorage
   useEffect(()=>{
-    const storedUser = JSON.parse(localStorage.getItem('mainUserData'))
+    const storedUser = JSON.parse(localStorage.getItem('mainUser'))
     if (storedUser){
       setMainUser(storedUser)
       setIsEditable(false)
@@ -36,20 +36,20 @@ export default function Profile() {
         ...prev,
         avatar: newAvatar
       }
-      localStorage.setItem('mainUserData', JSON.stringify(updatedUser))
+      localStorage.setItem('mainUser', JSON.stringify(updatedUser))
       return updatedUser
-    })    
+    })
   }
-
-  const handleSubmit = (e) =>{
-    e.preventDefault()
+  
+  const handleSubmit = () =>{
+   
     const updatedUser = {
       ...mainUser,
       id: mainUser.id || uuidv4()
     }
 
     //Save user to localStorage
-    localStorage.setItem('mainUserData', JSON.stringify(updatedUser))
+    localStorage.setItem('mainUser', JSON.stringify(updatedUser))
     setMainUser(updatedUser)
     addMainUserToFriends()
     setIsEditable(false)
@@ -62,7 +62,7 @@ export default function Profile() {
 
   const confirmDelete = () => {
     //clear all localStorage
-    localStorage.removeItem('mainUserData')
+    localStorage.removeItem('mainUser')
     localStorage.removeItem('groupsData')
     localStorage.removeItem('friendsData')
     localStorage.removeItem('expensesData')
@@ -100,6 +100,7 @@ export default function Profile() {
                   avatar={mainUser.avatar}
                   onAvatarChange={handleAvatarChange}
                   showText={true}
+                  isEditable={isEditable}
                 />        
 
                 <label className='text-sm font-medium text-gray-950'>

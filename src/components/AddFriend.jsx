@@ -14,6 +14,9 @@ export default function AddFriend({ closeAddFriendModal }) {
     name: "",
     userName: "",
     id: uuidv4(),
+    paypal:"",
+    venmo:"",
+    cashapp:"",
   });
 
   // Handle input changes and updates form data state

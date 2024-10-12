@@ -188,6 +188,7 @@ export default function AddGroup({
                   avatar={groupsData.avatar}
                   onAvatarChange={handleAvatarChange}
                   showText={false} 
+                  isEditable={true}
                 /> 
               </div>
 
@@ -303,4 +304,5 @@ export default function AddGroup({
 AddGroup.propTypes = {
   closeAddGroupModal: PropTypes.func.isRequired,
   openLinkAddFriendModal: PropTypes.func.isRequired,
+  isEditable: PropTypes.bool
 };

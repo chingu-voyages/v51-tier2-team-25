@@ -7,7 +7,7 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
     const [isExpenseOpen, setIsExpenseOpen] = useState(false);
     const { handleToggleIsPaid } = useContext(AppContext);
     const [fullyPaidDate, setFullyPaidDate] = useState(null);
-    const storedUser = JSON.parse(localStorage.getItem('mainUserData'))
+    const storedUser = JSON.parse(localStorage.getItem('mainUser'))
 
     const peopleRemainingToPay = expense.participants.filter(participant => !participant.isPaid).length;
     const unpaidAmount = expense.participants.filter(p => !p.isPaid).reduce((total, participant) => total + participant.amountToPay, 0);

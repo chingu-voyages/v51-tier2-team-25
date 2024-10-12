@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import {useState} from 'react'
 
 const ViewReceipt = ({ closeReceipt, fileUrls }) => {
-  console.log("Rendering receipts with URLs:", fileUrls); // Log fileUrls to debug
+  // console.log("Rendering receipts with URLs:", fileUrls); // Log fileUrls to debug
 
   const [currentIndex, setCurrentIndex] =useState(0)
 
