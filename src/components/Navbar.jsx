@@ -16,7 +16,7 @@ export default function Navbar() {
   const [isLinkAddFriendModalOpen, setIsLinkAddFriendModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isHomeHovered, setIsHomeHovered] =useState(false)
-  const [isProfileHovered, setIsProfileHovered] =useState(false)
+  const [isProfileHovered, setIsProfileHovered] =useState(false)  
   const { groups, friends, mainUser } = useContext(AppContext);
 
   const navigate = useNavigate();
