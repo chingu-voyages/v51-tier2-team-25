@@ -179,47 +179,45 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
   
   const renderPreviewsWithDelete = () => (
     <>
-      <div 
-        {...getRootProps()} 
-        className="flex flex-col flex-grow w-full h-auto p-2 mt-1 text-center text-gray-500 "
-      >
+      <div {...getRootProps()} className="flex flex-col flex-grow w-full h-auto p-2 mt-1 " >
         <input {...getInputProps()} />
-        <p>Drag & drop more receipt images or click to select</p>
+        <p className="p-4 text-sm text-center text-gray-800 font-outfit">Drag & drop more receipt images or click to select</p>
       </div>
-      <div className="flex flex-wrap w-full gap-4 mt-4">
+      <div className="flex flex-col w-full gap-2 ">
         {selectedImages.map((receipt,index) => (
-          <div
-            key={receipt.fileId || receipt.preview}
-            className="flex flex-col items-center flex-grow p-3 text-sm text-center text-gray-500 "
-          >
-            <img src={receipt.fileUrl || receipt.preview} alt="Receipt" className="h-12 pb-3 rounded-med" />
-            <p className="pb-1 text-xs text-gray-600">
-              <span className="font-bold">receipt</span> attached
-            </p>
-            <div className="flex gap-4">
+
+            <div key={receipt.fileId || receipt.preview} className="flex items-center justify-between p-3 text-sm text-gray-500 rounded-md bg-light-indigo">
+              
+              <div className="flex items-center gap-4">
+                <img src={receipt.fileUrl || receipt.preview} alt="Receipt" className="object-cover w-12 h-12" /> 
+                <p className="pb-1 text-xs text-gray-600"><span className="font-bold">receipt</span> attached </p>
+              </div>
+
+              <div className="">
               {receipt.newFile ? (
                 <button
                   type="button"
                   className="text-xs text-gray-600"
                   onClick={() => handleFileRemove(index)}
                 >
-                  Remove
+                  <img src='../../images/XVector.svg' alt='remove button' className="w-2 h-2"/>
                 </button>
               ) : (
-              isEditable && (
-                <button
-                  type="button"
-                  className="text-xs text-gray-600"
-                  onClick={() => handleDeleteReceipt(receipt.fileId, receipt.fileUrl)}
-                >
-                  Delete Attachment
-                </button>
-              )            
-            )}
-            </div>
-          </div>
+                isEditable && (
+                  <button
+                    type="button"
+                    className="text-xs text-gray-600"
+                    onClick={() => handleDeleteReceipt(receipt.fileId, receipt.fileUrl)}
+                  >
+                    <img src='../../images/XVector.svg' alt='remove button' className="w-2 h-2"/>
+                  </button>
+                )            
+              )}
+            </div>            
+          </div> 
         ))}
       </div>
+    
     </>
     
   );
@@ -235,9 +233,8 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
         src='../../images/Upload.svg'
         className="h-6 text-center"
       ></img>
-      <p className="text-sm text-gray-800 font-outfit">Upload receipt image or drag and drop</p>
-      <p className="text-xs text-gray-600 font-outfit">.png, .jpeg, .heic, .pdf, up to 5MB</p>
-      <p className="text-xs text-gray-400 font-outfit">PDF supports only one page</p>
+      <p className="p-5 text-sm text-gray-800 font-outfit"><span className="font-semibold">Upload receipt image</span> or <span className="font-semibold">drag and drop</span></p>
+      
     </div>
   );
 
