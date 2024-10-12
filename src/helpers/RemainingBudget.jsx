@@ -19,7 +19,7 @@ const RemainingBudget = ({ groupId }) =>{
 
   const remainingBudget = budget - totalExpenses
 
-  return (remainingBudget)
+  return remainingBudget.toFixed(2)
 }
 
 export default RemainingBudget
