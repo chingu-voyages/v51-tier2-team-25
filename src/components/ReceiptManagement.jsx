@@ -6,6 +6,7 @@ import { getDownloadURL, uploadBytes, ref as firebaseRef,deleteObject } from 'fi
 import { collection, addDoc, query, where, getDocs, doc, deleteDoc } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import PropTypes from 'prop-types';
+import imageCompression from 'browser-image-compression'
 
 //Each receipt should have a unique id and be under expense id
 
@@ -31,17 +32,34 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
   },[expenseId, isEditable])
 
   // Callback function to append new files to selectedImages and generate preview URLs
-  const onDrop = useCallback((acceptedFiles) => {
+  const onDrop = useCallback(async(acceptedFiles) => {
+    const compressedFilesPromises = acceptedFiles.map(async (file) => {
+      
+      const options = {
+        maxSizeMB: 1, 
+        maxWidthOrHeight: 1024, 
+        useWebWorker: true, 
+      };
+      try {
+        // Compress the file
+        const compressedFile = await imageCompression(file, options);
+        compressedFile.preview = URL.createObjectURL(compressedFile); // Create preview URL for the compressed image
+        compressedFile.newFile = true; // Mark it as a new file for the UI
+
+        return compressedFile;
+      } catch (error) {
+        console.error("Error compressing file:", error);
+        showNotification(`Error compressing ${file.name}`, 'error');
+      }
+    });
+
+    const compressedFiles = await Promise.all(compressedFilesPromises);
+
     setSelectedImages((prev) => [
       ...prev,
-      ...acceptedFiles.map((file) =>
-        Object.assign(file, {  
-          preview:URL.createObjectURL(file),
-          newFile: true
-        })
-      )
-    ])
-  }, []);
+      ...compressedFiles.filter(file => !!file), // Filter out any undefined (failed compression)
+    ]);
+  }, [showNotification]);
 
   // Hook to manage the dropzone functionality
   const { getRootProps, getInputProps } = useDropzone({
