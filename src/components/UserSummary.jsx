@@ -38,15 +38,15 @@ export default function UserSummary() {
     }, [expenses, storedUser]);
 
     return (
-        <div className="flex w-full gap-2">
-          <div className='flex items-center w-1/3 mt-12 border rounded-md border-border bg-zinc-50'>
+        <div className="flex flex-col w-full gap-2 md:flex-row ">
+          <div className='flex items-center w-full mt-12 border rounded-md md:w-1/3 border-border bg-zinc-50'>
             <div className='flex flex-col justify-center w-full gap-1 px-3 py-6'>
               <p className='text-xs font-light text-gray-600'>Your balance</p>
               <p className='text-xl font-semibold text-gray-950'>US$ {totalBalance.toFixed(2)}</p>
             </div> 
           </div>
 
-          <div className='flex items-center w-1/3 mt-12 border rounded-md border-border bg-zinc-50'>
+          <div className='flex items-center w-full border rounded-md md:mt-12 md:w-1/3 border-border bg-zinc-50'>
             <div className='flex flex-col justify-center w-full gap-1 px-3 py-6'>
               <p className='text-xs font-light text-gray-600'>You&apos;re going to receive</p>
               <p className='text-xl font-semibold text-green'>US$ {totalToGet.toFixed(2)}</p>
@@ -54,7 +54,7 @@ export default function UserSummary() {
             <img src="../../images/VectorGreen.svg" className="w-[67px] mr-6 h-[43px]"></img>
           </div>
 
-          <div className='flex items-center w-1/3 mt-12 border rounded-md border-border bg-zinc-50'>
+          <div className='flex items-center w-full border rounded-md md:mt-12 md:w-1/3 border-border bg-zinc-50'>
             <div className='flex flex-col justify-center w-full gap-1 px-3 py-6'>
               <p className='text-xs font-light text-gray-600'>You owe</p>
               <p className='text-xl font-semibold text-red-700'>US$ {totalOwe.toFixed(2)}</p>

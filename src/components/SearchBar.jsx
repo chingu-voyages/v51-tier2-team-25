@@ -112,15 +112,19 @@ export default function SearchBar({
         classNamePrefix="select"
         isDisabled={isDisabled}
         isLoading={isLoading}
-        // isClearable={isClearable}
         isRtl={isRtl}
         isSearchable={isSearchable}
-        name="color"
         options={options}
         filterOption={filterOptions}
         onChange={addSelectionToForm}
         maxMenuHeight={150}
         value={selectedValue}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault(); // Prevent form submission
+            addSelectionToForm(selectedValue); // Add the selection to form manually
+          }
+        }}
       />
     </div>
   );
