@@ -75,13 +75,14 @@ export default function Expenses() {
   return (
     <div >      
       {filteredExpenses.length === 0 ? (
-      <p>No expenses found.</p>
+      <p className="text-gray-500">No expenses found.</p>
       ) : (
         <>
           {title && <p className="text-sm text-button">{title}</p>}
           {filteredExpenses.map((expense)=>(
             <Expense 
               key={expense.id} 
+              group={currentGroup}
               expense={expense} 
               showButtons={true} 
               openReceipt={openReceipt} 

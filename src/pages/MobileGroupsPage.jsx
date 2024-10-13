@@ -71,7 +71,7 @@ export default function MobileGroupsPage() {
       <h2 className="mb-1 text-gray-500">Groups</h2>
       <button
         onClick={openAddGroupModal}  
-        className="w-full p-2 font-medium text-black bg-gray-300 rounded-md hover:bg-gray-400"
+        className="w-full p-2 font-medium text-gray-800 bg-gray-300 rounded-md hover:bg-gray-400"
       >
         + New group
       </button>

@@ -98,21 +98,25 @@ export default function Friends() {
 
         <div>          
           {friendExpenses.length > 0 ? (
-            friendExpenses.map((expense, index) => (
-              <div key={expense.id}>
-                <p>{title[index]}</p>
+            friendExpenses.map((expense, index) => {
+              const group = groups.find(group => group.id === expense.groupId);
+              return (
+                <div key={expense.id}>
+                  <p>{title[index]}</p>
                   <Expense 
                     key={expense.id} 
                     expense={expense} 
+                    group={group} 
                     showButtons={false} 
                   />
-              </div>
-            ))
-          ):(
-            <p>No expenses for this friend</p>
+                </div>
+              );
+            })
+          ) : (
+            <p className="text-gray-500">No expenses for this friend</p>
           )}
         </div>
-  
+          
       </div>
       {isModalOpen && (
         <ConfirmationModal
