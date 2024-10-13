@@ -59,9 +59,6 @@ export default function AddFriend({ closeAddFriendModal }) {
       return;
     }
 
-    //console.log("Adding new friend: ", newFriendData);
-    
-    //validate userName
     const isUserNameTaken = friends.some(
       (friend) =>
         friend.userName.toLowerCase() === newFriendData.userName.toLowerCase()
@@ -74,23 +71,13 @@ export default function AddFriend({ closeAddFriendModal }) {
     addFriendToList(newFriendData);    
     
     localStorage.setItem("friendsList", JSON.stringify([...friends, newFriendData]))
-    
-    // const temporaryGroupData = JSON.parse(localStorage.getItem("temporaryGroupData")) || {};
-    // const updatedTemporaryGroupData = {
-    //   ...temporaryGroupData,
-    //   members: [...(temporaryGroupData.members || []), newFriendData],
-    // };
-    // localStorage.setItem("temporaryGroupData", JSON.stringify(updatedTemporaryGroupData));
 
     closeAddFriendModal();
     showNotification("New friend added",'success');
     
-    // Check screen size to conditionally navigate
     if (window.innerWidth < 768) {
-      // If small screen, navigate to mobile-friends page
       navigate("/mobile-friends");
     } else {
-      // If not small screen, navigate to the friend's detail page
       navigate(`friend/${newFriendData.id}`);
     }
   };
@@ -116,6 +103,7 @@ export default function AddFriend({ closeAddFriendModal }) {
                   name="name"
                   value={newFriendData.name}
                   onChange={handleChange}
+                  placeholder="Bob Nielsen"
                   maxLength="30"
                   required
                 />
@@ -129,6 +117,7 @@ export default function AddFriend({ closeAddFriendModal }) {
                   name="userName"
                   value={newFriendData.userName}
                   onChange={handleChange}
+                  placeholder="@Bob"
                   maxLength="30"
                   required
                 />
