@@ -113,7 +113,7 @@ export default function Friends() {
               );
             })
           ) : (
-            <p>No expenses for this friend</p>
+            <p className="text-gray-500">No expenses for this friend</p>
           )}
         </div>
           

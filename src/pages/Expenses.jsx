@@ -75,7 +75,7 @@ export default function Expenses() {
   return (
     <div >      
       {filteredExpenses.length === 0 ? (
-      <p>No expenses found.</p>
+      <p className="text-gray-500">No expenses found.</p>
       ) : (
         <>
           {title && <p className="text-sm text-button">{title}</p>}
