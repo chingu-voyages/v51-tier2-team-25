@@ -179,7 +179,7 @@ Expense.propTypes = {
             })
         ).isRequired,
     }).isRequired,
-    showButtons: PropTypes.bool,
-    openReceipt: PropTypes.func.isRequired,
-    openEditExpense: PropTypes.func.isRequired,
+    showButtons: PropTypes.bool.isRequired,
+    openReceipt: PropTypes.func,
+    openEditExpense: PropTypes.func,
 };
