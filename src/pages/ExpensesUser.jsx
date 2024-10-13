@@ -16,6 +16,7 @@ export default function ExpensesUser() {
                             <Expense 
                                 key={expense.id} 
                                 expense={expense} 
+                                group={group}
                                 showButtons={false}
                             />
                         ))}

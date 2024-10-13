@@ -82,6 +82,7 @@ export default function Expenses() {
           {filteredExpenses.map((expense)=>(
             <Expense 
               key={expense.id} 
+              group={currentGroup}
               expense={expense} 
               showButtons={true} 
               openReceipt={openReceipt} 
