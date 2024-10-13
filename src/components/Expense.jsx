@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { AppContext } from "../App";
 
 
-export default function Expense({expense, showButtons, openReceipt, openEditExpense}) {
+export default function Expense({expense, group, showButtons, openReceipt, openEditExpense}) {
     const [isExpenseOpen, setIsExpenseOpen] = useState(false);
     const { handleToggleIsPaid } = useContext(AppContext);
     const [fullyPaidDate, setFullyPaidDate] = useState(null);
     const storedUser = JSON.parse(localStorage.getItem('mainUser'))
+    console.log("this is the group data;", group)
 
     const peopleRemainingToPay = expense.participants.filter(participant => !participant.isPaid).length;
     const unpaidAmount = expense.participants.filter(p => !p.isPaid).reduce((total, participant) => total + participant.amountToPay, 0);
@@ -23,6 +24,10 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
     const hasUser = expense.participants.find(participant => participant.id === storedUser.id)
     const userIsPaid = hasUser ? hasUser.isPaid : false;
     const userAmountToPay = hasUser ? hasUser.amountToPay : 0;
+
+    const isGroupMember = (participantId) => {
+        return group.members.some(member => member.id === participantId);
+    };
 
     return (
         <div>
@@ -68,7 +73,7 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                             )}
                         </div>
                         {showButtons && (
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 hidden md:block">
                             <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openReceipt(expense.id)}><img src="../../images/Ticket.svg" alt="Ticket" /></button>
                             <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openEditExpense(expense)}><img src="../../images/Edit.svg" alt="Edit" /></button>
                         </div>
@@ -97,7 +102,7 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                                 <React.Fragment key={participant.id}>
                                     <div className="flex items-center">
                                         <img src={participant.avatar} className='w-6 h-6 mr-4 rounded-full border-border'/>
-                                        <p>{participant.name}</p>
+                                        <p className={`${!isGroupMember(participant.id) ? 'line-through text-gray-400' : ''}`}>{participant.name}</p>
                                     </div>
                                     <div className="flex justify-center">
                                         <p>{participant.sharePercentage}%</p>
@@ -142,6 +147,26 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                             <p>${parseFloat(expense.amount).toFixed(2)}</p>
                             </div>
                         </div>
+                        {showButtons && (
+                        <div className="flex gap-2 md:hidden mt-3 justify-between gap-4">
+                            <button 
+                                type="button"
+                                className="flex items-center justify-center px-1 rounded-md hover:bg-gray-400 bg-gray-300 font-medium p-2 text-gray-800 w-full gap-3"
+                                onClick={() => openReceipt(expense.id)}
+                            >
+                                <img src="../../images/Ticket.svg" alt="Ticket"/>
+                                <p>View receipt</p>
+                            </button>
+                            <button 
+                                type="button" 
+                                className="flex items-center justify-center px-1 rounded-md hover:bg-gray-400 bg-gray-300 font-medium p-2 text-gray-800 w-full gap-3" 
+                                onClick={() => openEditExpense(expense)}
+                            >
+                                <img src="../../images/Edit.svg" alt="Edit" />
+                                <p>Edit expense</p>
+                            </button>
+                        </div>
+                        )}
                     </div>
                 )}
             </div>
@@ -164,9 +189,17 @@ Expense.propTypes = {
                 amountToPay: PropTypes.number.isRequired,
                 isPaid: PropTypes.bool.isRequired,
             })
-        ).isRequired, 
+        ).isRequired,
     }).isRequired,
-    showButtons: PropTypes.bool,
-    openReceipt: PropTypes.func.isRequired,
-    openEditExpense: PropTypes.func.isRequired,
+    group: PropTypes.shape({
+        members: PropTypes.arrayOf(
+            PropTypes.shape({
+                id: PropTypes.string.isRequired,
+                name: PropTypes.string,
+            })
+        ).isRequired,
+    }).isRequired,
+    showButtons: PropTypes.bool.isRequired,
+    openReceipt: PropTypes.func,
+    openEditExpense: PropTypes.func,
 };

@@ -38,8 +38,8 @@ export default function UserSummary() {
     }, [expenses, storedUser]);
 
     return (
-        <div className="flex flex-col w-full gap-2 md:flex-row ">
-          <div className='flex items-center w-full mt-12 border rounded-md md:w-1/3 border-border bg-zinc-50'>
+        <div className="flex flex-col w-full gap-2 md:flex-row">
+          <div className='flex items-center w-full md:mt-12 mt-2 border rounded-md md:w-1/3 border-border bg-zinc-50'>
             <div className='flex flex-col justify-center w-full gap-1 px-3 py-6'>
               <p className='text-xs font-light text-gray-600'>Your balance</p>
               <p className='text-xl font-semibold text-gray-950'>US$ {totalBalance.toFixed(2)}</p>

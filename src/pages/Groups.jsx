@@ -3,14 +3,15 @@ import { useState, useContext, useEffect } from "react";
 import { AppContext } from "../App";
 import EditGroupForm from "../components/EditGroupForm";
 import AddExpense from "../components/AddExpense";
-import EditAddFriendModal from "../components/EditAddFriendModal";
+import EditAddFriendModal from "../components/EditAddFriendModal"
+import RemainingBudget from "../helpers/RemainingBudget";
 
 const getNavLinkClass = ({ isActive })=> 
    `${isActive ? "px-2 py-1 text-sm bg-border rounded-t-md text-tab-text" : "px-2 py-1 text-sm text-button"} hover:text-tab-text`
 
 export default function Groups() {
-  const { groupId } = useParams(); // Get the groupId from the URL
-  const { groups, addExpenseToList } = useContext(AppContext); // Get all groups from context
+  const { groupId } = useParams(); 
+  const { groups, addExpenseToList } = useContext(AppContext); 
   const navigate = useNavigate();
 
   const [isEditGroupFormModalOpen, setIsEditGroupFormModalOpen] = useState(false);
@@ -23,11 +24,10 @@ export default function Groups() {
   useEffect(() => {
     if (currentGroup) {
       setTempGroupData(currentGroup);
-      navigate(`expenses`); //auto navigate to expense page when group loads
+      navigate(`expenses`); 
     }
   }, [currentGroup, navigate]);
   
-  // Find the current group based on the groupId
   if(!groupId){
     console.error("groupId undefined")
     return
@@ -37,10 +37,6 @@ export default function Groups() {
     console.error("Group not found")
     return
   }
-
-  //console.log('current group expenses:',currentGroup?.expenses)
-
-  
 
   function openEditGroupFormModal() {
     setIsEditGroupFormModalOpen(true);
@@ -74,7 +70,7 @@ export default function Groups() {
                 alt='Group Avatar'
                 src={currentGroup?.avatar|| "../../images/placeholder.jpg"}
               />
-              <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-1/2 bottom-3 rounded-xl">
+              <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-[50px] bottom-3 rounded-xl">
                 {currentGroup?.groupType}
               </div>
             </div>
@@ -93,6 +89,7 @@ export default function Groups() {
             <img
               className="h-4 w-4 absolute md:relative md:top-0 top-[120px] right-0"
               src="../../images/Setting.svg"
+              alt="Edit Expense Icon"
               onClick={openEditGroupFormModal}
             />
           </div>
@@ -124,7 +121,7 @@ export default function Groups() {
               <div className="flex flex-col">
                 <p className="text-xs text-gray-500">Remaining</p>
                 <p className="text-sm text-gray-950">
-                  US$ {currentGroup?.remainingBudget.toFixed(2)}
+                  US$ <RemainingBudget groupId={groupId} />
                 </p>
                 
               </div>
