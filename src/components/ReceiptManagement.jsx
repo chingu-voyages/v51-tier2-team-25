@@ -137,8 +137,8 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
           showNotification(`Error uploading ${file.name}: ${error.message}`, 'error');
         }
       }
-
       showNotification('Receipts uploaded successfully', 'success');
+      
     } catch (error) {
       console.error('Error in uploadReceiptsToFirebase:', error);
       showNotification(`Error uploading receipts: ${error.message}`, 'error');

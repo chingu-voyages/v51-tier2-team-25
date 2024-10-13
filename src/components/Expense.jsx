@@ -59,12 +59,12 @@ export default function Expense({expense, group, showButtons, openReceipt, openE
                             </div>
                         </div>
                     </div>
-                    <div className='flex gap-4 text-sm'>
+                    <div className='flex items-center gap-4 text-sm'>
                         <div className='flex flex-col gap-2'>    
                             {allPaid ? (
                                 <p className="text-sm"><span className="font-bold">Fully paid</span> on {fullyPaidDate}</p>
                             ) : (
-                                <p className="text-sm">US${unpaidAmount.toFixed(2)} left</p>
+                                <p className="text-sm font-semibold">US${unpaidAmount.toFixed(2)} left</p>
                             )}        
                             {allPaid ? (
                                 <p>${expense.amount} paid by {expense.participants.length} members</p>
@@ -73,9 +73,9 @@ export default function Expense({expense, group, showButtons, openReceipt, openE
                             )}
                         </div>
                         {showButtons && (
-                        <div className="flex gap-2 hidden md:block">
-                            <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openReceipt(expense.id)}><img src="../../images/Ticket.svg" alt="Ticket" /></button>
-                            <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openEditExpense(expense)}><img src="../../images/Edit.svg" alt="Edit" /></button>
+                        <div className="flex hidden gap-2 md:block">
+                            <button type="button" className="px-1 py-1 rounded-md hover:bg-gray-200" onClick={() => openReceipt(expense.id)}><img src="../../images/Ticket.svg" alt="Ticket" className='w-5 h-5'/></button>
+                            <button type="button" className="px-1 py-1 ml-1 rounded-md hover:bg-gray-200" onClick={() => openEditExpense(expense)}><img src="../../images/Edit.svg" alt="Edit" className='w-5 h-5'/></button>
                         </div>
                         )}
                     </div>
@@ -148,10 +148,10 @@ export default function Expense({expense, group, showButtons, openReceipt, openE
                             </div>
                         </div>
                         {showButtons && (
-                        <div className="flex gap-2 md:hidden mt-3 justify-between gap-4">
+                        <div className="flex justify-between gap-2 gap-4 mt-3 md:hidden">
                             <button 
                                 type="button"
-                                className="flex items-center justify-center px-1 rounded-md hover:bg-gray-400 bg-gray-300 font-medium p-2 text-gray-800 w-full gap-3"
+                                className="flex items-center justify-center w-full gap-3 p-2 px-1 font-medium text-gray-800 bg-gray-300 rounded-md hover:bg-gray-400"
                                 onClick={() => openReceipt(expense.id)}
                             >
                                 <img src="../../images/Ticket.svg" alt="Ticket"/>
@@ -159,7 +159,7 @@ export default function Expense({expense, group, showButtons, openReceipt, openE
                             </button>
                             <button 
                                 type="button" 
-                                className="flex items-center justify-center px-1 rounded-md hover:bg-gray-400 bg-gray-300 font-medium p-2 text-gray-800 w-full gap-3" 
+                                className="flex items-center justify-center w-full gap-3 p-2 px-1 font-medium text-gray-800 bg-gray-300 rounded-md hover:bg-gray-400" 
                                 onClick={() => openEditExpense(expense)}
                             >
                                 <img src="../../images/Edit.svg" alt="Edit" />
