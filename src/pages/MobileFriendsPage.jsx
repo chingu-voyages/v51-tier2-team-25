@@ -82,9 +82,6 @@ export default function MobileFriendsPage() {
             ) : (
             <p>You don&apos;t have any friends yet.</p>
             )}
-https://splithubfairshare.netlify.app/assets/hero-image-Dx2oLda2.png
-
-
             {isAddFriendModalOpen && (
                 <AddFriend closeAddFriendModal={closeAddFriendModal} />
             )}
