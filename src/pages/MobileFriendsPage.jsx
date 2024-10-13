@@ -74,7 +74,6 @@ export default function MobileFriendsPage() {
                                 />
                                 <div>
                                     <h3 className="font-medium">{friend.name}</h3>
-                                    <p className="text-xs text-gray-600">- groups in common</p>
                                 </div>
                             </NavLink>
                         </li>
@@ -83,9 +82,6 @@ export default function MobileFriendsPage() {
             ) : (
             <p>You don&apos;t have any friends yet.</p>
             )}
-
-
-
             {isAddFriendModalOpen && (
                 <AddFriend closeAddFriendModal={closeAddFriendModal} />
             )}

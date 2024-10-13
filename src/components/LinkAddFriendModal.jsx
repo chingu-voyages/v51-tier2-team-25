@@ -80,6 +80,7 @@ export default function LinkAddFriendModal({ closeLinkAddFriendModal }) {
                   type="text"
                   name="name"
                   value={newFriendData.name}
+                  placeholder="Bob Nielsen"
                   onChange={handleChange}
                   maxLength="30"
                   required
@@ -93,6 +94,7 @@ export default function LinkAddFriendModal({ closeLinkAddFriendModal }) {
                   type="text"
                   name="userName"
                   value={newFriendData.userName}
+                  placeholder="@Bob"
                   onChange={handleChange}
                   maxLength="30"
                   required
