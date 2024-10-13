@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { AppContext } from "../App";
 import Expense from "../components/Expense";
 
@@ -27,28 +27,28 @@ export default function ExpensesUser() {
     );
 }
 
-ExpensesUser.propTypes = {
-    groups: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired,
-            expenses: PropTypes.arrayOf(
-                PropTypes.shape({
-                    id: PropTypes.string.isRequired,
-                    name: PropTypes.string.isRequired,
-                    category: PropTypes.string.isRequired,
-                    description: PropTypes.string.isRequired,
-                    participants: PropTypes.arrayOf(
-                        PropTypes.shape({
-                            id: PropTypes.string.isRequired,
-                            name: PropTypes.string.isRequired,
-                            sharePercentage: PropTypes.number.isRequired,
-                            amountToPay: PropTypes.number.isRequired,
-                            isPaid: PropTypes.bool.isRequired,
-                        })
-                    ).isRequired, 
-                })
-            ).isRequired
-        })
-    ).isRequired
-};
+// ExpensesUser.propTypes = {
+//     groups: PropTypes.arrayOf(
+//         PropTypes.shape({
+//             id: PropTypes.string.isRequired,
+//             name: PropTypes.string.isRequired,
+//             expenses: PropTypes.arrayOf(
+//                 PropTypes.shape({
+//                     id: PropTypes.string.isRequired,
+//                     name: PropTypes.string.isRequired,
+//                     category: PropTypes.string.isRequired,
+//                     description: PropTypes.string.isRequired,
+//                     participants: PropTypes.arrayOf(
+//                         PropTypes.shape({
+//                             id: PropTypes.string.isRequired,
+//                             name: PropTypes.string.isRequired,
+//                             sharePercentage: PropTypes.number.isRequired,
+//                             amountToPay: PropTypes.number.isRequired,
+//                             isPaid: PropTypes.bool.isRequired,
+//                         })
+//                     ).isRequired, 
+//                 })
+//             ).isRequired
+//         })
+//     ).isRequired
+// };
