@@ -57,27 +57,11 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
 
     console.log("addNewExpense triggered")    
     event.preventDefault();
-    setUploading(true)
-
-    // Handle receipt upload
     try{
-      console.log("Checking for receiptManagementRef");
-      //Trigger receipt upload vai ref to ReceiptManagement
-      if (receiptManagementRef.current){
-        console.log("receiptManagementRef found, uploading receipts...");
-        try{
-          await receiptManagementRef.current.uploadReceiptsToFirebase()
-          console.log("Receipts uploaded successfully");
-        }catch(uploadError){
-          console.error("Error uploading receipts:", uploadError);
-          throw uploadError;
-        }        
-      }else{
-        console.log("No receiptManagementRef found, skipping receipt upload");
+      if (expensesData.participants.length === 0) {
+        showNotification("Please add at least one participant", 'error');
+        return;
       }
-
-      console.log("Preparing to save expense data...");
-
       // Calculate total share percentage
       const totalSharePercentage = expensesData.participants.reduce((total, participant) => {
         return total + (participant.sharePercentage || 0)
@@ -95,7 +79,25 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
         showNotification("Total share percentage cannot exceed 100%. Please adjust the shares.",'error')
         return;
       }
-      
+
+      setUploading(true)
+
+      // Handle receipt upload
+      if (receiptManagementRef.current){
+        console.log("receiptManagementRef found, uploading receipts...");
+        try{
+          await receiptManagementRef.current.uploadReceiptsToFirebase()
+          console.log("Receipts uploaded successfully");
+        }catch(uploadError){
+          console.error("Error uploading receipts:", uploadError);
+          throw uploadError;
+        }        
+      }else{
+        console.log("No receiptManagementRef found, skipping receipt upload");
+      }
+
+      console.log("Preparing to save expense data...");
+
       // Prepare participants for the expense data
       const updatedParticipants = expensesData.participants.map((participant) => ({
         ...participant,

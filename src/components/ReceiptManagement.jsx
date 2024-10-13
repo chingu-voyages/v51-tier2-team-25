@@ -33,8 +33,13 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
 
   // Callback function to append new files to selectedImages and generate preview URLs
   const onDrop = useCallback(async(acceptedFiles) => {
+    const maxSizeInMB = 5;
     const compressedFilesPromises = acceptedFiles.map(async (file) => {
       
+      if (file.size / 1024 / 1024 > maxSizeInMB) {
+        showNotification(`${file.name} exceeds the ${maxSizeInMB}MB file size limit`, 'error');
+        return null; // Skip this file
+      }
       const options = {
         maxSizeMB: 1, 
         maxWidthOrHeight: 1024, 
@@ -164,7 +169,7 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
 
       //Remove from UI
       setSelectedImages(prev =>
-        prev.filter(receipt => receipt.fileId !== receiptId)
+        prev.filter(receipt => receipt.id !== receiptId)
       )
 
       showNotification('Receipt deleted successfully', 'success')
@@ -186,7 +191,7 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
       <div className="flex flex-col w-full gap-2 ">
         {selectedImages.map((receipt,index) => (
 
-            <div key={receipt.fileId || receipt.preview} className="flex items-center justify-between p-3 text-sm text-gray-500 rounded-md bg-light-indigo">
+            <div key={receipt.id || receipt.preview} className="flex items-center justify-between p-3 text-sm text-gray-500 rounded-md bg-light-indigo">
               
               <div className="flex items-center gap-4">
                 <img src={receipt.fileUrl || receipt.preview} alt="Receipt" className="object-cover w-12 h-12" /> 
@@ -207,7 +212,7 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
                   <button
                     type="button"
                     className="text-xs text-gray-600"
-                    onClick={() => handleDeleteReceipt(receipt.fileId, receipt.fileUrl)}
+                    onClick={() => handleDeleteReceipt(receipt.id, receipt.fileUrl)}
                   >
                     <img src='../../images/XVector.svg' alt='remove button' className="w-2 h-2"/>
                   </button>
