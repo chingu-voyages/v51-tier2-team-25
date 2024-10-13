@@ -73,7 +73,7 @@ export default function Expense({expense, group, showButtons, openReceipt, openE
                             )}
                         </div>
                         {showButtons && (
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 hidden md:block">
                             <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openReceipt(expense.id)}><img src="../../images/Ticket.svg" alt="Ticket" /></button>
                             <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openEditExpense(expense)}><img src="../../images/Edit.svg" alt="Edit" /></button>
                         </div>
@@ -147,6 +147,26 @@ export default function Expense({expense, group, showButtons, openReceipt, openE
                             <p>${parseFloat(expense.amount).toFixed(2)}</p>
                             </div>
                         </div>
+                        {showButtons && (
+                        <div className="flex gap-2 md:hidden mt-3 justify-between gap-4">
+                            <button 
+                                type="button"
+                                className="flex items-center justify-center px-1 rounded-md hover:bg-gray-400 bg-gray-300 font-medium p-2 text-gray-800 w-full gap-3"
+                                onClick={() => openReceipt(expense.id)}
+                            >
+                                <img src="../../images/Ticket.svg" alt="Ticket"/>
+                                <p>View receipt</p>
+                            </button>
+                            <button 
+                                type="button" 
+                                className="flex items-center justify-center px-1 rounded-md hover:bg-gray-400 bg-gray-300 font-medium p-2 text-gray-800 w-full gap-3" 
+                                onClick={() => openEditExpense(expense)}
+                            >
+                                <img src="../../images/Edit.svg" alt="Edit" />
+                                <p>Edit expense</p>
+                            </button>
+                        </div>
+                        )}
                     </div>
                 )}
             </div>

@@ -70,7 +70,7 @@ export default function Groups() {
                 alt='Group Avatar'
                 src={currentGroup?.avatar|| "../../images/placeholder.jpg"}
               />
-              <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-1/2 bottom-3 rounded-xl">
+              <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-[50px] bottom-3 rounded-xl">
                 {currentGroup?.groupType}
               </div>
             </div>
