@@ -169,7 +169,7 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
 
       //Remove from UI
       setSelectedImages(prev =>
-        prev.filter(receipt => receipt.fileId !== receiptId)
+        prev.filter(receipt => receipt.id !== receiptId)
       )
 
       showNotification('Receipt deleted successfully', 'success')
@@ -191,7 +191,7 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
       <div className="flex flex-col w-full gap-2 ">
         {selectedImages.map((receipt,index) => (
 
-            <div key={receipt.fileId || receipt.preview} className="flex items-center justify-between p-3 text-sm text-gray-500 rounded-md bg-light-indigo">
+            <div key={receipt.id || receipt.preview} className="flex items-center justify-between p-3 text-sm text-gray-500 rounded-md bg-light-indigo">
               
               <div className="flex items-center gap-4">
                 <img src={receipt.fileUrl || receipt.preview} alt="Receipt" className="object-cover w-12 h-12" /> 
@@ -212,7 +212,7 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
                   <button
                     type="button"
                     className="text-xs text-gray-600"
-                    onClick={() => handleDeleteReceipt(receipt.fileId, receipt.fileUrl)}
+                    onClick={() => handleDeleteReceipt(receipt.id, receipt.fileUrl)}
                   >
                     <img src='../../images/XVector.svg' alt='remove button' className="w-2 h-2"/>
                   </button>
