@@ -33,8 +33,13 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
 
   // Callback function to append new files to selectedImages and generate preview URLs
   const onDrop = useCallback(async(acceptedFiles) => {
+    const maxSizeInMB = 5;
     const compressedFilesPromises = acceptedFiles.map(async (file) => {
       
+      if (file.size / 1024 / 1024 > maxSizeInMB) {
+        showNotification(`${file.name} exceeds the ${maxSizeInMB}MB file size limit`, 'error');
+        return null; // Skip this file
+      }
       const options = {
         maxSizeMB: 1, 
         maxWidthOrHeight: 1024, 

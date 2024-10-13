@@ -7,7 +7,7 @@ const AvatarManagement = ({avatar, onAvatarChange, showText=true, isEditable=tru
 
   const handleAvatarChange = async (e) =>{
     const file = e.target.files[0]    
-    const maxSizeInMB = 2;
+    const maxSizeInMB = 5;
     
     if(!file) return
 
