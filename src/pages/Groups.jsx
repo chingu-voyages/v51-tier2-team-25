@@ -95,44 +95,49 @@ export default function Groups() {
           </div>
 
           <div className="flex items-end pt-4">
-            <div className="flex items-center w-1/2">
-              {currentGroup?.members.map((member, index)=>(
-                <img
-                  key={member.id}
-                  className={`w-8 h-8 rounded-full border-1 object-cover relative -ml-5 first:ml-0`}
-                  style={{ zIndex: index }}
-                  src={member.avatar || "../../images/placeholder.jpg"}
-                  alt={member.name}
-               />
-              ))}              
-              <p className="pl-2 text-sm text-gray-500">
-                {currentGroup?.members.length} members
-              </p>
-            </div>
-
-            <div className="flex items-center w-full gap-6 place-content-end">
-              <div className="flex flex-col">
-                <p className="text-xs text-gray-500">Allotted budget</p>
-                <p className="text-sm text-gray-950">
-                  US$ {currentGroup?.allottedBudget}
+            <div className="flex w-full justify-between">
+              <div className="flex flex-col md:flex-row md:items-center md:gap-2">
+                <div className="flex items-center">
+                  {currentGroup?.members.map((member, index)=>(
+                    <img
+                      key={member.id}
+                      className={`w-8 h-8 rounded-full border-1 object-cover relative -ml-5 first:ml-0`}
+                      style={{ zIndex: index }}
+                      src={member.avatar || "../../images/placeholder.jpg"}
+                      alt={member.name}
+                  />
+                  ))}              
+                </div>
+                <p className=" text-sm font-light text-gray-600">
+                    {currentGroup?.members.length} members
                 </p>
               </div>
 
-              <div className="flex flex-col">
-                <p className="text-xs text-gray-500">Remaining</p>
-                <p className="text-sm text-gray-950">
-                  US$ <RemainingBudget groupId={groupId} />
-                </p>
-                
-              </div>
+              <div className="flex items-center xs:w-full gap-6 place-content-end">
+                <div className="flex flex-col">
+                  <p className="text-xs text-gray-500">Allotted budget</p>
+                  <p className="text-sm text-gray-950">
+                    US$ {currentGroup?.allottedBudget}
+                  </p>
+                </div>
 
-              <button
-                className="hidden px-3 py-2 text-sm border-none rounded-lg md:block hover:bg-hover bg-button text-light-indigo"
-                onClick={openAddExpense}
-              >
-                New expense
-              </button>
+                <div className="flex flex-col xs:w-full">
+                  <p className="text-xs text-gray-500">Remaining</p>
+                  <p className="text-sm text-gray-950">
+                    US$ <RemainingBudget groupId={groupId} />
+                  </p>
+                  
+                </div>
+
+                <button
+                  className="hidden px-3 py-2 text-sm border-none rounded-lg md:block hover:bg-hover bg-button text-light-indigo"
+                  onClick={openAddExpense}
+                >
+                  New expense
+                </button>
+              </div>
             </div>
+            
 
             {isAddExpenseOpen && (
               <AddExpense
