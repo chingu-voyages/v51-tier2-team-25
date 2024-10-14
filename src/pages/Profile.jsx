@@ -9,11 +9,11 @@ export default function Profile() {
   const { mainUser, setMainUser, addMainUserToFriends, setGroups, setFriends, setExpenses}= useContext(AppContext)
   const [isEditable, setIsEditable] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
 
   //Load user info from localstorage
   useEffect(()=>{
-    const storedUser = JSON.parse(localStorage.getItem('mainUserData'))
+    const storedUser = JSON.parse(localStorage.getItem('mainUser'))
     if (storedUser){
       setMainUser(storedUser)
       setIsEditable(false)
@@ -28,7 +28,6 @@ export default function Profile() {
       ...prevUser,
       [name]:value,
     }))
-    // console.log("mainUser",mainUser)
   }
   const handleAvatarChange = (newAvatar) => {
     setMainUser(prev => {
@@ -36,24 +35,24 @@ export default function Profile() {
         ...prev,
         avatar: newAvatar
       }
-      localStorage.setItem('mainUserData', JSON.stringify(updatedUser))
+      localStorage.setItem('mainUser', JSON.stringify(updatedUser))
       return updatedUser
     })
-    
   }
-
-  const handleSubmit = (e) =>{
-    e.preventDefault()
+  
+  const handleSubmit = () =>{
+   
     const updatedUser = {
       ...mainUser,
       id: mainUser.id || uuidv4()
     }
 
     //Save user to localStorage
-    localStorage.setItem('mainUserData', JSON.stringify(updatedUser))
+    localStorage.setItem('mainUser', JSON.stringify(updatedUser))
     setMainUser(updatedUser)
     addMainUserToFriends()
     setIsEditable(false)
+    setIsSaveModalOpen(false)
   }
 
   const handleDelete = () => {
@@ -62,17 +61,20 @@ export default function Profile() {
 
   const confirmDelete = () => {
     //clear all localStorage
-    localStorage.removeItem('mainUserData')
+    localStorage.removeItem('mainUser')
     localStorage.removeItem('groupsData')
     localStorage.removeItem('friendsData')
     localStorage.removeItem('expensesData')
 
     //reset all state to initial
     setMainUser({
-      avatar:'',
-      name:'',
-      userName:'',
-      id:null
+      avatar: "", 
+      name: "", 
+      userName: "", 
+      id: null,
+      paypal:"",
+      venmo:"",
+      cashapp:"",
     })
     setGroups([])
     setFriends([])
@@ -80,20 +82,24 @@ export default function Profile() {
     setIsModalOpen(false); // This closes the modal
     setIsEditable(true)
   };  
-  
+
+  const handleSaveClick = () => {
+    setIsSaveModalOpen(true); // Open the save confirmation modal
+  };  
 
   return(
     <>
       <div className="flex flex-col max-w-[785px] w-full font-outfit mx-3 mt-12 gap-4">
         <div>
-          <form className='flex justify-between w-full gap-4' onSubmit={handleSubmit}>
-            <div className='flex flex-col flex-grow w-1/2 space-y-2'>
+          <form className='flex flex-col justify-between w-full gap-4 md:flex-row' onSubmit={handleSubmit}>
+            <div className='flex flex-col flex-grow space-y-2 md:w-1/2'>
               <p className='pl-2 text-sm text-button'>Personal information</p>
               <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50 ">
                 <AvatarManagement 
                   avatar={mainUser.avatar}
                   onAvatarChange={handleAvatarChange}
                   showText={true}
+                  isEditable={isEditable}
                 />        
 
                 <label className='text-sm font-medium text-gray-950'>
@@ -127,28 +133,57 @@ export default function Profile() {
                 
               </div>
             </div> 
-            <div className='flex flex-col flex-grow w-1/2 space-y-2'>
+            <div className='flex flex-col flex-grow space-y-2 md:w-1/2'>
               <p className='pl-2 m-0 text-sm text-button'>Payment Services</p>
               <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
                 <p className='text-sm font-medium text-gray-950'>Paypal</p>
                 <div className='flex'>
-                  <p className='p-2 mt-1 mb-4 text-sm text-gray-800 border w-fit rounded-l-md border-input-border bg-profile-background'>paypal.me/</p>
-                  <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border border-l-0 rounded-r-md border-border'>placeholder</p>
-                </div>              
+                  <label className='p-2 mt-1 mb-4 text-sm text-gray-800 border w-fit rounded-l-md border-input-border bg-profile-background'>
+                    paypal.me/</label>
+                    <input 
+                      type='text'                      
+                      name="paypal"
+                      value={mainUser.paypal  || ''}
+                      onChange={handleChange}
+                      maxLength={30}
+                      required
+                      disabled={!isEditable}
+                      className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border border-l-0 rounded-r-md border-border'
+                    />                  
+                </div>  
+
                 <p className='text-sm font-medium text-gray-950'>Venmo</p>
                 <div className='flex'>
-                  <p className='p-2 mt-1 mb-4 text-sm text-gray-800 border w-fit rounded-l-md border-input-border bg-profile-background'>venmo.com/</p>
-                  <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border border-l-0 rounded-r-md border-border'>placeholder</p>
-                </div>              
+                  <label className='p-2 mt-1 mb-4 text-sm text-gray-800 border w-fit rounded-l-md border-input-border bg-profile-background'>venmo.com/</label>
+                  <input 
+                    type='text'                      
+                    name="venmo"
+                    value={mainUser.venmo  || ''}
+                    onChange={handleChange}
+                    maxLength={30}
+                    required
+                    disabled={!isEditable}
+                    className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border border-l-0 rounded-r-md border-border'/>                    
+                </div>   
+
                 <p className='text-sm font-medium text-gray-950'>Cash app</p>
                 <div className='flex'>
-                  <p className='p-2 mt-1 mb-4 text-sm text-gray-800 border w-fit rounded-l-md border-input-border bg-profile-background'>cash.app/$</p>
-                  <p className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border border-l-0 rounded-r-md border-border'>placeholder</p>
+                  <label className='p-2 mt-1 mb-4 text-sm text-gray-800 border w-fit rounded-l-md border-input-border bg-profile-background'>cash.app/$</label>
+                  <input 
+                    type='text'                      
+                    name="cashapp"
+                    value={mainUser.cashapp  || ''}
+                    onChange={handleChange}
+                    maxLength={30}
+                    required
+                    disabled={!isEditable}
+                    className='w-full p-2 mt-1 mb-4 text-sm text-gray-800 border border-l-0 rounded-r-md border-border'/>
                 </div>
                 {isEditable && (
                   <button
                     className="px-3 py-2 text-sm text-white rounded-md bg-button hover:bg-hover"
-                    type="submit" 
+                    type="button"
+                    onClick={handleSaveClick}
                     >Save info
                   </button>
                 )}
@@ -165,6 +200,21 @@ export default function Profile() {
           title="Delete Profile?"
           message={"WARNING - This action will delete your profile, all groups, friends, and expenses." }
           confirmButtonText="Delete profile"
+        />
+
+        <ConfirmationModal
+          isOpen={isSaveModalOpen}
+          onConfirm={handleSubmit}    
+          onCancel={() => setIsSaveModalOpen(false)}     
+          title="Got it!"
+          message={
+            <>
+              <span><span className="font-bold">NOTICE</span> - If you want a Profile Picture, you must add it now <span className="font-bold">before</span> you save!</span>
+              <br />
+              <span>Your user name is automatically added to every group.</span>
+            </>
+          }
+          confirmButtonText="Got it!"
         />
 
         <div className='flex flex-col flex-grow w-full space-y-2'>

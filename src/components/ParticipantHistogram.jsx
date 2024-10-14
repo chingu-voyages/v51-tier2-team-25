@@ -30,7 +30,7 @@ ChartJS.register(
 
 const ParticipantHistogram = ({ group }) => {
   const { owedAmounts, averageOwed } = calculateOwedAmounts(group);
-  console.log("total owed :", owedAmounts);
+  // console.log("total owed :", owedAmounts);
   const participantNames = Object.values(owedAmounts).map((o) => o.name);
   const owedValues = Object.values(owedAmounts).map((o) => o.totalOwed);
   const chartRef = useRef();
@@ -161,7 +161,7 @@ const ParticipantHistogram = ({ group }) => {
   return (
     <div className="flex flex-col items-center w-full bg-gray-histogram max-w-[785px] max-h-[495px] pt-[24px] pb-[24px] rounded-md border border-border">
       {allBalancesPaid ? (
-          <div className="flex text-center text-sm font-geologica text-gray-600">
+          <div className="flex text-sm text-center text-gray-600 font-geologica">
             <img src="../../images/checkmark.png" className="w-[18px] h-[18px] mr-2 mt-[-2px]"/>
           All balances have been paid.
         </div>
@@ -185,7 +185,7 @@ const ParticipantHistogram = ({ group }) => {
       </div>
         )}
         {!allBalancesPaid && (
-      <div className="flex space-x-2 mt-4">
+      <div className="flex mt-4 space-x-2">
         <button onClick={downloadParticipantPDF} className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo">
           Export as PDF
         </button>

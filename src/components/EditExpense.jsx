@@ -60,20 +60,15 @@ export default function EditExpense({
     setUploading(true)
 
     //receipt management
-    try{
-      console.log("Checking for receiptManagementRef");
-      //Trigger receipt upload vai ref to ReceiptManagement
-      if (receiptManagementRef.current){
-        console.log("receiptManagementRef found, uploading receipts...");
-        try{
-          await receiptManagementRef.current.uploadReceiptsToFirebase()
-          console.log("Receipts uploaded successfully");
-        }catch(uploadError){
-          console.error("Error uploading receipts:", uploadError);
-          throw uploadError;
-        }        
-      }else{
-        console.log("No receiptManagementRef found, skipping receipt upload");
+    try {
+      // Trigger receipt deletions
+      if (receiptManagementRef.current && receiptManagementRef.current.handleDeletePendingReceipts) {
+        await receiptManagementRef.current.handleDeletePendingReceipts();
+      }
+  
+      // Trigger receipt uploads
+      if (receiptManagementRef.current) {
+        await receiptManagementRef.current.uploadReceiptsToFirebase();
       }
 
       const totalSharePercentage = expensesData.participants.reduce((total, participant) => {
@@ -126,7 +121,7 @@ export default function EditExpense({
       const querySnapshot = await getDocs(q);
   
       if (querySnapshot.empty) {
-        console.log('No associated receipts found for this expense.');
+        // console.log('No associated receipts found for this expense.');
       } else {
         // Delete associated receipts from Firestore and Firebase Storage
         const deleteReceiptsPromises = querySnapshot.docs.map(async (receiptDoc) => {
@@ -138,7 +133,7 @@ export default function EditExpense({
             // Delete the receipt from Firestore
             const receiptRef = doc(db, 'receipts', receiptId);
             await deleteDoc(receiptRef);
-            console.log(`Deleted Firestore document for receipt: ${receiptId}`);
+            // console.log(`Deleted Firestore document for receipt: ${receiptId}`);
 
             // Parse the file path from the full file URL
             const filePath = decodeURIComponent(fileUrl.split("/o/")[1].split("?")[0]);
@@ -146,7 +141,7 @@ export default function EditExpense({
             // Delete the receipt from Firebase Storage
             const storageRef = firebaseRef(storage, filePath); // Use file path, not full URL
             await deleteObject(storageRef);
-            console.log(`Deleted file from Firebase Storage: ${filePath}`);
+            // console.log(`Deleted file from Firebase Storage: ${filePath}`);
           } catch (receiptError) {
             console.error(`Error deleting receipt with ID: ${receiptId}`, receiptError);
             throw receiptError; // Rethrow to capture in the main try-catch block

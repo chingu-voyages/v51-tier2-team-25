@@ -18,8 +18,6 @@ export default function AddGroup({
   const modalRef = useRef()
   const navigate = useNavigate()
   const [resetSearchBar, setResetSearchBar] = useState(false); 
-  
-
 
   //Maybe move this to a helper function also maybe use uuid library?
   const generateGroupId = () => {
@@ -38,7 +36,7 @@ export default function AddGroup({
   const [groupsData, setGroupsData] = useState(
     temporaryGroupData
       ? {...temporaryGroupData,
-        members:[]
+        members:temporaryGroupData.members || []
       }
       : {
           avatar:"",
@@ -101,20 +99,12 @@ export default function AddGroup({
     }));
   };
 
-  const handleAvatarChange = (newAvatar, memberId) => {
-    setGroupsData(prev => {
-      const updatedMembers = prev.members.map(member => 
-        member.id === memberId ? { ...member, avatar: newAvatar } : member
-      );
-      const updatedGroup = {
-        ...prev,
-        members: updatedMembers,
-      };
-      localStorage.setItem('groupsData', JSON.stringify(updatedGroup));
-      return updatedGroup;
-    });
-  };
-  
+  const handleAvatarChange = (newAvatar) => {
+    setGroupsData((prev) => ({
+      ...prev,
+      avatar: newAvatar, // Update the avatar in the groupsData state
+    }));
+  };  
 
   const addNewGroup = (event) => {
     event.preventDefault();
@@ -131,10 +121,13 @@ export default function AddGroup({
       return;
     }
 
+    // Ensure mainUser is always the first member
+  const updatedMembers = [mainUser, ...groupsData.members.filter(member => member.id !== mainUser.id)]
+
     const newGroupData = {
       ...groupsData,
       remainingBudget: Number(groupsData.allottedBudget), 
-      members: [...groupsData.members, mainUser]
+      members: updatedMembers
     };
 
     addGroupToList(newGroupData);
@@ -193,11 +186,12 @@ export default function AddGroup({
         >
           <div className="flex flex-col">
             <div className="flex flex-col md:items-start md:flex-row">
-              <div className='w-32'>
+              <div className='object-cover w-32 h-32 rounded-full'>
                 <AvatarManagement 
                   avatar={groupsData.avatar}
                   onAvatarChange={handleAvatarChange}
                   showText={false} 
+                  isEditable={true}
                 /> 
               </div>
 
@@ -268,9 +262,9 @@ export default function AddGroup({
                 onClick={(e) => {
                   e.preventDefault();
                   createTemporaryGroupData();                  
-                  openLinkAddFriendModal();
+                  openLinkAddFriendModal();                  
                 }}
-                className="p-0 text-sm text-gray-400 underline hover:text-black "
+                className="p-0 text-sm text-gray-400 underline hover:text-black"
               >
                 Add new friends to your friend list
               </Link>
@@ -313,4 +307,5 @@ export default function AddGroup({
 AddGroup.propTypes = {
   closeAddGroupModal: PropTypes.func.isRequired,
   openLinkAddFriendModal: PropTypes.func.isRequired,
+  isEditable: PropTypes.bool
 };

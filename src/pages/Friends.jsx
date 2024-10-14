@@ -17,7 +17,7 @@ export default function Friends() {
   const navigate = useNavigate();
 
   const currentFriend = friends.find((friend)=>friend.id === friendId)
-  console.log("currentFriend", currentFriend)
+  // console.log("currentFriend", currentFriend)
 
   const friendExpenses = useMemo(()=>{
     return expenses.filter(expense => 
@@ -53,8 +53,8 @@ export default function Friends() {
   return (
     <>
       <div className="flex flex-col max-w-[785px] w-full font-outfit mx-3 mt-12 gap-4">
-        <div className='flex justify-between w-full gap-4'>
-          <div className='flex flex-col flex-grow w-1/2 space-y-2'>
+        <div className='flex flex-col justify-between w-full gap-4 md:flex-row'>
+          <div className='flex flex-col flex-grow space-y-2 md:w-1/2'>
             <p className='pl-2 text-sm text-button'>Personal information</p>
             <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
               <img src={currentFriend?.avatar} className='h-24 mb-4 border-border'/>
@@ -68,7 +68,7 @@ export default function Friends() {
             </div>
           </div>          
         
-          <div className='flex flex-col flex-grow w-1/2 space-y-2'>
+          <div className='flex flex-col flex-grow space-y-2 md:w-1/2'>
             <p className='pl-2 m-0 text-sm text-button'>Payment Services</p>
             <div className="flex-grow p-6 border rounded-md md:mt-12 border-border bg-zinc-50">
               <p className='text-sm font-medium text-gray-950'>Paypal</p>
@@ -98,21 +98,25 @@ export default function Friends() {
 
         <div>          
           {friendExpenses.length > 0 ? (
-            friendExpenses.map((expense, index) => (
-              <div key={expense.id}>
-                <p>{title[index]}</p>
+            friendExpenses.map((expense, index) => {
+              const group = groups.find(group => group.id === expense.groupId);
+              return (
+                <div key={expense.id}>
+                  <p>{title[index]}</p>
                   <Expense 
                     key={expense.id} 
                     expense={expense} 
+                    group={group} 
                     showButtons={false} 
                   />
-              </div>
-            ))
-          ):(
-            <p>No expenses for this friend</p>
+                </div>
+              );
+            })
+          ) : (
+            <p className="text-gray-500">No expenses for this friend</p>
           )}
         </div>
-  
+          
       </div>
       {isModalOpen && (
         <ConfirmationModal

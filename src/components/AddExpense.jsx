@@ -55,29 +55,13 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
 
   const addNewExpense = async(event) => {
 
-    console.log("addNewExpense triggered")    
+    // console.log("addNewExpense triggered")    
     event.preventDefault();
-    setUploading(true)
-
-    // Handle receipt upload
     try{
-      console.log("Checking for receiptManagementRef");
-      //Trigger receipt upload vai ref to ReceiptManagement
-      if (receiptManagementRef.current){
-        console.log("receiptManagementRef found, uploading receipts...");
-        try{
-          await receiptManagementRef.current.uploadReceiptsToFirebase()
-          console.log("Receipts uploaded successfully");
-        }catch(uploadError){
-          console.error("Error uploading receipts:", uploadError);
-          throw uploadError;
-        }        
-      }else{
-        console.log("No receiptManagementRef found, skipping receipt upload");
+      if (expensesData.participants.length === 0) {
+        showNotification("Please add at least one participant", 'error');
+        return;
       }
-
-      console.log("Preparing to save expense data...");
-
       // Calculate total share percentage
       const totalSharePercentage = expensesData.participants.reduce((total, participant) => {
         return total + (participant.sharePercentage || 0)
@@ -95,7 +79,25 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
         showNotification("Total share percentage cannot exceed 100%. Please adjust the shares.",'error')
         return;
       }
-      
+
+      setUploading(true)
+
+      // Handle receipt upload
+      if (receiptManagementRef.current){
+        // console.log("receiptManagementRef found, uploading receipts...");
+        try{
+          await receiptManagementRef.current.uploadReceiptsToFirebase()
+          // console.log("Receipts uploaded successfully");
+        }catch(uploadError){
+          console.error("Error uploading receipts:", uploadError);
+          throw uploadError;
+        }        
+      }else{
+        console.log("No receiptManagementRef found, skipping receipt upload");
+      }
+
+      // console.log("Preparing to save expense data...");
+
       // Prepare participants for the expense data
       const updatedParticipants = expensesData.participants.map((participant) => ({
         ...participant,
@@ -116,25 +118,25 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
 
       //get stored data from local storage or initialize array
       let storedExpenseData = JSON.parse(localStorage.getItem("expensesData")) || [];
-      console.log("Current stored expense data:", storedExpenseData);
+      // console.log("Current stored expense data:", storedExpenseData);
 
       //append new form data to array
-      console.log("Adding new expense to stored data:", expensesData);
+      // console.log("Adding new expense to stored data:", expensesData);
       storedExpenseData.push(updatedExpensesData);
 
       // Save updated array to local storage
-      console.log("Saving updated expense data to localStorage");
+      // console.log("Saving updated expense data to localStorage");
       localStorage.setItem("expensesData", JSON.stringify(storedExpenseData));
 
       //save updated array to local storage
-      console.log("Adding expense to list");
+      // console.log("Adding expense to list");
       addExpenseToList(updatedExpensesData);
 
-      console.log("Expense added successfully");
+      // console.log("Expense added successfully");
       showNotification("New expense added",'success');
 
       // Reset form data
-      console.log("Resetting form data");
+      // console.log("Resetting form data");
       setExpensesData({
         name: "",
         amount: "",
@@ -148,7 +150,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
       setSelectedParticipant(null);
       setResetSearchBar((prev) => !prev);
 
-      console.log("Closing add expense form");
+      // console.log("Closing add expense form");
       closeAddExpense();
 
     } catch (error){
@@ -156,7 +158,7 @@ export default function AddExpense({ closeAddExpense, currentGroup }) {
       showNotification('Failed to add expense','error')      
     } finally  {
         setUploading(false)
-        console.log("addNewExpense completed");
+        // console.log("addNewExpense completed");
     }
   };
 

@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { AppContext } from "../App";
 
 
-export default function Expense({expense, showButtons, openReceipt, openEditExpense}) {
+export default function Expense({expense, group, showButtons, openReceipt, openEditExpense}) {
     const [isExpenseOpen, setIsExpenseOpen] = useState(false);
     const { handleToggleIsPaid } = useContext(AppContext);
     const [fullyPaidDate, setFullyPaidDate] = useState(null);
-    const storedUser = JSON.parse(localStorage.getItem('mainUserData'))
+    const storedUser = JSON.parse(localStorage.getItem('mainUser'))
+    // console.log("this is the group data;", group)
 
     const peopleRemainingToPay = expense.participants.filter(participant => !participant.isPaid).length;
     const unpaidAmount = expense.participants.filter(p => !p.isPaid).reduce((total, participant) => total + participant.amountToPay, 0);
@@ -23,6 +24,10 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
     const hasUser = expense.participants.find(participant => participant.id === storedUser.id)
     const userIsPaid = hasUser ? hasUser.isPaid : false;
     const userAmountToPay = hasUser ? hasUser.amountToPay : 0;
+
+    const isGroupMember = (participantId) => {
+        return group.members.some(member => member.id === participantId);
+    };
 
     return (
         <div>
@@ -54,12 +59,12 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                             </div>
                         </div>
                     </div>
-                    <div className='flex gap-4 text-sm'>
+                    <div className='flex items-center gap-4 text-sm'>
                         <div className='flex flex-col gap-2'>    
                             {allPaid ? (
                                 <p className="text-sm"><span className="font-bold">Fully paid</span> on {fullyPaidDate}</p>
                             ) : (
-                                <p className="text-sm">US${unpaidAmount.toFixed(2)} left</p>
+                                <p className="text-sm font-semibold">US${unpaidAmount.toFixed(2)} left</p>
                             )}        
                             {allPaid ? (
                                 <p>${expense.amount} paid by {expense.participants.length} members</p>
@@ -68,9 +73,9 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                             )}
                         </div>
                         {showButtons && (
-                        <div className="flex gap-2">
-                            <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openReceipt(expense.id)}><img src="../../images/Ticket.svg" alt="Ticket" /></button>
-                            <button type="button" className="px-1 rounded-md hover:bg-gray-200" onClick={() => openEditExpense(expense)}><img src="../../images/Edit.svg" alt="Edit" /></button>
+                        <div className="flex hidden gap-2 md:block">
+                            <button type="button" className="px-1 py-1 rounded-md hover:bg-gray-200" onClick={() => openReceipt(expense.id)}><img src="../../images/Ticket.svg" alt="Ticket" className='w-5 h-5'/></button>
+                            <button type="button" className="px-1 py-1 ml-1 rounded-md hover:bg-gray-200" onClick={() => openEditExpense(expense)}><img src="../../images/Edit.svg" alt="Edit" className='w-5 h-5'/></button>
                         </div>
                         )}
                     </div>
@@ -95,9 +100,9 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
 
                             {expense.participants.map((participant) => (
                                 <React.Fragment key={participant.id}>
-                                    <div className="flex">
-                                        <img src={participant.avatar} className='h-24 mb-4 border-border'/>
-                                        <p>{participant.name}</p>
+                                    <div className="flex items-center">
+                                        <img src={participant.avatar} className='w-6 h-6 mr-4 rounded-full border-border'/>
+                                        <p className={`${!isGroupMember(participant.id) ? 'line-through text-gray-400' : ''}`}>{participant.name}</p>
                                     </div>
                                     <div className="flex justify-center">
                                         <p>{participant.sharePercentage}%</p>
@@ -142,6 +147,26 @@ export default function Expense({expense, showButtons, openReceipt, openEditExpe
                             <p>${parseFloat(expense.amount).toFixed(2)}</p>
                             </div>
                         </div>
+                        {showButtons && (
+                        <div className="flex justify-between gap-2 gap-4 mt-3 md:hidden">
+                            <button 
+                                type="button"
+                                className="flex items-center justify-center w-full gap-3 p-2 px-1 font-medium text-gray-800 bg-gray-300 rounded-md hover:bg-gray-400"
+                                onClick={() => openReceipt(expense.id)}
+                            >
+                                <img src="../../images/Ticket.svg" alt="Ticket"/>
+                                <p>View receipt</p>
+                            </button>
+                            <button 
+                                type="button" 
+                                className="flex items-center justify-center w-full gap-3 p-2 px-1 font-medium text-gray-800 bg-gray-300 rounded-md hover:bg-gray-400" 
+                                onClick={() => openEditExpense(expense)}
+                            >
+                                <img src="../../images/Edit.svg" alt="Edit" />
+                                <p>Edit expense</p>
+                            </button>
+                        </div>
+                        )}
                     </div>
                 )}
             </div>
@@ -164,9 +189,17 @@ Expense.propTypes = {
                 amountToPay: PropTypes.number.isRequired,
                 isPaid: PropTypes.bool.isRequired,
             })
-        ).isRequired, 
+        ).isRequired,
     }).isRequired,
-    showButtons: PropTypes.bool,
-    openReceipt: PropTypes.func.isRequired,
-    openEditExpense: PropTypes.func.isRequired,
+    group: PropTypes.shape({
+        members: PropTypes.arrayOf(
+            PropTypes.shape({
+                id: PropTypes.string.isRequired,
+                name: PropTypes.string,
+            })
+        ).isRequired,
+    }).isRequired,
+    showButtons: PropTypes.bool.isRequired,
+    openReceipt: PropTypes.func,
+    openEditExpense: PropTypes.func,
 };

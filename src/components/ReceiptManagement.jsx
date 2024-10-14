@@ -6,6 +6,7 @@ import { getDownloadURL, uploadBytes, ref as firebaseRef,deleteObject } from 'fi
 import { collection, addDoc, query, where, getDocs, doc, deleteDoc } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import PropTypes from 'prop-types';
+import imageCompression from 'browser-image-compression'
 
 //Each receipt should have a unique id and be under expense id
 
@@ -31,17 +32,39 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
   },[expenseId, isEditable])
 
   // Callback function to append new files to selectedImages and generate preview URLs
-  const onDrop = useCallback((acceptedFiles) => {
+  const onDrop = useCallback(async(acceptedFiles) => {
+    const maxSizeInMB = 5;
+    const compressedFilesPromises = acceptedFiles.map(async (file) => {
+      
+      if (file.size / 1024 / 1024 > maxSizeInMB) {
+        showNotification(`${file.name} exceeds the ${maxSizeInMB}MB file size limit`, 'error');
+        return null; // Skip this file
+      }
+      const options = {
+        maxSizeMB: 1, 
+        maxWidthOrHeight: 1024, 
+        useWebWorker: true, 
+      };
+      try {
+        // Compress the file
+        const compressedFile = await imageCompression(file, options);
+        compressedFile.preview = URL.createObjectURL(compressedFile); // Create preview URL for the compressed image
+        compressedFile.newFile = true; // Mark it as a new file for the UI
+
+        return compressedFile;
+      } catch (error) {
+        console.error("Error compressing file:", error);
+        showNotification(`Error compressing ${file.name}`, 'error');
+      }
+    });
+
+    const compressedFiles = await Promise.all(compressedFilesPromises);
+
     setSelectedImages((prev) => [
       ...prev,
-      ...acceptedFiles.map((file) =>
-        Object.assign(file, {  
-          preview:URL.createObjectURL(file),
-          newFile: true
-        })
-      )
-    ])
-  }, []);
+      ...compressedFiles.filter(file => !!file), // Filter out any undefined (failed compression)
+    ]);
+  }, [showNotification]);
 
   // Hook to manage the dropzone functionality
   const { getRootProps, getInputProps } = useDropzone({
@@ -73,7 +96,7 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
     const uploadedFiles = [];
 
     try {
-      console.log('Starting to upload receipts:', selectedImages.length, 'files');
+      // console.log('Starting to upload receipts:', selectedImages.length, 'files');
 
       for (const file of selectedImages) {
         if (file.fileUrl) continue; //skip already uploaded files
@@ -89,13 +112,13 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
 
         try {
           // Upload file to Firebase Storage
-          console.log(`Uploading file: ${file.name}`);
+          // console.log(`Uploading file: ${file.name}`);
           await uploadBytes(fileRef, file);
           const fileUrl = await getDownloadURL(fileRef);
           uploadedFiles.push({ fileId, fileUrl });
 
-          console.log('File uploaded successfully:', file.name);
-          console.log('File URL:', fileUrl);
+          // console.log('File uploaded successfully:', file.name);
+          // console.log('File URL:', fileUrl);
 
           // Store the file URL in Firestore under the 'receipts' collection
           const receiptsCollection = collection(db, 'receipts');
@@ -106,9 +129,9 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
             uploadedAt: new Date(),
           };
 
-          console.log('Attempting to write to Firestore with data:', docData);
+          // console.log('Attempting to write to Firestore with data:', docData);
           await addDoc(receiptsCollection, docData);
-          console.log('Document successfully written for file:', file.name);
+          // console.log('Document successfully written for file:', file.name);
         } catch (error) {
           console.error(`Error uploading ${file.name}:`, error.message);
           showNotification(`Error uploading ${file.name}: ${error.message}`, 'error');
@@ -137,16 +160,16 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
       //Delete from Firestore
       const receiptRef = doc(db, 'receipts', receiptId)
       await deleteDoc(receiptRef)
-      console.log('Deleted from Firestore:', receiptId)
+      // console.log('Deleted from Firestore:', receiptId)
 
       //Delete from Firebase Storage
       const storageRef = firebaseRef(storage, fileUrl)
       await deleteObject(storageRef)
-      console.log('Deleted from Storage:', fileUrl)
+      // console.log('Deleted from Storage:', fileUrl)
 
       //Remove from UI
       setSelectedImages(prev =>
-        prev.filter(receipt => receipt.fileId !== receiptId)
+        prev.filter(receipt => receipt.id !== receiptId)
       )
 
       showNotification('Receipt deleted successfully', 'success')
@@ -161,47 +184,45 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
   
   const renderPreviewsWithDelete = () => (
     <>
-      <div 
-        {...getRootProps()} 
-        className="flex flex-col flex-grow w-full h-auto p-2 mt-1 text-center text-gray-500 "
-      >
+      <div {...getRootProps()} className="flex flex-col flex-grow w-full h-auto p-2 mt-1 " >
         <input {...getInputProps()} />
-        <p>Drag & drop more receipt images or click to select</p>
+        <p className="p-4 text-sm text-center text-gray-800 font-outfit">Drag & drop more receipt images or click to select</p>
       </div>
-      <div className="flex flex-wrap w-full gap-4 mt-4">
+      <div className="flex flex-col w-full gap-2 ">
         {selectedImages.map((receipt,index) => (
-          <div
-            key={receipt.fileId || receipt.preview}
-            className="flex flex-col items-center flex-grow p-3 text-sm text-center text-gray-500 "
-          >
-            <img src={receipt.fileUrl || receipt.preview} alt="Receipt" className="h-12 pb-3 rounded-med" />
-            <p className="pb-1 text-xs text-gray-600">
-              <span className="font-bold">receipt</span> attached
-            </p>
-            <div className="flex gap-4">
+
+            <div key={receipt.id || receipt.preview} className="flex items-center justify-between p-3 text-sm text-gray-500 rounded-md bg-light-indigo">
+              
+              <div className="flex items-center gap-4">
+                <img src={receipt.fileUrl || receipt.preview} alt="Receipt" className="object-cover w-12 h-12" /> 
+                <p className="pb-1 text-xs text-gray-600"><span className="font-bold">receipt</span> attached </p>
+              </div>
+
+              <div className="">
               {receipt.newFile ? (
                 <button
                   type="button"
                   className="text-xs text-gray-600"
                   onClick={() => handleFileRemove(index)}
                 >
-                  Remove
+                  <img src='../../images/XVector.svg' alt='remove button' className="w-2 h-2"/>
                 </button>
               ) : (
-              isEditable && (
-                <button
-                  type="button"
-                  className="text-xs text-gray-600"
-                  onClick={() => handleDeleteReceipt(receipt.fileId, receipt.fileUrl)}
-                >
-                  Delete Attachment
-                </button>
-              )            
-            )}
-            </div>
-          </div>
+                isEditable && (
+                  <button
+                    type="button"
+                    className="text-xs text-gray-600"
+                    onClick={() => handleDeleteReceipt(receipt.id, receipt.fileUrl)}
+                  >
+                    <img src='../../images/XVector.svg' alt='remove button' className="w-2 h-2"/>
+                  </button>
+                )            
+              )}
+            </div>            
+          </div> 
         ))}
       </div>
+    
     </>
     
   );
@@ -217,9 +238,8 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
         src='../../images/Upload.svg'
         className="h-6 text-center"
       ></img>
-      <p className="text-sm text-gray-800 font-outfit">Upload receipt image or drag and drop</p>
-      <p className="text-xs text-gray-600 font-outfit">.png, .jpeg, .heic, .pdf, up to 5MB</p>
-      <p className="text-xs text-gray-400 font-outfit">PDF supports only one page</p>
+      <p className="p-5 text-sm text-gray-800 font-outfit"><span className="font-semibold">Upload receipt image</span> or <span className="font-semibold">drag and drop</span></p>
+      
     </div>
   );
 

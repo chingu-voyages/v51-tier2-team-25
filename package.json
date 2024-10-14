@@ -11,6 +11,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "browser-image-compression": "^2.0.2",
     "chart.js": "^4.4.4",
     "chartjs-plugin-annotation": "^3.0.1",
     "chartjs-plugin-datalabels": "^2.2.0",

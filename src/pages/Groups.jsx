@@ -3,14 +3,15 @@ import { useState, useContext, useEffect } from "react";
 import { AppContext } from "../App";
 import EditGroupForm from "../components/EditGroupForm";
 import AddExpense from "../components/AddExpense";
-import EditAddFriendModal from "../components/EditAddFriendModal";
+import EditAddFriendModal from "../components/EditAddFriendModal"
+import RemainingBudget from "../helpers/RemainingBudget";
 
 const getNavLinkClass = ({ isActive })=> 
    `${isActive ? "px-2 py-1 text-sm bg-border rounded-t-md text-tab-text" : "px-2 py-1 text-sm text-button"} hover:text-tab-text`
 
 export default function Groups() {
-  const { groupId } = useParams(); // Get the groupId from the URL
-  const { groups, addExpenseToList } = useContext(AppContext); // Get all groups from context
+  const { groupId } = useParams(); 
+  const { groups, addExpenseToList } = useContext(AppContext); 
   const navigate = useNavigate();
 
   const [isEditGroupFormModalOpen, setIsEditGroupFormModalOpen] = useState(false);
@@ -23,11 +24,10 @@ export default function Groups() {
   useEffect(() => {
     if (currentGroup) {
       setTempGroupData(currentGroup);
-      navigate(`expenses`); //auto navigate to expense page when group loads
+      navigate(`expenses`); 
     }
   }, [currentGroup, navigate]);
   
-  // Find the current group based on the groupId
   if(!groupId){
     console.error("groupId undefined")
     return
@@ -37,10 +37,6 @@ export default function Groups() {
     console.error("Group not found")
     return
   }
-
-  //console.log('current group expenses:',currentGroup?.expenses)
-
-  
 
   function openEditGroupFormModal() {
     setIsEditGroupFormModalOpen(true);
@@ -74,7 +70,7 @@ export default function Groups() {
                 alt='Group Avatar'
                 src={currentGroup?.avatar|| "../../images/placeholder.jpg"}
               />
-              <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-1/2 bottom-3 rounded-xl">
+              <div className="absolute px-2 py-1 text-xs font-light text-gray-700 transform -translate-x-1/2 bg-white border-2 left-[50px] bottom-3 rounded-xl">
                 {currentGroup?.groupType}
               </div>
             </div>
@@ -93,44 +89,55 @@ export default function Groups() {
             <img
               className="h-4 w-4 absolute md:relative md:top-0 top-[120px] right-0"
               src="../../images/Setting.svg"
+              alt="Edit Expense Icon"
               onClick={openEditGroupFormModal}
             />
           </div>
 
           <div className="flex items-end pt-4">
-            <div className="flex items-center w-1/2">
-              <img
-                className="w-8 h-8 rounded-full"
-                src= "../../images/placeholder.jpg"
-              />
-              <p className="pl-2 text-sm text-gray-500">
-                {currentGroup?.members.length} members
-              </p>
-            </div>
-
-            <div className="flex items-center w-full gap-6 place-content-end">
-              <div className="flex flex-col">
-                <p className="text-xs text-gray-500">Allotted budget</p>
-                <p className="text-sm text-gray-950">
-                  US$ {currentGroup?.allottedBudget}
+            <div className="flex justify-between w-full">
+              <div className="flex flex-col md:flex-row md:items-center md:gap-2">
+                <div className="flex items-center">
+                  {currentGroup?.members.map((member, index)=>(
+                    <img
+                      key={member.id}
+                      className={`w-8 h-8 rounded-full border-1 object-cover relative -ml-5 first:ml-0`}
+                      style={{ zIndex: index }}
+                      src={member.avatar || "../../images/placeholder.jpg"}
+                      alt={member.name}
+                  />
+                  ))}              
+                </div>
+                <p className="text-sm font-light text-gray-600 ">
+                    {currentGroup?.members.length} members
                 </p>
               </div>
 
-              <div className="flex flex-col">
-                <p className="text-xs text-gray-500">Remaining</p>
-                <p className="text-sm text-gray-950">
-                  US$ {currentGroup?.remainingBudget.toFixed(2)}
-                </p>
-                
-              </div>
+              <div className="flex items-center gap-6 xs:w-full place-content-end">
+                <div className="flex flex-col">
+                  <p className="text-xs text-gray-500">Allotted budget</p>
+                  <p className="text-sm text-gray-950">
+                    US$ {currentGroup?.allottedBudget}
+                  </p>
+                </div>
 
-              <button
-                className="hidden px-3 py-2 text-sm border-none rounded-lg md:block hover:bg-hover bg-button text-light-indigo"
-                onClick={openAddExpense}
-              >
-                New expense
-              </button>
+                <div className="flex flex-col xs:w-full">
+                  <p className="text-xs text-gray-500">Remaining</p>
+                  <p className="text-sm text-gray-950">
+                    US$ <RemainingBudget groupId={groupId} />
+                  </p>
+                  
+                </div>
+
+                <button
+                  className="hidden px-3 py-2 text-sm border-none rounded-lg md:block hover:bg-hover bg-button text-light-indigo"
+                  onClick={openAddExpense}
+                >
+                  New expense
+                </button>
+              </div>
             </div>
+            
 
             {isAddExpenseOpen && (
               <AddExpense

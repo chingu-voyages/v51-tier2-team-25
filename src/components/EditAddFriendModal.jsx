@@ -16,6 +16,7 @@ export default function EditAddFriendModal({
     name: "",
     userName: "",
     id: uuidv4(),
+    
   });
    // Handle input changes and updates form data state
    const handleChange = (event) => {
@@ -60,7 +61,7 @@ export default function EditAddFriendModal({
       return;
     }
   
-    console.log("Adding new friend with avatar:", newFriendData); // Log avatar data
+    //console.log("Adding new friend with avatar:", newFriendData); // Log avatar data
     addFriendToList(newFriendData); // Ensure avatar is passed
     closeAddFriendModal();
     openEditGroupFormModal();
@@ -88,6 +89,7 @@ export default function EditAddFriendModal({
                   type="text"
                   name="name"
                   value={newFriendData.name}
+                  placeholder="Bob Nielsen"
                   onChange={handleChange}
                   maxLength="30"
                   required
@@ -101,6 +103,7 @@ export default function EditAddFriendModal({
                   type="text"
                   name="userName"
                   value={newFriendData.userName}
+                  placeholder="@Bob"
                   onChange={handleChange}
                   maxLength="30"
                   required

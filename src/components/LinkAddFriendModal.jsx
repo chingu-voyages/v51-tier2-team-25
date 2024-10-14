@@ -11,6 +11,9 @@ export default function LinkAddFriendModal({ closeLinkAddFriendModal }) {
     name: "",
     userName: "",
     id: uuidv4(),
+    paypal:"",
+    venmo:"",
+    cashapp:"",
   });
 
   // Handle input changes and updates form data state
@@ -51,7 +54,7 @@ export default function LinkAddFriendModal({ closeLinkAddFriendModal }) {
       return;
     }
 
-    console.log("Adding new friend with avatar:", newFriendData);
+    //console.log("Adding new friend with avatar:", newFriendData);
     addFriendToList(newFriendData);
     closeLinkAddFriendModal();
     showNotification("New friend added",'success');
@@ -77,6 +80,7 @@ export default function LinkAddFriendModal({ closeLinkAddFriendModal }) {
                   type="text"
                   name="name"
                   value={newFriendData.name}
+                  placeholder="Bob Nielsen"
                   onChange={handleChange}
                   maxLength="30"
                   required
@@ -90,6 +94,7 @@ export default function LinkAddFriendModal({ closeLinkAddFriendModal }) {
                   type="text"
                   name="userName"
                   value={newFriendData.userName}
+                  placeholder="@Bob"
                   onChange={handleChange}
                   maxLength="30"
                   required

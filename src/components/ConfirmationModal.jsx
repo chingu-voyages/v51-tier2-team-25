@@ -12,7 +12,9 @@ const ConfirmationModal = ({ isOpen, onConfirm, onCancel, title, message, confir
           {message}
         </p>
         <div className="absolute bottom-0 right-0 flex items-center w-full p-2 bg-light-indigo place-content-end rounded-b-[8px]">
-          <button onClick={onCancel} className="font-normal text-sm px-3 py-2 mr-2 text-gray-600 rounded-[8px] hover:text-gray-800">Cancel</button>
+          {onCancel &&( 
+            <button onClick={onCancel} className="font-normal text-sm px-3 py-2 mr-2 text-gray-600 rounded-[8px] hover:text-gray-800">Cancel</button>
+          )}          
           <button onClick={onConfirm} className="px-3 py-2 mr-2 text-sm bg-red-600 rounded-lg hover:bg-red-800 text-light-indigo">{confirmButtonText}</button>
         </div>
       </div>
@@ -23,9 +25,9 @@ const ConfirmationModal = ({ isOpen, onConfirm, onCancel, title, message, confir
 ConfirmationModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onConfirm: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
   title: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
+  message: PropTypes.node,
   confirmButtonText: PropTypes.string.isRequired,
 };
 
