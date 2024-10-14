@@ -1,8 +1,14 @@
-# Project Name - TBD
+# Project Name - Slice
+![Chosen logo](https://github.com/user-attachments/assets/c4d7f262-3cff-40f5-a6fd-4ef829c61223)
+
 
 ## Project Description
 
-TBD
+Slice, an expense-splitting app tailored specifically for roommates and friends. Slice helps users manage and divide expenses such as rent, utilities, subscription services, groceries, and more. Our target demographic is the 18-30 age group, which includes students and early professionals who need an easy way to handle finances among roommates and friends.
+
+Our product vision is to revolutionize how roommates and friends manage their finances. Slice is designed to effortlessly track and divide costs for rent, utilities, and groceries, making shared living more stress-free.
+![Homepage _ Expenses you're in](https://github.com/user-attachments/assets/08b68054-b6eb-480f-92cb-a70b5ca57982)
+
 
 ---
 
