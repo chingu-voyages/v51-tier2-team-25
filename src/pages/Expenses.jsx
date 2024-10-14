@@ -14,7 +14,7 @@ export default function Expenses() {
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [title, setTitle]= useState([])
   const [isViewingReceipt, setIsViewingReceipt] = useState(false)
-  const [receiptImageUrl, setReceiptImageUrl] = useState(null)
+  const [receiptImageUrl, setReceiptImageUrl] = useState([])
 
   const currentGroup = groups.find(group=> group.id === Number(groupId))
 
@@ -42,7 +42,7 @@ export default function Expenses() {
       if (!querySnapshot.empty) {
         const fileUrls = querySnapshot.docs.map((doc) => {
           const receiptData = doc.data();
-          console.log("Fetched receipt data:", receiptData);
+          //console.log("Fetched receipt data:", receiptData);
           return receiptData.fileUrl; 
         });
         // console.log("Fetched URL:", fileUrls)
