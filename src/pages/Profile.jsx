@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState, useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from '../App';
 import ConfirmationModal from "../components/ConfirmationModal";
@@ -6,10 +6,11 @@ import AvatarManagement from '../components/AvatarManagement';
 
 export default function Profile() {
 
-  const { mainUser, setMainUser, addMainUserToFriends, setGroups, setFriends, setExpenses}= useContext(AppContext)
+  const { mainUser, setMainUser, addMainUserToFriends, setGroups, setFriends, setExpenses, showNotification}= useContext(AppContext)
   const [isEditable, setIsEditable] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const inputRef = useRef(null)
 
   //Load user info from localstorage
   useEffect(()=>{
@@ -40,8 +41,18 @@ export default function Profile() {
     })
   }
   
-  const handleSubmit = () =>{
-   
+  const handleSubmit = (e) =>{
+    e.preventDefault()
+
+    if (inputRef.current.value.trim() === ""){
+      console.log("Input is empty")
+      showNotification("Please enter your name and user name.", "error")
+      setTimeout(()=>{
+        setIsSaveModalOpen(false)
+      },1500)
+      return
+    }
+
     const updatedUser = {
       ...mainUser,
       id: mainUser.id || uuidv4()
@@ -84,6 +95,7 @@ export default function Profile() {
   };  
 
   const handleSaveClick = () => {
+
     setIsSaveModalOpen(true); // Open the save confirmation modal
   };  
 
@@ -120,6 +132,7 @@ export default function Profile() {
                   <input
                     type="text"
                     name="userName"
+                    ref={inputRef}
                     value={mainUser.userName  || ''}
                     onChange={handleChange}
                     maxLength={30}
