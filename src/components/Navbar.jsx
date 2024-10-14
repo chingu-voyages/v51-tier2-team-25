@@ -4,8 +4,6 @@ import AddGroup from "./AddGroup.jsx";
 import { AppContext } from "../App";
 import AddFriend from "./AddFriend.jsx";
 import LinkAddFriendModal from "./LinkAddFriendModal.jsx";
-import toast from "react-hot-toast";
-
 
 export default function Navbar() {
   // TESTING ONLY to clear local storage -REMOVE
@@ -19,7 +17,7 @@ export default function Navbar() {
   const [isProfileHovered, setIsProfileHovered] =useState(false) 
   const [isFriendHovered, setIsFriendHovered] =useState(false)
   const [isGroupHovered, setIsGroupHovered] = useState(false)
-  const { groups, friends, mainUser } = useContext(AppContext);
+  const { groups, friends, mainUser, showNotification } = useContext(AppContext);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,7 +25,7 @@ export default function Navbar() {
 
   function openAddGroupModal() {
     if(!mainUser || !mainUser.id){
-      toast.error("Please create a profile before adding a group.")
+      showNotification("Please create a profile before adding a group.", 'error')
       return
     }
     setIsAddGroupModalOpen(true);
@@ -38,7 +36,7 @@ export default function Navbar() {
 
   function openAddFriendModal() {
     if(!mainUser || !mainUser.id){
-      toast.error("Please create a profile before adding friends.")
+      showNotification("Please create a profile before adding friends.", 'error')
       return
     }
     setIsAddFriendModalOpen(true);

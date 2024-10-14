@@ -27,7 +27,7 @@ ConfirmationModal.propTypes = {
   onConfirm: PropTypes.func.isRequired,
   onCancel: PropTypes.func,
   title: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
+  message: PropTypes.node,
   confirmButtonText: PropTypes.string.isRequired,
 };
 

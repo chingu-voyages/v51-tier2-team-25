@@ -8,7 +8,7 @@ export default function Expense({expense, group, showButtons, openReceipt, openE
     const { handleToggleIsPaid } = useContext(AppContext);
     const [fullyPaidDate, setFullyPaidDate] = useState(null);
     const storedUser = JSON.parse(localStorage.getItem('mainUser'))
-    console.log("this is the group data;", group)
+    // console.log("this is the group data;", group)
 
     const peopleRemainingToPay = expense.participants.filter(participant => !participant.isPaid).length;
     const unpaidAmount = expense.participants.filter(p => !p.isPaid).reduce((total, participant) => total + participant.amountToPay, 0);

@@ -47,7 +47,7 @@ export default function AddFriend({ closeAddFriendModal }) {
   }, [newFriendData.userName]);
 
   useEffect(() => {
-    console.log("newFriendData updated: ", newFriendData);
+    // console.log("newFriendData updated: ", newFriendData);
   }, [newFriendData]);
 
   const addNewFriend = (event) => {

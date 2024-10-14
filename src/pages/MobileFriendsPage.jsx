@@ -11,8 +11,6 @@ export default function MobileFriendsPage() {
     const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
     const [searchedFriends, setSearchedFriends] = useState([])
 
-    console.log("mainuser from mobilefreind", mainUser.name)
-
     useEffect(() => {
         if (location.state && location.state.openAddFriendModal) {
             setIsAddFriendModalOpen(true);

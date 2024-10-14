@@ -97,17 +97,17 @@ function App() {
     setFriends(updatedFriends);
     localStorage.setItem("friendsData", JSON.stringify(updatedFriends));
   }
-  console.log("friends from app", friends);
+  //console.log("friends from app", friends);
 
   function addGroupToList(newGroup) {
     const updatedGroups = { ...newGroup, remainingBudget: Number(newGroup.allottedBudget) };
     setGroups((prevGroups) => [...prevGroups, updatedGroups]);
     localStorage.setItem("groupsData", JSON.stringify([...groups, updatedGroups]));
   }
-  console.log("groups from app:", groups);
+  //console.log("groups from app:", groups);
 
   function addExpenseToList(newExpense) {
-    console.log("addNewExpense-app", newExpense);
+    // console.log("addNewExpense-app", newExpense);
     const updatedExpenses =[...expenses, newExpense]    
     setExpenses(updatedExpenses);
     localStorage.setItem("expensesData", JSON.stringify(updatedExpenses))
@@ -129,7 +129,7 @@ function App() {
       return updatedGroups
     })
   }
-  console.log("expenses from app", expenses);  
+  // console.log("expenses from app", expenses);  
 
   function updateGroup(updatedGroup) {
     setGroups((prevGroups) => {

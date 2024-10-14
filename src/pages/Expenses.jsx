@@ -32,7 +32,7 @@ export default function Expenses() {
 
   const openReceipt = async (expenseId) =>{
     try{
-      console.log("Fetching receipts for expenseId:", expenseId);
+      // console.log("Fetching receipts for expenseId:", expenseId);
       setIsViewingReceipt(true)
 
       // Query Firestore for receipts associated with the expenseId
@@ -45,10 +45,10 @@ export default function Expenses() {
           console.log("Fetched receipt data:", receiptData);
           return receiptData.fileUrl; 
         });
-        console.log("Fetched URL:", fileUrls)
+        // console.log("Fetched URL:", fileUrls)
         setReceiptImageUrl(fileUrls)
       }else{
-        console.log("No receipts found for this expense.");
+        // console.log("No receipts found for this expense.");
         setReceiptImageUrl([]); // Handle no receipts case
       }
     }catch (error) {

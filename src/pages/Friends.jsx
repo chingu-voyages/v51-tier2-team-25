@@ -17,7 +17,7 @@ export default function Friends() {
   const navigate = useNavigate();
 
   const currentFriend = friends.find((friend)=>friend.id === friendId)
-  console.log("currentFriend", currentFriend)
+  // console.log("currentFriend", currentFriend)
 
   const friendExpenses = useMemo(()=>{
     return expenses.filter(expense => 

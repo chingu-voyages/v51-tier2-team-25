@@ -30,7 +30,7 @@ const ExpenseHistogram = ({ groups }) => {
 
   useEffect(() => {
     if (chartRef.current) {
-      console.log("Chart is rendered and ready for export.");
+      // console.log("Chart is rendered and ready for export.");
     } else {
       console.error("Chart reference is not set yet.");
     }
@@ -168,7 +168,7 @@ const ExpenseHistogram = ({ groups }) => {
           ref={chartRef}
         />
       </div>
-      <div className="flex space-x-2 mt-4">
+      <div className="flex mt-4 space-x-2">
         <button onClick={downloadGroupPDF} className="px-3 py-2 text-sm border-none rounded-lg hover:bg-hover bg-button text-light-indigo">
           Export as PDF
         </button>
