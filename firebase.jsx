@@ -17,7 +17,7 @@ let app, db, storage;
 
 
 try {
-  console.log("Initializing Firebase...");
+  //console.log("Initializing Firebase...");
   app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
   // console.log("Firebase initialized successfully");
 

@@ -28,7 +28,6 @@ export default function Profile() {
       ...prevUser,
       [name]:value,
     }))
-    // console.log("mainUser",mainUser)
   }
   const handleAvatarChange = (newAvatar) => {
     setMainUser(prev => {
@@ -205,9 +204,16 @@ export default function Profile() {
 
         <ConfirmationModal
           isOpen={isSaveModalOpen}
-          onConfirm={handleSubmit}         
+          onConfirm={handleSubmit}    
+          onCancel={() => setIsSaveModalOpen(false)}     
           title="Got it!"
-          message={"Your user name is automatically added to every group." }
+          message={
+            <>
+              <span><span className="font-bold">NOTICE</span> - If you want a Profile Picture, you must add it now <span className="font-bold">before</span> you save!</span>
+              <br />
+              <span>Your user name is automatically added to every group.</span>
+            </>
+          }
           confirmButtonText="Got it!"
         />
 

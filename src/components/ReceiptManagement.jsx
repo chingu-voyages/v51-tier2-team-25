@@ -96,7 +96,7 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
     const uploadedFiles = [];
 
     try {
-      console.log('Starting to upload receipts:', selectedImages.length, 'files');
+      // console.log('Starting to upload receipts:', selectedImages.length, 'files');
 
       for (const file of selectedImages) {
         if (file.fileUrl) continue; //skip already uploaded files
@@ -112,13 +112,13 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
 
         try {
           // Upload file to Firebase Storage
-          console.log(`Uploading file: ${file.name}`);
+          // console.log(`Uploading file: ${file.name}`);
           await uploadBytes(fileRef, file);
           const fileUrl = await getDownloadURL(fileRef);
           uploadedFiles.push({ fileId, fileUrl });
 
-          console.log('File uploaded successfully:', file.name);
-          console.log('File URL:', fileUrl);
+          // console.log('File uploaded successfully:', file.name);
+          // console.log('File URL:', fileUrl);
 
           // Store the file URL in Firestore under the 'receipts' collection
           const receiptsCollection = collection(db, 'receipts');
@@ -129,9 +129,9 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
             uploadedAt: new Date(),
           };
 
-          console.log('Attempting to write to Firestore with data:', docData);
+          // console.log('Attempting to write to Firestore with data:', docData);
           await addDoc(receiptsCollection, docData);
-          console.log('Document successfully written for file:', file.name);
+          // console.log('Document successfully written for file:', file.name);
         } catch (error) {
           console.error(`Error uploading ${file.name}:`, error.message);
           showNotification(`Error uploading ${file.name}: ${error.message}`, 'error');
@@ -160,12 +160,12 @@ const ReceiptManagement = forwardRef(({ expenseId, isEditable }, ref) => {
       //Delete from Firestore
       const receiptRef = doc(db, 'receipts', receiptId)
       await deleteDoc(receiptRef)
-      console.log('Deleted from Firestore:', receiptId)
+      // console.log('Deleted from Firestore:', receiptId)
 
       //Delete from Firebase Storage
       const storageRef = firebaseRef(storage, fileUrl)
       await deleteObject(storageRef)
-      console.log('Deleted from Storage:', fileUrl)
+      // console.log('Deleted from Storage:', fileUrl)
 
       //Remove from UI
       setSelectedImages(prev =>
