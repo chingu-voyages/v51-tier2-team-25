@@ -6,8 +6,6 @@ import AddFriend from "./AddFriend.jsx";
 import LinkAddFriendModal from "./LinkAddFriendModal.jsx";
 
 export default function Navbar() {
-  // TESTING ONLY to clear local storage -REMOVE
-  // localStorage.clear()
 
   const [isAddGroupModalOpen, setIsAddGroupModalOpen] = useState(false);
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
