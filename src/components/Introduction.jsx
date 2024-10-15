@@ -28,7 +28,7 @@ export default function Introduction({ closeIntroModal }) {
             <div>
                 {currentStep === 1 && (
                     <div>
-                        <img src="../images/welcome.png" alt="Expense section screenshot" />
+                        <img src="../../images/welcome.png" alt="Expense section screenshot" />
                         <p className='text-sm mt-4 font-medium'>
                             Slice, an intuitive expense splitter and tracker that simplifies managing shared costs with clear and fair solutions.
                         </p>
@@ -36,7 +36,7 @@ export default function Introduction({ closeIntroModal }) {
                 )}
                 {currentStep === 2 && (
                     <div>
-                        <img src="../images/step1.png" alt="Profile page screenshot" />
+                        <img src="../../images/step1.png" alt="Profile page screenshot" />
                         <p className='text-sm mt-4 font-medium'>
                             Start by setting up your profile to personalize your experience.
                         </p>
@@ -44,7 +44,7 @@ export default function Introduction({ closeIntroModal }) {
                 )}
                 {currentStep === 3 && (
                     <div>
-                        <img src="../images/step2.png" alt="Add friend screenshot" />
+                        <img src="../../images/step2.png" alt="Add friend screenshot" />
                         <p className='text-sm mt-4 font-medium'>
                             Invite your friends to join by adding them to your account.
                         </p>
@@ -52,7 +52,7 @@ export default function Introduction({ closeIntroModal }) {
                 )}
                 {currentStep === 4 && (
                     <div>
-                        <img src="../images/step3.png" alt="Add group screenshot" />
+                        <img src="../../images/step3.png" alt="Add group screenshot" />
                         <p className='text-sm mt-4 font-medium'>
                             Organize your shared expenses by creating a group for you and your friends.
                         </p>
@@ -60,7 +60,7 @@ export default function Introduction({ closeIntroModal }) {
                 )}
                 {currentStep === 5 && (
                     <div>
-                        <img src="../images/step4.png" alt="Add expense screenshot" />
+                        <img src="../../images/step4.png" alt="Add expense screenshot" />
                         <p className='text-sm mt-4 font-medium'>
                             Input the expenses you want to share, making it easy to track costs together.
                         </p>
