@@ -59,14 +59,14 @@ export default function Navbar() {
     setIsMenuOpen()
   }
 
-  //filter main user from friends list for display
+   //filter main user from friends list for display
   // Ensure mainUser has an id before using it for filtering
   const displayedFriends = mainUser && mainUser.id ? friends.filter(friend => friend.id !== mainUser.id) : friends;
 
 
-  // Screen size change effect
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 768px)");
+// Screen size change effect
+useEffect(() => {
+  const mediaQuery = window.matchMedia("(min-width: 768px)");
 
     function handleScreenResize(event) {
       if (event.matches) {

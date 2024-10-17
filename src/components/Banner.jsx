@@ -22,7 +22,7 @@ export default function Banner() {
         <div>
             {isBannerVisible && (
                 <div className="h-[25px] bg-button text-white text-sm flex items-center justify-center p-4 font-light gap-2">
-                    <p><span className="font-bold">Welcome to our app !</span> No login required, just dive right in! <span className="underline font-normal cursor-pointer" onClick={openIntroModal}>Click here to see steps to get started.</span></p>
+                    <p><span className="font-bold">Welcome to our app !</span> No login required, just dive right in! <span className="font-normal underline cursor-pointer" onClick={openIntroModal}>Click here to see steps to get started.</span></p>
                     <button className="ml-4" onClick={closeBanner}>
                         <img src="../../images/Xmark.svg" className="" />
                     </button>
