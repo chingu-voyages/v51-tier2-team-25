@@ -30,8 +30,8 @@ export default function AddFriend({ closeAddFriendModal }) {
 
   useEffect(()=>{
     if (newFriendData.userName) {
-      const apiKey = import.meta.env.VITE_AVATAR_API_KEY
-      const apiUrl = `https://api.multiavatar.com/${newFriendData.userName}.svg?apikey=${apiKey}`;
+      // const apiKey = import.meta.env.VITE_AVATAR_API_KEY
+      const apiUrl = `https://api.dicebear.com/9.x/fun-emoji/svg?&seed=${newFriendData.userName}&radius=50`
 
       fetch(apiUrl)
         .then((response) => response.text())
