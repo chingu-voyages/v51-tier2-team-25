@@ -149,7 +149,7 @@ export default function EditGroupForm({
             ...prevData.members,
             {
               ...newMember,
-              avatar: newMember.avatar || "/images/Profile.svg", // Ensure avatar is included
+              avatar: newMember.avatar || "../../images/Profile.svg", // Ensure avatar is included
             },
           ],
         };

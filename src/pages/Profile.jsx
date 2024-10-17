@@ -44,6 +44,8 @@ export default function Profile() {
   const handleSubmit = (e) =>{
     e.preventDefault()
 
+
+
     if (inputRef.current.value.trim() === ""){
       console.log("Input is empty")
       showNotification("Please enter your name and user name.", "error")
@@ -95,6 +97,14 @@ export default function Profile() {
   };  
 
   const handleSaveClick = () => {
+    // Check if the avatar is missing
+    if (!mainUser.avatar) {
+      showNotification("Please upload an avatar image.", "error");
+      setTimeout(() => {
+        setIsSaveModalOpen(false);
+      }, 1500);
+      return;
+    }
 
     setIsSaveModalOpen(true); // Open the save confirmation modal
   };  
@@ -222,9 +232,7 @@ export default function Profile() {
           title="Got it!"
           message={
             <>
-              <span><span className="font-bold">NOTICE</span> - If you want a Profile Picture, you must add it now <span className="font-bold">before</span> you save!</span>
-              <br />
-              <span>Your user name is automatically added to every group.</span>
+              <span><span className="font-bold">NOTICE</span> - Your user name is automatically added to every group.<span className="font-bold">before</span> you save!</span>
             </>
           }
           confirmButtonText="Got it!"

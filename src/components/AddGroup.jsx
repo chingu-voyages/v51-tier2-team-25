@@ -143,7 +143,7 @@ export default function AddGroup({
       ...prevData,
       members: [...prevData.members, {
         ...newMember,
-        avatar: newMember.avatar || "/images/Profile.svg" // Ensure avatar is included
+        avatar: newMember.avatar || "../../images/Profile.svg" // Ensure avatar is included
       }],
     }));
     setResetSearchBar((prev) => !prev);
@@ -163,7 +163,7 @@ export default function AddGroup({
       ...groupsData,
       members: groupsData.members.map(member => ({
         ...member,
-        avatar: member.avatar || "/images/Profile.svg" // Ensure avatar is included
+        avatar: member.avatar || "../../images/Profile.svg" // Ensure avatar is included
       })),
     };
   

@@ -168,7 +168,7 @@ useEffect(() => {
                         className="flex items-center p-3 rounded md:hover:bg-light-indigo hover:bg-[#D8DBE5]"
                       >
                         <img
-                          src={group.avatar || "../../images/profilePlaceHolder.png"}
+                          src={group.avatar || "../../images/Groups.svg"}
                           className="w-6 h-6 mr-2 border border-none rounded-full"
                         />
                         <NavLink className="block md:font-extralight" to={`/group/${group.id}`}>
