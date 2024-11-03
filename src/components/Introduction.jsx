@@ -11,11 +11,11 @@ export default function Introduction({ closeIntroModal }) {
   };
 
   return (
-    <div className="fixed p-10 inset-0 z-50 flex items-start justify-center overflow-y-auto bg-gray-800 bg-opacity-75">
+    <div className="fixed inset-0 z-50 flex items-start justify-center p-10 overflow-y-auto bg-gray-800 bg-opacity-75">
       <div className="font-extralight relative w-full max-w-[535px] sm:w-11/12 md:w-10/12 lg:w-3/4 xl:w-[535px] h-auto rounded-md bg-zinc-50 flex flex-col m-4 font-geologica">
-        <div className='pt-8 px-8'>
-            <div className="flex justify-between items-center mb-4 border-b pb-4">
-                <h2 className="text-md font-medium">
+        <div className='px-8 pt-8'>
+            <div className="flex items-center justify-between pb-4 mb-4 border-b">
+                <h2 className="font-medium text-md">
                     {currentStep === 1 && 'Welcome!'}
                     {currentStep === 2 && 'Create Your Profile'}
                     {currentStep === 3 && 'Add Your Friends'}
@@ -70,17 +70,17 @@ export default function Introduction({ closeIntroModal }) {
         </div>
             
 
-            <div className="mt-10 flex justify-end space-x-4 bg-light-indigo p-4 rounded-b-md text-medium">
+            <div className="flex justify-end p-4 mt-10 space-x-4 bg-light-indigo rounded-b-md text-medium">
             <button
                 onClick={closeIntroModal}
-                className="text-black px-4 py-2 rounded-lg transition flex items-center"
+                className="flex items-center px-4 py-2 text-black transition rounded-lg"
             >
                 <span>Close</span>
             </button>
             {currentStep < 5 && (
                 <button
                 onClick={nextStep}
-                className="bg-button text-white px-4 py-2 rounded-lg transition"
+                className="px-4 py-2 text-white transition rounded-lg bg-button"
                 >
                 Next
                 </button>

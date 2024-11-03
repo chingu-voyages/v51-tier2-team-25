@@ -95,7 +95,7 @@ export default function Groups() {
           </div>
 
           <div className="flex items-end pt-4">
-            <div className="flex w-full justify-between">
+            <div className="flex justify-between w-full">
               <div className="flex flex-col md:flex-row md:items-center md:gap-2">
                 <div className="flex items-center">
                   {currentGroup?.members.map((member, index)=>(
@@ -108,12 +108,12 @@ export default function Groups() {
                   />
                   ))}              
                 </div>
-                <p className=" text-sm font-light text-gray-600">
+                <p className="text-sm font-light text-gray-600 ">
                     {currentGroup?.members.length} members
                 </p>
               </div>
 
-              <div className="flex items-center xs:w-full gap-6 place-content-end">
+              <div className="flex items-center gap-6 xs:w-full place-content-end">
                 <div className="flex flex-col">
                   <p className="text-xs text-gray-500">Allotted budget</p>
                   <p className="text-sm text-gray-950">
